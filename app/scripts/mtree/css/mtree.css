@@ -1,0 +1,18 @@
+/* DIV.MzTreeView DIV IMG{border: 0px solid #FFFFFF;}
+
+DIV.MzTreeView DIV SPAN IMG{border: 0px solid #FFFFFF;} */
+
+
+
+div.MzTreeView {
+	position: absolute;
+	left: 10px;
+	width: 230px;
+	height: 460px;
+	overflow: auto;
+}
+div.MzTreeView nobr > img {
+	width: 30px;
+	height: 30px;
+	
+} 

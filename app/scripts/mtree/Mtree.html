@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+	<HEAD>
+		<META http-equiv=Content-Type content="text/html; charset=gb2312">
+		<TITLE>menu</TITLE>
+
+<script language="JavaScript" src="Mtree/MzTreeView10.js"></script>
+
+	</HEAD>
+	<BODY>
+
+<style>
+A.MzTreeview
+{
+  font-size: 9pt;
+  padding-left: 3px;
+}
+</style>
+<script language="JavaScript">
+  var tree = new MzTreeView("tree");
+
+  tree.icons["property"] = "property.gif";
+  tree.icons["css"] = "collection.gif";
+  tree.icons["book.gif"]  = "book.gif";
+ // tree.iconsExpand["book.gif"] = "bookopen.gif"; //展开时对应的图片
+
+  tree.setIconPath("Mtree/"); //可用相对路径
+
+  tree.nodes["0_1"] = "text:XXX公司;";
+  tree.nodes["1_320"] = "text:开发部; data:id=320"; 
+  tree.nodes["1_400"] = "text:财务部; icon: company.png; data:id=400";
+  tree.nodes["320_322"] = "text:林兴洋; icon: property; data:id=322"; 
+  tree.nodes["320_323"] = "text:雷田树; icon: company.png; data:id=323"; 
+  
+  tree.nodes["320_325"] = "text:丁伟鹏; data:id=325"; 
+  tree.nodes["400_407"] = "text:吕海菊; data:id=407"; 
+  tree.nodes["400_406"] = "text:涂婷婷; data:id=406"; 
+  tree.nodes["400_408"] = "text:谢开池; data:id=408"; 
+  tree.nodes["400_409"] = "text:邹小龙; data:id=409"; 
+  tree.nodes["407_1140"] = "text:Date; url:Article.asp; data:id=140";
+  tree.nodes["406_1127"] = "text:toString; url:Article.asp; data:id=127";
+  tree.nodes["408_1239"] = "text:||; url:Article.asp; data:id=239";
+  tree.nodes["409_1163"] = "text:E;  url:Article.asp; data:id=163";
+
+  //tree.setURL("Catalog.asp");
+  tree.setTarget("MzMain");
+  document.write(tree.toString());    //亦可用 obj.innerHTML = tree.toString();
+</script>
+
+<!-- tree.setTarget("MzMain"); tree.setURL("Catalog.asp"); -->
+
+	</BODY>
+</HTML>

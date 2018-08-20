@@ -1,0 +1,102 @@
+﻿<!DOCTYPE HTML>
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+    <TITLE>Facewhat Web端即时通讯</TITLE>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <!-- jquery -->
+    <SCRIPT src="scripts/jquery/jquery-1.11.1.js" type="text/javascript"></SCRIPT>
+    <link rel="stylesheet" href="scripts/jquery/ui/jquery-ui.css">
+    <script src="scripts/jquery/ui/jquery-ui.js" type="text/javascript"></script>
+    <script src="scripts/jquery/jquery.caret.js" type="text/javascript"></script>
+    <!-- <SCRIPT src="scripts/jquery/jquery-1.4.2.js" type="text/javascript"></SCRIPT> -->
+
+    <!-- strophe及其插件 -->
+    <script type="text/javascript" src="scripts/strophe/strophe.js"></script>
+    <!-- strophe扩展，XEP-0096: SI File Transfer -->
+    <script type="text/javascript" src="scripts/strophe/strophe.si-filetransfer.js"></script>
+    <!-- strophe扩展，XEP-0047: In-Band Bytestreams -->
+    <script type="text/javascript" src="scripts/strophe/strophe.ibb.js"></script>
+    <!-- strophe扩展，XEP-0045: 多用户聊天 -->
+    <script type="text/javascript" src="scripts/strophe/strophe.muc.js"></script>
+    <!-- strophe扩展，XEP-0030: 发现服务-->
+    <!-- <script type="text/javascript" src="scripts/strophe/strophe.disco.js"></script> -->
+
+    <!-- 界面的 ，使用layim1.0-->
+    <link href="css/layim.css" type="text/css" rel="stylesheet"/>
+    <!-- <link href="cssc/layui.css" type="text/css" rel="stylesheet"/> -->
+    <script src="lay/lib.js"></script>
+    <script src="lay/layer/layer.min.js"></script>
+    <script src="lay/layer/extend/layer.ext.js"></script>
+    <script src="lay/layim.js"></script>
+
+    <link href="scripts/layui/css/layui.css" type="text/css" rel="stylesheet"/>
+    <script src="scripts/layui/layui.js"></script>
+
+    <!-- ibb文件下载，用到的 插件，弹出保存框 -->
+    <script type="text/javascript" src="scripts/download/download.js"></script>
+    <!-- 表情插件 -->
+    <link href="css/smohan.face.css" type="text/css" rel="stylesheet">
+
+    <!-- 企业通讯录，树形结构图 -->
+    <script type="text/javascript" src="scripts/mtree/js/MzTreeView.js"></script>
+    <link href="scripts/mtree/css/mtree.css" type="text/css" rel="stylesheet">
+
+    <!-- 界面controller -->
+    <script type="text/javascript" src="scripts/controller/index-controller.js"></script>
+</HEAD>
+<BODY>
+<div id="loginpage" style="display:none">
+    <script type="text/javascript">
+        $('#loginpage').load("login.html"); // 载入登陆页面
+    </script>
+</div>
+<div id="mainpage" style="display:none;">
+
+</div>
+<div style="display:none;">
+    <object id="Exobud" type="application/x-oleobject" height="64" width="300"
+            classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" name="MediaPlayer">
+        <embed id="mediaPlayerEmbed" name="mediaPlayerEmbed"
+               pluginspage="http://www.microsoft.com/windows/windowsmedia/download/"
+               type="application/x-mplayer2"
+               src=""
+               width="300" height="40" showcontrols="0" showdisplay="0" showstatusbar="0"
+               autostart="0" autorewind="0" showpositioncontrols="0" showtracker="0">
+        </embed>
+    </object>
+</div>
+
+<!-- 打印日志-->
+<!--<input type="button" id="login2" value="谷歌下的登录"/>
+<input type="button" id="testbtn" onclick="test()" value="测试事件"/> <br>-->
+<input type="button" id="clearmessage" onclick="clearlogs()" value="清空当前报文"/><br>
+<div id="logcontainer"></div>
+<script type="text/javascript">
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+    });
+</script>
+
+<!-- 自己的 ,可以通过在后面加入一个参数，就可以不用每次清除缓存-->
+<SCRIPT src="scripts/xow/xowim2.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.handler.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.connection.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.roster.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.vcard.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.presence.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.room.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.user.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.server.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.chat.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.view.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.model.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.messagearchive.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.orgnization.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xow.messagecenter.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xowlogger.js?time=New Date()" type="text/javascript"></SCRIPT>
+<SCRIPT src="scripts/xow/xowutils.js?time=New Date()" type="text/javascript"></SCRIPT>
+</BODY>
+</HTML>
