@@ -1,0 +1,6 @@
+.layim_filepicture {background:url(../../images/folder1.png) no-repeat;float:left; width:102px; height:70px; text-align:center}
+.layim_filepicture span{padding: 20px 0 0 10px; position: relative; color: blue; float: left; overflow: hidden; width:70px}
+.layim_filepicture span：hover{overflow: hidden; width:70px; height: 20px}
+.layim_fileinfo {float:left; margin-left: 10px/* border : 2px solid black */}
+.layim_filestate {margin-left: 10px; padding-left: 102px}
+.layim_fileinfo img{width : 128px; height:128px;}
