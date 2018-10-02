@@ -16,10 +16,11 @@ var rename = require('gulp-rename'); // 文件重命名
 var cssmin = require('gulp-minify-css'); //css压缩
 var clean = require('gulp-clean');    // 清理
 var connect = require('gulp-connect'); // web服务器
+var gutil = require('gulp-util');
 
 //定义css、js源文件路径
-var jsSrc = 'app/js/*.js',
-    jsDist = 'dist/js',
+var jsSrc = 'app/scripts/*/*.js',
+    jsDist = './dist/js',
     cssSrc = 'app/css/*.css',
     lessSrc = 'less/*.less',
     sassSrc = './scss/*.scss',
@@ -41,7 +42,24 @@ gulp.task('scripts', function() {
        .pipe(gulp.dest(jsDist))
        .pipe(rename('all.min.js'))
        .pipe(uglify()) //  压缩文件
+       .on('error', function(err) {
+          gutil.log(gutil.colors.red('[Error]'),err.toString());
+       })
        .pipe(gulp.dest(jsDist))
+});
+
+var jsImSrc = 'app/layui/lay/modules/layim.js',
+    jsImDist = './dist/js';
+// 压缩 js 文件
+gulp.task('just_layim_script', function() {
+   // 1\. 找到文件
+   gulp.src(jsImSrc)
+       .pipe(rename('layim.min.js'))
+       .pipe(uglify({
+          mangle:true,
+          compress: true
+       })) //  压缩文件
+       .pipe(gulp.dest(jsImDist))
 });
 
 // 编译Sass
