@@ -19,7 +19,7 @@
   }
 
   ,Layui = function(){
-    this.v = '2.2.6-rc1'; //版本号
+    this.v = '2.4.5'; //版本号
   }
 
   //获取layui所在目录
@@ -59,9 +59,12 @@
     ,tree: 'modules/tree' //树结构
     ,table: 'modules/table' //表格
     ,element: 'modules/element' //常用元素操作
-    ,util: 'modules/util' //工具块
-    ,flow: 'modules/flow' //流加载
+    ,rate: 'modules/rate'  //评分组件
+    ,colorpicker: 'modules/colorpicker' //颜色选择器
+    ,slider: 'modules/slider' //滑块
     ,carousel: 'modules/carousel' //轮播
+    ,flow: 'modules/flow' //流加载
+    ,util: 'modules/util' //工具块
     ,code: 'modules/code' //代码修饰器
     ,jquery: 'modules/jquery' //DOM库（第三方）
     
@@ -276,11 +279,11 @@
     }
     img.onload = function(){
       img.onload = null;
-      callback(img);
+      typeof callback === 'function' && callback(img);
     };
     img.onerror = function(e){
       img.onerror = null;
-      error(e);
+      typeof error === 'function' && error(e);
     };  
   };
 
@@ -330,7 +333,8 @@
     };
     
     if(!/^#\//.test(hash)) return data; //禁止非路由规范
-    data.href = hash = hash.replace(/^#\//, '');
+    hash = hash.replace(/^#\//, '');
+    data.href = '/' + hash;
     hash = hash.replace(/([^#])(#.*$)/, '$1').split('/') || [];
     
     //提取Hash结构
@@ -531,7 +535,7 @@
       
       //执行指定事件
       key === '' && layui.each(item, callback);
-      key === filterName && layui.each(item, callback);
+      (filterName && key === filterName) && layui.each(item, callback);
     });
     
     return result;

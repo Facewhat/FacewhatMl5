@@ -41,10 +41,11 @@
       _this.id = groupname;
       XoW.logger.me(_this.classInfo, '_init()');
     };
-    this.getFriendByJid = function(jid) {
+    this.getItemByJid = function(jid) {
       if(jid == null || jid == "") {
         return null;
       }
+      jid = XoW.utils.getBareJidFromJid(jid);
       for(var i = 0; i < this.list.length; i++) {
         if(_this.list[i].id == jid) {
           return _this.list[i];

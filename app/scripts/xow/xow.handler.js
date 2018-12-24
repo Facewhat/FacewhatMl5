@@ -76,7 +76,7 @@
           }
         }
       }
-      XoW.logger.me(this.classInfo, 'triggerHandler(), count {0}'.f(count));
+      XoW.logger.me(this.classInfo, 'triggerHandler({0}), count {1}'.f(proName, count));
     }
   }
   return XoW;

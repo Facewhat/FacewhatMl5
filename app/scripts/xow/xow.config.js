@@ -7,11 +7,13 @@
   "use strict";
   var config = {
     version: '2.0',
-    serviceUrl: 'ws://10.10.123.225:7070/ws/',
-    // domain: '',
+    serviceUrl: 'ws://120.24.53.76:7070/ws/',
+    domain: '120.24.53.76',
     password: '123456',
     userId: 'ican',
-    resource: 'facewhatml5'
+    resource: 'fwh5_desktop'
   };
+
+  // XoW.logger.init({logLevel:1});
   return config;
 }));

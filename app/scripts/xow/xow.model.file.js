@@ -4,7 +4,6 @@
 XoW.File = function (toJid) {
   // region Fields
   var _this = this;
-
   // region adapt for message
   this.username = ''; // 发送者用户名
   this.avatar = XoW.DefaultImage.AVATAR_DEFAULT; // 发送者头像,每一条消息都记录一个base64串太耗存储了（layim原本记录的是地址而非值，fw存储值） todo

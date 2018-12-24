@@ -24,24 +24,24 @@
       _gblMgr.getConnMgr().addHandler(_messageCb.bind(_this), null, 'message');
       XoW.logger.me(_this.classInfo, '_init()');
     };
-    var _addJidChat = function (item) {
-      XoW.logger.ms(_this.classInfo, '_addJidChat()');
-      var gpIndex = _findIndexOfFriendGroup(item.groupid);
-      var group = null;
-      if (gpIndex < 0) {
-        group = new XoW.FriendGroup(item.groupid);
-        _friendGroups.push(group);
-      } else {
-        group = _friendGroups.find(function (x) {
-          return x.id === item.groupid
-        });
-      }
-      // 类似于引用类型哦
-      if (group) {
-        group.list.push(item);
-      }
-      XoW.logger.me(_this.classInfo, '_addJidChat');
-    };
+    //var _addJidChat = function (item) {
+    //  XoW.logger.ms(_this.classInfo, '_addJidChat()');
+    //  var gpIndex = _findIndexOfFriendGroup(item.groupid);
+    //  var group = null;
+    //  if (gpIndex < 0) {
+    //    group = new XoW.FriendGroup(item.groupid);
+    //    _friendGroups.push(group);
+    //  } else {
+    //    group = _friendGroups.find(function (x) {
+    //      return x.id === item.groupid
+    //    });
+    //  }
+    //  // 类似于引用类型哦
+    //  if (group) {
+    //    group.list.push(item);
+    //  }
+    //  XoW.logger.me(_this.classInfo, '_addJidChat');
+    //};
     var _messageCb = function (stanza) {
       XoW.logger.ms(_this.classInfo, '_messageCb()');
       var $message = $(stanza);
@@ -51,8 +51,6 @@
       // 如果两个doamin相同，则说明是个人消息
       XoW.logger.d(_this.classInfo, 'fromDomain：{0} toDomain: {1}'.f(fromDomain, myDomain));
       if (fromDomain == myDomain) {
-        var pureJid = XoW.utils.getBareJidFromJid($message.attr('from'));
-
         // 到时候这边看看要不要把type=errror的消息拦截下来。在外面进行统一的处理。
         var theMsg = new XoW.Message();
         theMsg.cid = $message.attr('id');
@@ -150,10 +148,10 @@
         }
         if ('chat' == theMsg.type || 'headline' == theMsg.type || 'normal' == theMsg.type) {
           // 放行
-          var theChat = _this.getOrCreateChatByJid(pureJid);
+          var theChat = _this.getOrCreateChatByJid($message.attr('from'));
           theChat.addMessage(theMsg);
           var param = { chat: theChat, msg: theMsg};
-          _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_MSG_RECEIVED, param);
+          _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_MSG_RCV, param);
         } else if (type == 'error') {
           // 错误节
         } else if (type == 'groupchat') {
@@ -177,14 +175,14 @@
       _jidChats.push(chat);
       XoW.logger.me(_this.classInfo, '_createChatByJid({0})'.f(to));
       return chat;
-    }
+    };
     // endregion Private Methods
 
     // region Public Methods
-    this.getJidChats = function () {
-      XoW.logger.ms(_this.classInfo, 'getJidChats()');
-      return _jidChats;
-    };
+    //this.getJidChats = function () {
+    //  XoW.logger.ms(_this.classInfo, 'getJidChats()');
+    //  return _jidChats;
+    //};
     /**
      * 根据好友的jid得到chat
      * @param pJid bare jid or full jid of remote peer.
@@ -192,10 +190,9 @@
     this.getChatByJid = function (pJid) {
       XoW.logger.ms(_this.classInfo, 'getChatByJid({0})'.f(pJid));
       pJid = XoW.utils.getBareJidFromJid(pJid);
-      var item = _jidChats.find(function (x) {
+      return _jidChats.find(function (x) {
         return x.to === pJid
       });
-      return item;
     };
     /**
      * 根据好友的jid去获得chat，如果chat不存在，则创建
@@ -211,11 +208,6 @@
       XoW.logger.me(_this.classInfo, 'getOrCreateChatByJid({0})'.f(jid));
       return chat;
     };
-    /**
-     * 发送message的处理 ： 界面显示 + 发送处理
-     * @param content 要发送的内容
-     * @param toJid 要发送给的好友
-     */
     this.sendMessage = function (content, toJid, fromJid) {
       XoW.logger.ms(_this.classInfo, 'sendMessage({0})'.f(toJid));
       var chat = this.getOrCreateChatByJid(toJid);
@@ -238,7 +230,7 @@
       }).c("body").t(msg.content);
       _gblMgr.getConnMgr().send(xmppmsg);
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));
-    }
+    };
     // endregion Public Methods
 
     // construct

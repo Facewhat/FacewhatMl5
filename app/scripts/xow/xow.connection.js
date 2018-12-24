@@ -44,7 +44,7 @@
         succ = true;
       } else if (cond == Strophe.Status.DISCONNECTED) {
         var msg = '连接断开';
-        this._eventMgr.triggerHandler(XoW.SERVICE_EVENT.DISCONNECT_RECEIVED, msg);
+        this._eventMgr.triggerHandler(XoW.SERVICE_EVENT.DISCONNECT_RCV, msg);
         return true;
       } else if (cond == Strophe.Status.DISCONNECTING) {
         msg = ' 断开连接中...';
@@ -56,7 +56,7 @@
         msg = ' 连接超时！';
       }
       var params = { data : msg, succ : succ };
-      this._eventMgr.triggerHandler(XoW.SERVICE_EVENT.CONNECT_RECEIVED, params);
+      this._eventMgr.triggerHandler(XoW.SERVICE_EVENT.CONNECT_RCV, params);
       XoW.logger.me(this.classInfo, '_connectCb()');
       return true;
     },

@@ -39,7 +39,7 @@ body .layui-layim-chat .layui-layer-content{overflow: visible;}
 .layim-menu-box{display: none; position: absolute; z-index: 100; top: 24px; left: -31px; padding: 5px 0; width: 85px; border: 1px solid #E2E2E2; border-radius: 2px; background-color: #fff; box-shadow: 1px 1px 20px rgba(0,0,0,.1);}
 .layim-menu-box li{position: relative; line-height: 22px; padding-left: 30px; font-size: 12px;}
 .layim-menu-box li cite{padding-right: 5px; font-size: 14px;}
-.layim-menu-box li i{display: none; position: absolute; left: 0; top: 0;}
+.layim-menu-box li i{display: none; position: absolute; left: 8px; top: 0; font-weight: 700; color: #5FB878;}
 .layim-menu-box .layim-this i{display: block;}
 .layim-menu-box li:hover{background-color: #eee;}
 .layui-layim-remark{position: relative; left: -6px; display: block; width: 100%; border: 1px solid transparent; margin-top: 8px; padding: 0 5px; height: 26px; line-height: 26px; background: none; border-radius: 2px;}

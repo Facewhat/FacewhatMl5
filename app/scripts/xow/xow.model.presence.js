@@ -3,7 +3,7 @@
  * todo 默认人（客服）要做单向订阅，不仅为了显示状态还为了获取resource
  * @constructor
  */
-XoW.Presence = function() {
+XoW.Presence = function(pJid) {
   var _this = this;
   this.id = '';
   this.from = ''; // 此处from 很可能带有 resource
@@ -15,11 +15,14 @@ XoW.Presence = function() {
   this.photoHash = ''; // 用于判定是否用户头像有变化，请参考facewhat1.0
   this.avatarHash = '';
   this.time = '';
+  this.username = '';
 
-  this.classInfo = 'Presence_' + this.from;
+  this.classInfo = 'Presence_' + pJid;
 
   var _init = function () {
     XoW.logger.ms(_this.classInfo, '_init()');
+    _this.from = pJid;
+    _this.id = XoW.utils.getNodeFromJid(pJid);
     XoW.logger.me(_this.classInfo, '_init()');
   };
 

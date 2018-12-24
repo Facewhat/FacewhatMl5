@@ -1,7 +1,7 @@
+'use strict';
 (function (factory) {
   return factory(XoW);
 }(function (XoW) {
-  'use strict'
   /**
    * 拆包解包，管理联系人、群组人员等vCard数据
    * @param globalManager
@@ -44,13 +44,13 @@
       }
       _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ERROR, stanza);
     };
-    var _getVCardCb = function (stanza) {
-      XoW.logger.ms(_this.classInfo, '_getVCardCb()');
+    var _cbGetVCard = function (stanza) {
+      XoW.logger.ms(_this.classInfo, '_cbGetVCard()');
       var vCardTemp = _parseStanzaToVCard(stanza);
       XoW.logger.d(' 获得vCard: ' + vCardTemp.jid/* JSON.stringify(vCardTemp)*/);
       _addVCard(vCardTemp);
-      _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.VCARD_RECEIVED, vCardTemp);
-      XoW.logger.me(_this.classInfo, '_getVCardCb()');
+      _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CARD_RCV, vCardTemp);
+      XoW.logger.me(_this.classInfo, '_cbGetVCard()');
     };
     /**
      * 将VCard节转为VCard对象。
@@ -222,10 +222,11 @@
     // region Public Methods
     /**
      * 本地查找
-     * @param Bare jid
+     * @param jid
      */
     this.getVCardByJid = function (jid) {
       XoW.logger.ms(_this.classInfo, 'getVCardByJid({0})'.f(jid));
+      jid = XoW.utils.getBareJidFromJid(jid);
       var theVCard = _vCards.find(function (x) {
         return x.jid === jid
       });
@@ -246,7 +247,7 @@
       }).c('vCard', {
         xmlns: XoW.NS.VCARD
       });
-      _gblMgr.getConnMgr().sendIQ(vCard, _getVCardCb.bind(this), _errorBackCb.bind(_this), timeout);
+      _gblMgr.getConnMgr().sendIQ(vCard, _cbGetVCard.bind(this), _errorBackCb.bind(_this), timeout);
       XoW.logger.me(_this.classInfo, 'getVCard({0})'.f(jid));
     };
     // endregion Public Methods

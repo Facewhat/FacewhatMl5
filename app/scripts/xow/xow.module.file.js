@@ -48,10 +48,10 @@
         file.content = file.base64;
         file.content = 'imgEx[{0}]'.f(JSON.stringify(file)); // exclude base64
         file.content = file.content.replace('"content":', '"base64":');
-        eventName = XoW.SERVICE_EVENT.CHAT_FILE_TRANS_REQUESTED;
+        eventName = XoW.SERVICE_EVENT.CHAT_FILE_TRANS_REQ_SUC;
       } else {
         file.content = 'fileEx(www.facewhat.com/file33)[{0}]'.f(JSON.stringify(file));
-        eventName = XoW.SERVICE_EVENT.CHAT_IMAGE_TRANS_REQUESTED;
+        eventName = XoW.SERVICE_EVENT.CHAT_IMAGE_TRANS_REQ_SUC;
       }
       file.avatar = cachedAvatar;
       // endregion create file instance
@@ -212,7 +212,7 @@
       file.type = pType;
       file.status = XoW.FileReceiveState.ERROR;
       file.errorMsg = pErrMsg;
-      _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.FILE_OVERDUE, file);
+      _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_FILE_OVERDUE, file);
       XoW.logger.me(_this.classInfo, '_triggerFileErr()');
     }
     // endregion Private Methods
@@ -361,10 +361,10 @@
       // accept automatic when it is an image
       if (theFile.getIsImage()) {
         // 完全收到后直接再显示
-        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_TRANS_REQ_RECEIVED, theFile);
+        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_TRANS_REQ_RCV, theFile);
         _gblMgr.getConnMgr().sendFileSiResult(true, theFile.to, theFile.from, theFile.sid, theFile.iqid);
       } else {
-        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_FILE_TRANS_REQ_RECEIVED, theFile);
+        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_FILE_TRANS_REQ_RCV, theFile);
       }
       XoW.logger.me(_this.classInfo, '_onSiRcv()');
     };
@@ -427,7 +427,7 @@
             file.content = file.base64;
             file.content = 'imgEx[{0}]'.f(JSON.stringify(file)); // exclude base64
             file.content = file.content.replace('"content":', '"base64":');
-            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_RECEIVED, file);
+            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_RCV, file);
           } else if (resize >= size) {
             _changeFileStatus(file, XoW.FileReceiveState.CLOSED);
           } else {

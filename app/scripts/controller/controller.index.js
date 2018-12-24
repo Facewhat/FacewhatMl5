@@ -1,7 +1,7 @@
 /**
  * Created by cy on 2018/3/12.
  */
-'use strict'
+'use strict';
 layui.config({
   base: './scripts/layxow/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
@@ -46,19 +46,27 @@ layui.config({
       delete local.history;
 
       // 以上代码没卵用
-      localStorage.clear()
+      localStorage.clear();
       _layer.alert('清理成功');
     });
-  })
+
+    _client.getCache = _layIM.cache;
+
+  });
 
   // region 网络消息回调，通知界面
-  _client.on(XoW.VIEW_EVENT.LOGIN_STATE_CHANGED, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.LOGIN_STATE_CHANGED);
+  _client.on(XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED);
     if (params.succ) {
       $('#loginPage').css({display: 'none'}); // 隐藏登录界面div
       $('#mainPage').css({display: ''}); // 显示主页面的div
-      _layInit(params.data);
 
+      // just for test
+      //var testGroup = new XoW.Room('515@conference.120.24.53.76');
+      //testGroup.groupname = '牛的不要不要的会议室';
+      //params.data.group = [testGroup];
+
+      _layInit(params.data);
       // insert to local storage
       //var currentUser = localStorage.getItem('faceWhat_user');
       //var loginCount = 0;
@@ -81,51 +89,51 @@ layui.config({
       return;
     }
     $("#loginState").text(params.data);
-  })
-    , _client.on(XoW.VIEW_EVENT.FRIEND_AVATAR_CHANGED, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.FRIEND_AVATAR_CHANGED);
-    if (params.isMine) {
+  });
+  _client.on(XoW.VIEW_EVENT.V_DISCONNECTED, function () {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_DISCONNECTED);
+    _layer.alert('连接断开，可能您打开了新的页面或网络故障导致');
+    // _layImEx.setMineStatus(); // 暂时实现了设置成隐身
+    //var msg = {
+    //  system: true
+    //  , content: '连接断开'
+    //  , timestamp: Date.parse(new Date())
+    //};
+    // _layImEx.notifyToChatBoxes(msg);
+    return true;
+  });
 
-    } else {
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED);
+    if (!params.isMine) {
       _layImEx.changeFriendAvatar(params);
     }
     // layer.alert(JSON.stringify(params));
     return true;
-  })
-    , _client.on(XoW.VIEW_EVENT.DISCONNECTED, function (pMsg) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.DISCONNECTED);
-    layer.alert('连接断开，可能您打开了新的页面或网络故障导致');
-    _layImEx.setMineStatus(); // 暂时实现了设置成隐身
-    var msg = {
-      system: true
-      , content: '连接断开'
-      , timestamp: Date.parse(new Date())
-    };
-    _layImEx.notifyToChatBoxes(msg);
-    return true;
-  })
-    , _client.on(XoW.VIEW_EVENT.FRIEND_NICKNAME_CHANGED, function (pFriend) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.FRIEND_NICKNAME_CHANGED);
-    if (pFriend.vcard.isMine) {
+  });
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_NICKNAME_CHANGED, function (pFriend) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_NICKNAME_CHANGED);
+    if (pFriend.vcard && pFriend.vcard.isMine) {
       _layImEx.changeMineUsername(pFriend.username);
     } else {
-
+      _layImEx.changeFriendNick(pFriend);
     }
     // layer.alert(JSON.stringify(params));
     return true;
-  })
-    , _client.on(XoW.VIEW_EVENT.FRIEND_STATUS_CHANGED, function (pFriend) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.FRIEND_STATUS_CHANGED);
+  });
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED, function (pFriend) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED + pFriend.status);
     _layIM.setFriendStatus(pFriend.id, pFriend.status);
     return true;
-  })
-    , _client.on(XoW.VIEW_EVENT.ERROR_PROMPT, function (params) {
-    XoW.logger.ms(_classInfo, XoW.SERVICE_EVENT.ERROR);
+  });
+
+  _client.on(XoW.VIEW_EVENT.V_ERROR_PROMPT, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ERROR_PROMPT);
     layer.alert(params);
     return true; // 如果返回的不是true则将该触发器会被移除。
-  })
-    , _client.on(XoW.VIEW_EVENT.CHAT_MSG_RECEIVED, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.CHAT_MSG_RECEIVED);
+  });
+  _client.on(XoW.VIEW_EVENT.V_CHAT_MSG_RCV, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_MSG_RCV);
     params.type = 'friend';
     if (!params.avatar) {
       params.avatar = XoW.DefaultImage.AVATAR_DEFAULT;
@@ -135,52 +143,109 @@ layui.config({
     //var temp = '<div style="color:#00FF00"><h3>This is a header</h3><p>This is a paragraph.</p></div>';
     //params.content = _layIM.content(temp);//_layImEx.remixContent(temp);
     _layIM.getMessage(params);
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.CHAT_MSG_RECEIVED);
-  })
-    , _client.on(XoW.VIEW_EVENT.CHAT_FILE_TRANS_REQ_RECEIVED, function (pFile) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.CHAT_FILE_TRANS_REQ_RECEIVED);
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_MSG_RCV);
+  });
+
+  // region file transform
+  _client.on(XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_RCV, function (pFile) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_RCV);
     pFile.type = 'friend';
     if (!pFile.avatar) {
       pFile.avatar = XoW.DefaultImage.AVATAR_DEFAULT;
     }
     _layImEx.getMessage(pFile);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.CHAT_FILE_TRANS_REQ_RECEIVED);
-  })
-    , _client.on(XoW.VIEW_EVENT.CHAT_IMAGE_RECEIVED, function (pFile) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.CHAT_IMAGE_RECEIVED);
-    _layImEx.getMessage(pFile);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.CHAT_IMAGE_RECEIVED);
-  })
-    , _client.on(XoW.VIEW_EVENT.CHAT_IMAGE_TRANS_REQUESTED, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.CHAT_IMAGE_TRANS_REQUESTED);
-    _layImEx.sendMessageEx(params);
-    // _layImEx.putFileThumbnailOnPanel(params);
-  })
-    , _client.on(XoW.VIEW_EVENT.CHAT_FILE_TRANS_REQUESTED, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.CHAT_FILE_TRANS_REQUESTED);
-    _layImEx.sendMessageEx(params);
-    // _layImEx.putFileThumbnailOnPanel(params);
-  })
-    , _client.on(XoW.VIEW_EVENT.FILE_STATE_CHANGED, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.FILE_STATE_CHANGED);
-    _layImEx.changeFileStatus(params);
-  })
-    , _client.on(XoW.VIEW_EVENT.FILE_OVERDUE, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.FILE_OVERDUE);
-    _layImEx.changeFileStatus(params);
-  })
-    , _client.on(XoW.VIEW_EVENT.FILE_MSG_NOTIFY, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.FILE_MSG_NOTIFY);
-    _layImEx.getNewFileMessage(params);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_RCV);
   });
+  _client.on(XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV, function (pFile) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV);
+    _layImEx.getMessage(pFile);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV);
+  });
+  _client.on(XoW.VIEW_EVENT.V_CHAT_IMAGE_TRANS_REQ_SUC, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_IMAGE_TRANS_REQ_SUC);
+    _layImEx.sendMessageEx(params);
+    // _layImEx.putFileThumbnailOnPanel(params);
+  });
+  _client.on(XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_SUC, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_SUC);
+    _layImEx.sendMessageEx(params);
+    // _layImEx.putFileThumbnailOnPanel(params);
+  });
+  _client.on(XoW.VIEW_EVENT.V_FILE_STATE_CHANGED, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FILE_STATE_CHANGED);
+    _layImEx.changeFileStatus(params);
+  });
+  _client.on(XoW.VIEW_EVENT.V_FILE_OVERDUE, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FILE_OVERDUE);
+    _layImEx.changeFileStatus(params);
+  });
+  // endregion file transform
 
+  // region contact subscription
+  _client.on(XoW.VIEW_EVENT.V_USER_SEARCH_RSP_RCV, function (params) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_USER_SEARCH_RSP_RCV);
+    _layImEx.setUserSearchResult(params.itemsExcludeFriend);
+  });
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_ADDED, function (pUser) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_ADDED);
+    pUser.groupid = pUser.groupid || _layIM.cache().friend[0].id;
+    _layIM.addList(pUser);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_FRIEND_ADDED);
+  });
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_REMOVED, function (pUser) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_REMOVED);
+    _layIM.removeList({
+      type: 'friend'
+      ,id: pUser.id
+    });
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_FRIEND_REMOVED);
+  });
+  _client.on(XoW.VIEW_EVENT.V_SUB_ME_REQ_RCV, function (pSubMsg) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_ME_REQ_RCV);
+    _layImEx.pushSysInfo(pSubMsg);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_ME_REQ_RCV);
+  });
+  _client.on(XoW.VIEW_EVENT.V_SUB_CONTACT_REQ_SUC, function (pSubMsg) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_REQ_SUC);
+    _layer.msg('好友申请已发送，请等待对方确认', {
+      icon: 1
+      ,shade: 0.5
+    }, function(){
+      _layer.close(_layer.index - 1);
+    });
+    pSubMsg.item.groupid =  pSubMsg.item.groupid || _layIM.cache().friend[0].id;
+    _layImEx.pushSysInfo(pSubMsg, false);
+    pSubMsg.item.username = pSubMsg.item.username + '(Pending)';
+    _layIM.addList( pSubMsg.item);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_REQ_SUC);
+  });
+  _client.on(XoW.VIEW_EVENT.V_SUB_CONTACT_BE_APPROVED, function (pSubMsg) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_APPROVED);
+    _layImEx.pushSysInfo(pSubMsg);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_APPROVED);
+  });
+  _client.on(XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED, function (pSubMsg) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED);
+    _layImEx.pushSysInfo(pSubMsg);
+    _layIM.removeList({
+      type: 'friend'
+      ,id: pSubMsg.item.id
+    });
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED);
+  });
+  // endregion contact subscription
+
+  _client.on(XoW.VIEW_EVENT.V_NEW_INFO_ADDED, function (pSubMsg) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_NEW_INFO_ADDED);
+    _layImEx.pushSysInfo(pSubMsg);
+    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_NEW_INFO_ADDED);
+  });
   // endregion 网络消息回调，通知界面
 
   // region UI CAllBack By LayIM
   //监听在线状态的切换事件
   _layIM.on('online', function (data) {
-    //console.log(data);
-    alert('小飞侠');
+    _layer.prompt(data);
   });
   //监听签名修改
   _layIM.on('sign', function (value) {
@@ -192,9 +257,10 @@ layui.config({
    * init直接赋值mine、friend的情况下（只有设置了url才会执行 ready 事件）
    */
   _layIM.on('ready', function (res) {
-    XoW.logger.ms(_classInfo, 'on(ready)');
+    XoW.logger.ms(_classInfo, 'on(ready, {0})'.f(res));
     _layImEx.bindFriendListRightMenu();
-
+    _layImEx.rebindToolButtons();
+    _layImEx.ready();
     if (_clientMode === XoW.ClientMode.KEFU) {
       var toId = _getPar('toId');
       if (!toId) {
@@ -202,7 +268,7 @@ layui.config({
         return;
       }
       // 在好友列表中找
-      var theCusSvr = _client.getFriendById(toId);
+      var theCusSvr = _client.getContactById(toId);
       if (!theCusSvr) {
         theCusSvr = {
           name: '客服_' + toId //名称
@@ -268,13 +334,6 @@ layui.config({
   });
   _layImEx.on('acceptFile', function (param) {
     XoW.logger.ms(_classInfo, 'acceptFile({0},{1})'.f(param.sid, param.jid));
-    //_layer.alert('acceptFile');
-    _client.acceptFile(param.sid, param.jid);
-    XoW.logger.me(_classInfo, 'acceptFile()');
-  });
-  _layImEx.on('acceptFile', function (param) {
-    XoW.logger.ms(_classInfo, 'acceptFile({0},{1})'.f(param.sid, param.jid));
-    //_layer.alert('acceptFile');
     _client.acceptFile(param.sid, param.jid);
     XoW.logger.me(_classInfo, 'acceptFile()');
   });
@@ -298,29 +357,67 @@ layui.config({
     _client.cancelFile(param.sid, param.jid);
     XoW.logger.me(_classInfo, 'cancelFile()');
   });
+  _layImEx.on('searchUser', function (param) {
+    XoW.logger.ms(_classInfo, 'searchUser({0})'.f(param.username));
+    _client.searchUser(param.username, 3 * 1000);
+    XoW.logger.me(_classInfo, 'searchUser()');
+  });
+  _layImEx.on('rmvContact', function (pUser) {
+    XoW.logger.ms(_classInfo, 'removeContact({0})'.f(pUser.id));
+    _client.rmvContact(pUser);
+    XoW.logger.me(_classInfo, 'removeContact()');
+  });
+  _layImEx.on('subContact', function (pUser) {
+    XoW.logger.ms(_classInfo, 'subContact({0})'.f(pUser.id));
+    _client.subContact(pUser);
+    XoW.logger.me(_classInfo, 'subContact()');
+  });
+  _layImEx.on('approveUserSub', function (pUser) {
+    XoW.logger.ms(_classInfo, 'approveUserSub({0})'.f(pUser.jid));
+    _client.approveUserSub(pUser);
+    XoW.logger.me(_classInfo, 'approveUserSub()');
+  });
+  _layImEx.on('denyUserSub', function (pUser) {
+    XoW.logger.ms(_classInfo, 'approveUserSub({0})'.f(pUser.jid));
+    _client.denyUserSub(pUser);
+    XoW.logger.me(_classInfo, 'denyUserSub()');
+  });
   // endregion UI Callback By LayIM.extend
 
   // region Private Methods
   function _layInit(params) {
     XoW.logger.ms(_classInfo, '_layInit()');
+
     //基础配置
     _layIM.config({
         //初始化接口
         init: params
-        // 查看群员接口
-        , members: {
-          //url: 'json/getMembers.json'
-          //,data: {}
-        }
-        , copyright: true // true代表不要显示copyright = =!
-        , isfriend: true
-        , isgroup: false
-        , find: false
-        , uploadImage: {}
-        , uploadFile: {}
-        , isVideo : true
+        ,copyright: false // true代表不要显示copyright = =!
+        ,isfriend: true
+        ,isgroup: true
+        ,uploadImage: {}
+        ,uploadFile: {}
+        ,isVideo : true
+        ,search: layui.cache.dir + '../search.html'
+        ,find: layui.cache.dir + '../search.html'
+        ,msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html'
       }
     );
+
+    // Simulated room acquisition
+    var rooms = {
+      url: '../json/getRooms.json'
+      ,type: 'get'
+      ,data: {}
+    };
+    // that do not support sync post = =!
+    _layIM.post( rooms, function(res) {
+      $.each(res.group, function(i, item){
+        item.type = 'group';
+        _layIM.addList(item);
+      });
+    }, 'Rooms Simulation');
+
     XoW.logger.me(_classInfo, '_layInit()');
   }
 
@@ -361,12 +458,6 @@ layui.config({
     XoW.logger.me(_classInfo, '_autoLogin()');
   }
 
-  /**
-   * 文件选中后的回调
-   * @param pThatChat
-   * @param pFile
-   * @private
-   */
   var _fileSelectedCb = function (pThatChat, pFileInfo, pData) {
     var toFullJid = XoW.utils.getFullJid(pThatChat.data.jid, pThatChat.data.resource);
     _client.sendFile(pFileInfo.name, pFileInfo.size, pFileInfo.type, toFullJid, pData);

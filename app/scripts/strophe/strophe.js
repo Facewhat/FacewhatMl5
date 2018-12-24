@@ -3926,6 +3926,15 @@ Strophe.Connection.prototype = {
                         (that.authenticated || !hand.user)) {
                         if (hand.run(child)) {
                             that.handlers.push(hand);
+                        } else {
+                          // add by cy 20181130
+                          Strophe.error("handler removed"
+                            + " ,ns:" + hand.ns
+                            + " ,stanza name:" + hand.name
+                            + " ,type:" + hand.type
+                            + " ,id:" + hand.id
+                            + " ,from:" + hand.from
+                            + " ,function name:" + hand.handler.name);
                         }
                     } else {
                         that.handlers.push(hand);

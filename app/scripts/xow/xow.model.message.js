@@ -28,7 +28,7 @@
 
     var _init = function () {
       XoW.logger.ms(_this.classInfo, '_init()');
-      _this.timestamp =  Date.parse(new Date());
+      _this.timestamp = new Date().getTime(); // Date.parse(new Date());
       XoW.logger.me(_this.classInfo, '_init()');
     };
     _init();

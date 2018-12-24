@@ -11,7 +11,7 @@
                 type: 'friend'
                 ,avatar: "http://tp2.sinaimg.cn/2386568184/180/40050524279/0"
                 ,username: '冲田杏梨'
-                ,groupname: 2
+                ,groupid: 2
                 ,id: "1233333312121212"
                 ,remark: "本人热爱工作"
             });
@@ -20,12 +20,13 @@
     var _this = this;
     // region 兼容layim的属性
     this.id = ''; // 适配layim，全局唯一ID
-    this.username = ''; // 理解为备注名吧
-    this.name = ''; // 对方用户名，账号 < 其自己设置的昵称 < 本端给设置的备注名
+    this.username = ''; // 即nickname, 对方账号 < 对方自己设置的昵称 < 本端给好友设置的备注名
+    // this.name = ''; // 这是界面显示时集成的一个数据项，可能为friend的username或者group的goupname等，作为chat等的抬头
     this.groupid = ''; // xmpp roster 仅返回 groupname，而layim仅支持 groupid
     this.avatar = XoW.DefaultImage.AVATAR_DEFAULT;  // 适配face
     this.status = XoW.UserState.OFFLINE;
     this.sign = '这个人很懒，什么都没留下';
+    this.type = 'friend';
     // endregion 兼容layim的属性
 
     this.jid = ''; // bare jid
@@ -36,12 +37,12 @@
     // 解析roster的时候获取不到，后面再拿
     this.vcard = null;
     this.resource = ''; // 对方所在的资源
-    this.classInfo = 'Friend' + this.name;
+    this.classInfo = 'Friend' + this.id;
 
     var _init = function () {
       XoW.logger.ms(_this.classInfo, '_init()');
-      _this.jid = jid;
-      _this.name = _this.id = XoW.utils.getNodeFromJid(jid);
+      _this.jid = XoW.utils.getBareJidFromJid(jid);
+      _this.username = _this.id = XoW.utils.getNodeFromJid(jid);
       XoW.logger.me(_this.classInfo, '_init()');
     };
     /**
@@ -62,5 +63,5 @@
     };
 
     _init();
-  }
+  };
 }));

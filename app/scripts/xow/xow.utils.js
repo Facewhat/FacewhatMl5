@@ -340,6 +340,9 @@
   return utils;
 }));
 
+Strophe.log = function (pLevel, pMsg) {
+  XoW.logger.l(pLevel, pMsg);
+}
 // region 自定义类
 /**
  * 模仿ES6中的Map
@@ -403,11 +406,23 @@ XoW.CreateSingle = function(func) {
 // region 其他扩展方法
 String.prototype.format = String.prototype.f = function () {
   var s = this,
-    i = arguments.length;
-
+  i = arguments.length;
   while (i--) {
     s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
   }
   return s;
+};
+
+// 支持大小写无关
+String.prototype.indexOfIgnoreCase = function () {
+  var thisObj = this;
+  var idx = 0;
+  if (typeof(arguments[arguments.length - 1]) == 'number') {
+    idx = arguments[arguments.length - 1];
+    thisObj = this.substr(idx);
+  }
+  var re = new RegExp(arguments[0], 'i');
+  var r = thisObj.match(re);
+  return r == null ? -1 : r.index + idx;
 };
 // endregion 其他扩展方法
