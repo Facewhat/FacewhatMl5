@@ -19,6 +19,7 @@ layui.config({
   $(function () {
     XoW.logger.d("index.html on document ready");
     _clientMode = _getPar('mode');
+    _client.getCache = _layIM.cache;
     if (_clientMode === XoW.ClientMode.KEFU) {
       // 独立客服页面
       _autoLogin();
@@ -49,9 +50,6 @@ layui.config({
       localStorage.clear();
       _layer.alert('清理成功');
     });
-
-    _client.getCache = _layIM.cache;
-
   });
 
   // region 网络消息回调，通知界面
@@ -124,6 +122,13 @@ layui.config({
   _client.on(XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED, function (pFriend) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED + pFriend.status);
     _layIM.setFriendStatus(pFriend.id, pFriend.status);
+    if (pFriend.status == 'offline') {
+      _layIM.setChatStatus('<span style="color:#455052;">离线</span>');
+    } else if (pFriend.status == 'online') {
+      _layIM.setChatStatus('<span style="color:#455052;">在线</span>');
+    } else {
+      _layIM.setChatStatus('<span style="color:#888f7f;">临时会话</span>');
+    }
     return true;
   });
 
@@ -307,13 +312,22 @@ layui.config({
     XoW.logger.ms(_classInfo, 'chatChange({0},{1})'.f(res.data.type, res.data.jid));
     var type = res.data.type;
     var jid = res.data.jid;
-    if (jid == null) {
+    if (!jid) {
       _layer.alert('No Jid of that chat.');
+      return;
     }
     if (type === 'friend') {
-      //模拟标注好友状态
-      //_layIM.setChatStatus('<span style="color:#FF5722;">在线</span>');
       _layImEx.bindToolFileButton(_fileSelectedCb.bind(_this));
+      var user=_client.getContactByJid(jid);
+      if(!user){
+        _layIM.setChatStatus('<span style="color:#888f7f;">临时会话</span>');
+      }else if (user.status == "offline") {
+        _layIM.setChatStatus('<span style="color:#455052;">离线</span>');
+      } else if (user.status == "online") {
+        _layIM.setChatStatus('<span style="color:#455052;">在线</span>');
+      }else{
+        _layIM.setChatStatus('<span style="color:#2cff1b;"></span>');
+      }
     } else if (type === 'group') {
       //模拟系统消息
       _layIM.getMessage({

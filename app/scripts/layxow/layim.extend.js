@@ -752,7 +752,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         XoW.logger.ms(_this.classInfo, 'add_friend_submit()');
         var cont = $(window.event.currentTarget).parent().parent();
         this.groupid = pGroupName;
-        this.subRemark = pRemark;
+        this.remark = pRemark;
         this.username = '人工NICK_' + this.username;
         layui.each(call.subContact, function(index, item){
           item && item(stranger);});

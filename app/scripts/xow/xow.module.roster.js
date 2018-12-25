@@ -274,33 +274,6 @@
       }.bind(_this), _cbError.bind(_this), timeout);
       XoW.logger.me(_this.classInfo, 'setRosterForNameAndGroup()');
     };
-
-    this.setRosterForNameAndGroupEx = function (pUser, timeout) {
-      XoW.logger.ms(_this.classInfo, 'setRosterForNameAndGroup({0})'.f(pUser.jid));
-      var iq = $iq({
-        id: XoW.utils.getUniqueId('setIQRoster'),
-        type: 'set'
-      }).c('query', {
-        xmlns: Strophe.NS.ROSTER
-      }).c('item', {
-        jid: pUser.jid,
-        name: pUser.username
-      }).c('group').t(pUser.groupid);
-      // allowed belonging to multiple groups
-      //var userGroup = group;
-      //for (var i = 0; i < userGroup.length; i++) {
-      //  iq.c('group').t(userGroup[i]).up();
-      //}
-      _gblMgr.getConnMgr().sendIQ(iq, function (stanza) {
-        XoW.logger.ms(_this.classInfo, 'setIQRosterCb({0})'.f($(stanza).attr('id')));
-        // if the user is already in the roster(server),the server may not replay to the sending resource with an  IQ result
-        // indicating the success of the roster set, which is defined as ROSTER_FRIEND_SUB__SVR_PREPARED.
-        // But, after i send presence of subscribe request, the server will replay an roster set which include the info of the friend.
-        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.SUB_CONTACT_READY, pUser);
-        XoW.logger.me(_this.classInfo, 'setIQRosterCb({0})'.f($(stanza).attr('id')));
-      }.bind(_this), _cbError.bind(_this), timeout);
-      XoW.logger.me(_this.classInfo, 'setRosterForNameAndGroup()');
-    };
     // region Obsolete Methods
 
     this.removeContact = function (jid) {

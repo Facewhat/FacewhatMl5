@@ -304,7 +304,7 @@
     // region contact subscription
     var _onSubContactReady = function (pUser) {
       XoW.logger.ms(_this.classInfo, '_onSubContactReady({0})'.f(pUser.id));
-      _presMgr.subscribe(pUser.jid, _this.getCache().mine.jid);
+      _presMgr.subscribe(pUser.jid, _this.getCache().mine.jid, pUser.remark);
       XoW.logger.me(_this.classInfo, '_onSubContactReady()');
     };
 
@@ -424,13 +424,12 @@
 
       // 方式二：待验证 todo
       pUser.groupid = 'Friends';
-      _rosterMgr.setRosterForNameAndGroupEx(pUser);
+      _rosterMgr.setRosterForNameAndGroup(pUser);
       XoW.logger.me(this.classInfo,'subContact()');
     };
     this.approveUserSub = function (pUser) {
       XoW.logger.ms(this.classInfo, 'approveUserSub({0})'.f(pUser.jid));
       _presMgr.approveSub(pUser.jid, _this.getCache().mine.jid, 'AUTO REPLY');
-      // _presMgr.subscribe(pUser.jid, _this.getCache().mine.jid, 'auto reply');
       _rosterMgr.setRosterForNameAndGroup(pUser);
       XoW.logger.me(this.classInfo,'approveUserSub()');
     };
