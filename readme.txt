@@ -1,2 +1,2 @@
-��Դ��Ŀ��ַ��https://github.com/masach/FaceWhat
-����layim.js��Ȩ��δ��Դ�������������ֻ�ϴ������汾�ˣ��������Ҫ����ȥlayui�������򣬺ܱ��˵ģ���
+UI尊重layim.js版权（未开源），所以这里就只上传混淆版本了，大家有需要可以去layui官网购买，很便宜的：）
+其余的陆续整理上传
