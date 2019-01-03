@@ -63,7 +63,6 @@ layui.config({
       //var testGroup = new XoW.Room('515@conference.120.24.53.76');
       //testGroup.groupname = '牛的不要不要的会议室';
       //params.data.group = [testGroup];
-
       _layInit(params.data);
       // insert to local storage
       //var currentUser = localStorage.getItem('faceWhat_user');
@@ -127,7 +126,7 @@ layui.config({
     } else if (pFriend.status == 'online') {
       _layIM.setChatStatus('<span style="color:#455052;">在线</span>');
     } else {
-      _layIM.setChatStatus('<span style="color:#888f7f;">临时会话</span>');
+      _layIM.setChatStatus('<span style="color:#888f7f;"></span>');
     }
     return true;
   });
@@ -168,12 +167,12 @@ layui.config({
   });
   _client.on(XoW.VIEW_EVENT.V_CHAT_IMAGE_TRANS_REQ_SUC, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_IMAGE_TRANS_REQ_SUC);
-    _layImEx.sendMessageEx(params);
+    _layImEx.pushExtMsg(params);
     // _layImEx.putFileThumbnailOnPanel(params);
   });
   _client.on(XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_SUC, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_SUC);
-    _layImEx.sendMessageEx(params);
+    _layImEx.pushExtMsg(params);
     // _layImEx.putFileThumbnailOnPanel(params);
   });
   _client.on(XoW.VIEW_EVENT.V_FILE_STATE_CHANGED, function (params) {
@@ -267,7 +266,8 @@ layui.config({
     _layImEx.rebindToolButtons();
     _layImEx.ready();
     if (_clientMode === XoW.ClientMode.KEFU) {
-      var toId = _getPar('toId');
+      var token = JSON.parse(_getPar('token'));
+      var toId = token.to;
       if (!toId) {
         XoW.logger.e('There is no toId, return.');
         return;
@@ -276,16 +276,34 @@ layui.config({
       var theCusSvr = _client.getContactById(toId);
       if (!theCusSvr) {
         theCusSvr = {
-          name: '客服_' + toId //名称
-          , username: toId
-          , type: 'friend' //聊天类型不能用 kefu
-          , avatar: XoW.DefaultImage.AVATAR_KEFU //头像
-          , id: toId
-        }
+          name: toId, //名称
+          username: toId,
+          type: 'friend', //聊天类型不能用 kefu
+          avatar: XoW.DefaultImage.AVATAR_KEFU,
+          id: toId,
+          jid: toId + '@' + XoW.config.domain,
+          temporary: true
+        };
       } else {
         theCusSvr.type = 'friend';
+        theCusSvr.temporary = false;
       }
       _layIM.chat(theCusSvr);
+
+      // content template
+      //>[linkEx(url)[{"title":"某商品","description":"价格$2.7 质量上乘","image":"../images/prod.jpg"}]
+      var getMsg = _getPar('msg');
+      if(!getMsg) {
+        XoW.logger.e('There is no parameter of micro data for the the page, return.');
+        return;
+      }
+      var msg={
+        content: 'linkEx[{0}]'.f(getMsg),
+        mine: true,
+        avatar: _client.getCurrentUser().avatar,
+        username: _client.getCurrentUser().username
+      };
+      _layImEx.pushExtMsg(msg);
     }
     // _layIM()
   });
@@ -317,17 +335,7 @@ layui.config({
       return;
     }
     if (type === 'friend') {
-      _layImEx.bindToolFileButton(_fileSelectedCb.bind(_this));
-      var user=_client.getContactByJid(jid);
-      if(!user){
-        _layIM.setChatStatus('<span style="color:#888f7f;">临时会话</span>');
-      }else if (user.status == "offline") {
-        _layIM.setChatStatus('<span style="color:#455052;">离线</span>');
-      } else if (user.status == "online") {
-        _layIM.setChatStatus('<span style="color:#455052;">在线</span>');
-      }else{
-        _layIM.setChatStatus('<span style="color:#2cff1b;"></span>');
-      }
+      _layImEx.rebindToolFileButton(_fileSelectedCb.bind(_this));
     } else if (type === 'group') {
       //模拟系统消息
       _layIM.getMessage({
@@ -339,12 +347,69 @@ layui.config({
     }
     XoW.logger.me(_classInfo, 'chatChange({0})'.f(res.data.jid));
   });
+  //监听自定义工具栏点击，添加代码
+  _layIM.on('tool(code)', function(pInsert, pSendMessage){
+    XoW.logger.ms(_classInfo, 'tool(code)()');
+    _layer.prompt({
+      title: '插入代码'
+      ,formType: 2
+      ,shade: 0
+    }, function(text, index){
+      _layer.close(index);
+      pInsert('[pre class=layui-code]' + text + '[/pre]'); //将内容插入到编辑器
+      pSendMessage();
+    });
+    XoW.logger.me(_classInfo, 'tool(code)()');
+  });
+  _layIM.on('tool(link)', function(pInsert, pSendMessage){
+    _layer.prompt({
+      title: '请输入网页地址'
+      ,shade: false
+      ,offset: [
+        this.offset().top - $(window).scrollTop() - 158 + 'px'
+        ,this.offset().left + 'px'
+      ]
+    }, function(src, index) {
+      var regExp = /(https?):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
+      if(!regExp.test(src)) {
+        _layer.msg('网址格式错误,格式范例"http://www.baidu.com"');
+        XoW.logger.d('Invalid href format,return.');
+        return;
+      }
+      _layer.close(index);
+
+      // 不支持跨域
+      $.ajax({
+        async: false,
+        url: src,
+        type: 'GET',
+        dataType: "html",
+        timeout: 5000,
+        success: function (data) {
+          var doc = (new DOMParser()).parseFromString(data, "text/html");
+          var content = {
+            url:$('meta[property="og:url"]', doc) ? $('meta[property="og:url"]', doc).attr('content') : '',
+            type:$('meta[property="og:type"]', doc) ? $('meta[property="og:type"]', doc).attr('content') : '',
+            image:$('meta[property="og:image"]', doc) ? $('meta[property="og:image"]', doc).attr('content') : '',
+            title:$('meta[property="og:title"]', doc) ? $('meta[property="og:title"]', doc).attr('content') : '',
+            description:$('meta[property="og:description"]', doc) ? $('meta[property="og:description"]', doc).attr('content') : ''
+          };
+          var msg = 'linkEx[{0}]'.f(JSON.stringify(content));
+          pInsert(msg);
+          pSendMessage();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          _layer.msg('网络不可达或跨域了.'); // 若使用dataType: 'jsonp'来跨域，也不支持返回为html/text的类型
+        }
+      });
+    });
+  });
   // endregion UI CAllBack By LayIM
 
   // region UI Callback By LayIM.extend
-  _layImEx.on('sendMessageEx', function (param) {
-    XoW.logger.ms(_classInfo, 'sendMessageEx({0},{1})'.f(param.sid, param.to));
-    XoW.logger.me(_classInfo, 'sendMessageEx()');
+  _layImEx.on('pushExtMsg', function (param) {
+    XoW.logger.ms(_classInfo, 'pushExtMsg({0},{1})'.f(param.sid, param.to));
+    XoW.logger.me(_classInfo, 'pushExtMsg()');
   });
   _layImEx.on('acceptFile', function (param) {
     XoW.logger.ms(_classInfo, 'acceptFile({0},{1})'.f(param.sid, param.jid));
@@ -405,16 +470,27 @@ layui.config({
     //基础配置
     _layIM.config({
         //初始化接口
-        init: params
-        ,copyright: false // true代表不要显示copyright = =!
-        ,isfriend: true
-        ,isgroup: true
-        ,uploadImage: {}
-        ,uploadFile: {}
-        ,isVideo : true
-        ,search: layui.cache.dir + '../search.html'
-        ,find: layui.cache.dir + '../search.html'
-        ,msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html'
+        init: params,
+        copyright: false, // true代表不要显示copyright = =!
+        isfriend: true,
+        isgroup: true,
+        uploadImage: {},
+        uploadFile: {},
+        isPageThumbnail : true,
+        isVideo : true,
+        search: layui.cache.dir + '../search.html',
+        find: layui.cache.dir + '../search.html',
+        msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html',
+        tool: [{
+          alias: 'code', //工具别名
+          title: '发送代码', //工具名称
+          icon: '&#xe64e;' //工具图标，参考图标文档
+        },
+          {
+            alias: 'link',
+            title: '发送链接',
+            icon: '&#xe698;'
+          }]
       }
     );
 
@@ -456,7 +532,7 @@ layui.config({
     if (nextPar != -1) {
       get_par = get_par.slice(0, nextPar);
     }
-    return get_par;
+    return decodeURIComponent(get_par);
   }
 
   /**
@@ -464,7 +540,8 @@ layui.config({
    */
   function _autoLogin() {
     XoW.logger.ms(_classInfo, '_autoLogin()');
-    var username = _getPar('username');
+    var token = JSON.parse(_getPar('token'));
+    var username = token.from;
     _client.login(XoW.config.serviceUrl,
       username,
       XoW.config.password,

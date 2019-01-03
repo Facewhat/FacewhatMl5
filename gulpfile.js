@@ -12,6 +12,8 @@ var jshint = require('gulp-jshint'); // 代码检查
 //var less = require('gulp-less');     // less编译
 var concat = require('gulp-concat'); // 代码合并
 var uglify = require('gulp-uglify'); // 代码压缩
+
+
 var rename = require('gulp-rename'); // 文件重命名
 var cssmin = require('gulp-minify-css'); //css压缩
 var clean = require('gulp-clean');    // 清理

@@ -22,3 +22,30 @@
 .layim-msgbox .layui-btn-small{padding: 0 15px; margin-left: 5px;}
 .layim-msgbox-btn{position: absolute; right: 0; top: 12px; color: #999;}
 
+.layui-layim-goodinfo {margin-top: 10px; cursor:pointer}
+
+/*@font-face {font-family: "facewhat-icon-font";*/
+    /*src: url('../font/facewhat.eot'); !* IE9*!*/
+    /*src: url('../font/facewhat.eot#iefix') format('embedded-opentype'), !* IE6-IE8 *!*/
+    /*url('../font/facewhat.woff') format('woff'), !* chrome, firefox *!*/
+    /*url('../font/facewhat.ttf') format('truetype'), !* chrome, firefox, opera, Safari, Android, iOS 4.2+*!*/
+    /*url('../font/facewhat.svg#iconfont') format('svg'); !* iOS 4.1- *!*/
+/*}*/
+
+@font-face {
+    font-family: 'facewhat-icon-font';  /* project id 988899 */
+    src: url('//at.alicdn.com/t/font_988899_k779rp0fjbl.eot');
+    src: url('//at.alicdn.com/t/font_988899_k779rp0fjbl.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_988899_k779rp0fjbl.woff') format('woff'),
+    url('//at.alicdn.com/t/font_988899_k779rp0fjbl.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_988899_k779rp0fjbl.svg#iconfont') format('svg');
+}
+.facewhat-icon {
+    font-family:"facewhat-icon-font" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+/*.icon-insertlink:before { content: "\ebd7"; }*/
+/*.layuiEx-icon-link:before { content: "\e6e6"; }*/

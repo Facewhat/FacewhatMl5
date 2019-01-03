@@ -50,6 +50,17 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     ,'<div class="layim-chat-text">{{ layui.data.content(d.content||"&nbsp") }}</div>'
     ,'</li>'].join('');
 
+  var _elePageThumbnail = [
+    '<div class="layui-layim-goodinfo" title="点击进入页面查看详情" layImEx-event="open_page" data-src="{{ d.url }}">',
+    ' <div style="height: 90px;float: left;">',
+    '   <img src="{{ d.image }}" style="height: 80px;width:80px;">',
+    ' </div>',
+    ' <div style="float:left;width:150px;margin-left:10px;margin-top:10px;">',
+    '   <div style="font-size:14px;width: 150px">{{ d.title }}</div>',
+    '   <div style="font-size:16px;margin-left: 7px;margin-top:15px">{{ d.description }}</div>',
+    ' </div></div>'
+  ].join('');
+
   var _eleImage = [
     ,'<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_fileinfo">'
@@ -165,7 +176,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     ,'                <div class="layui-card-body">'
     ,'                  昵称：{{ item.username }}'
     ,'                  <button class="layui-btn layui-btn-xs" layImEx-event="add_friend" data-jid="{{ item.jid }}">'
-    ,'                    <i class="layui-icon">&#xe608;</i>添加好友</button>'
+    ,'                    <i class="layui-icon">&#xe608;</i>加为好友</button>'
     ,'                </div>'
     ,'              </div>'
     ,'            </div>'
@@ -349,8 +360,8 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
 
     XoW.logger.me(_this.classInfo, 'rebindToolButtons()');
   };
-  LAYIMEX.prototype.bindToolFileButton = function (pCallback) {
-    XoW.logger.ms(_this.classInfo, 'bindToolFileButton()');
+  LAYIMEX.prototype.rebindToolFileButton = function (pCallback) {
+    XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
     var thatChat = _getThisChat();
     if(!thatChat){
       return;
@@ -394,14 +405,18 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         delete reader;
       });
     });
-    XoW.logger.me(_this.classInfo, 'bindToolFileButton()');
+    XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
+  };
+  LAYIMEX.prototype.bindAddFriendIconInChatView = function(jid){
+    var name = jid;
+    var chatPanel = $('.layim-chat-other').eq(1);
+    var title = $('.layim-title',chatPanel);
+    var html = '<div data-jid="'+jid+'"><img id="addSranger" src="../../images/AddFriend.png"></img><span style="display: none">'+name+'</span><div>';
+    title.html(html);
   };
   LAYIMEX.prototype.getMessage = function(data) {
     XoW.logger.ms(_this.classInfo, 'getMessage()');
     _layIM.getMessage(data);
-  };
-  LAYIMEX.prototype.remixContent = function(data) {
-    XoW.logger.ms(_this.classInfo, 'remixContent()');
   };
   LAYIMEX.prototype.setUserSearchResult = function(data) {
     XoW.logger.ms(_this.classInfo, 'setUserSearchResult()');
@@ -412,27 +427,26 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     });
 
     XoW.logger.me(_this.classInfo, 'setUserSearchResult()');
-  }
-  // copy from layim.sendMessage
-  LAYIMEX.prototype.sendMessageEx = function(pMsg) {
-    XoW.logger.ms(_this.classInfo, 'sendMessageEx()');
+  };
+  LAYIMEX.prototype.pushExtMsg = function(pMsg) {
+    XoW.logger.ms(_this.classInfo, 'pushExtMsg()');
     pMsg.avatar = _cache.mine ? _cache.mine.avatar :  XoW.DefaultImage.AVATAR_DEFAULT;
     var thatChat = _getThisChat(), ul = thatChat.elem.find('.layim-chat-main ul');
     var maxLength = _cache.base.maxLength || 3000;
     if(pMsg.content.replace(/\s/g, '') !== ''){
-      var noLimited = pMsg.getIsImage() || false
+      var noLimited = $.isFunction(pMsg.getIsImage) ? pMsg.getIsImage() : false;
       if(pMsg.content.length > maxLength && !noLimited){
-        return _layer.msg('内容最长不能超过'+ maxLength +'个字符')
+        return _layer.msg('内容最长不能超过'+ maxLength +'个字符');
       }
       ul.append(_layTpl(_elemChatMain).render(pMsg));
 
       _layIM.pushChatLog(pMsg);
-      layui.each(call.sendMessageEx, function(index, item){
+      layui.each(call.pushExtMsg, function(index, item){
         item && item(pMsg);
       });
     }
     _chatListMore();
-    XoW.logger.me(_this.classInfo, 'sendMessageEx()');
+    XoW.logger.me(_this.classInfo, 'pushExtMsg()');
   };
   LAYIMEX.prototype.pushSysInfo = function(pMsg, pIsBlink) {
     XoW.logger.ms(_this.classInfo, 'pushSysInfo({0})'.f(pMsg.cid));
@@ -744,9 +758,16 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     add_friend: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'add_friend()');
       var jid = e.currentTarget.dataset.jid;
-      var stranger =  _cache.searchResOfStranger.find(function (x) {
-        return x.jid === jid
-      });
+      var stranger;
+      if(_cache.searchResOfStranger) {
+        stranger = _cache.searchResOfStranger.find(function (x) {
+          return x.jid === jid
+        });
+      }
+      if(!stranger) {
+        var thatChat = _getThisChat();
+        stranger = thatChat.data;
+      }
       stranger.type = 'friend';
       stranger.submit = function (pGroupName, pRemark, pIndex) {
         XoW.logger.ms(_this.classInfo, 'add_friend_submit()');
@@ -894,6 +915,13 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         ,value: local
       });
       XoW.logger.me(_this.classInfo, 'deny_user_sub()');
+    },
+    open_page: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_page()');
+      var pageUrl = oThis.data('src');
+      if(!pageUrl) return;
+      window.open(pageUrl);
+      XoW.logger.me(_this.classInfo, 'open_page()');
     }
   };
   // endregion LayImEx-event handlers
@@ -914,6 +942,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
   var _changeMineUsername = function (params) {
     XoW.logger.ms(_this.classInfo, '_changeMineAvatar()');
     $('.layui-layim-user').text(params);
+    _cache.mine.username = params;
     XoW.logger.ms(_this.classInfo, '_changeMineAvatar()');
   };
   var _changeFriendNick = function (params) {
@@ -935,7 +964,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     var img = list.find('img');
     // 判断是否存在头像这个标签，因为刚登陆进来，可能界面上还没有显示好友列表
     if (img.length != 0) { // img.length!=0表示是有img的
-      XoW.logger.d(this.classInfo, '更新了好友列表中的头像');
+      XoW.logger.d(this.classInfo, '更新了好友列表中的头像{0}'.f(id));
       if (img.attr('src') != params.avatar) {
         img.attr('src', params.avatar);
       }
@@ -1043,7 +1072,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
   }();
 
   layui.data.content = function(content){
-    // XoW.logger.e('self content @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //XoW.logger.e('self content @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     //支持的html标签
     var html = function(end){
       return new RegExp('\\n*\\['+ (end||'') +'(code|pre|div|span|p|table|thead|th|tbody|tr|td|ul|li|ol|li|dl|dt|dd|h2|h3|h4|h5)([\\s\\S]*?)\\]\\n*', 'g');
@@ -1055,7 +1084,6 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
       .replace(/@(\S+)(\s+?|$)/g, '@<a href="javascript:;">$1</a>$2') //转义@
       .replace(/'/g, '&#39;').replace(/"/g, '&quot;')
       .replace(/fileEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义文件
-        //var href = (str.match(/file\(([\s\S]+?)\)\[/)||[])[1];
         var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
         if(!text) return str;
         text = text.replace(/&quot;/g, '"');
@@ -1084,7 +1112,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         }
 
         var html = _layTpl(_eleFileThumbnail).render(thatFile);
-        delete thatFile;
+        thatFile = null;
         return html;
         // return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
       })
@@ -1102,7 +1130,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         thatFile.errorMsg = theThumbnail.errorMsg;
         thatFile.base64 = theThumbnail.base64;
         var html = _layTpl(_eleImage).render(thatFile);
-        delete thatFile;
+        thatFile = null;
         return html;
       })
       .replace(/face\[([^\s\[\]]+?)\]/g, function(face){  //转义表情
@@ -1119,6 +1147,17 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
       })
 
+      //.replace(/linkEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){
+      .replace(/linkEx\[[\s\S]*?\]/g, function(str){
+        var text = (str.match(/\[([\s\S]*?)\]/)||[])[1];
+        //var href = (content.match(/linkEx\(([\s\S]+?)\)\[/)||[])[1];
+        if(!text) return str;
+        var theThumbnail = $.parseJSON(text.replace(/&quot;/g, '"'));
+        if(!theThumbnail) return str;
+        var html = _layTpl(_elePageThumbnail).render(theThumbnail);
+        theThumbnail = null;
+        return html;
+      })
 
       .replace(/audio\[([^\s]+?)\]/g, function(audio){  //转义音频
         return '<div class="layui-unselect layui-layim-audio" layim-event="playAudio" data-src="' + audio.replace(/(^audio\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i><p>音频消息</p></div>';

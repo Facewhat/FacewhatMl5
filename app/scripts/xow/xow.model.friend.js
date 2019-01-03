@@ -27,6 +27,7 @@
     this.status = XoW.UserState.OFFLINE;
     this.sign = '这个人很懒，什么都没留下';
     this.type = 'friend';
+    this.temporary = false;
     // endregion 兼容layim的属性
 
     this.jid = ''; // bare jid

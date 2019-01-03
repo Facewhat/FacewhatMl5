@@ -110,7 +110,7 @@
         ERROR: 'error' // 错误
       },
       DefaultImage: {
-        AVATAR_DEFAULT: '../skin/images/avatar_stranger.png',
+        AVATAR_DEFAULT: '../skin/images/avatar_male.bmp',
         AVATAR_MALE: '../skin/images/avatar_male.bmp',
         AVATAR_FEMALE: '../skin/images/avatar_male.bmp',
         AVATAR_KEFU: '../skin/images/kefu.png',

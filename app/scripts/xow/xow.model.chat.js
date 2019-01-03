@@ -21,7 +21,7 @@ XoW.Chat =  function(to) {
   this.addMessage = function(pMsg) {
     XoW.logger.ms(_this.classInfo, 'addMessage()');
     _this.allMessage.push(pMsg);
-    XoW.logger.me(_this.classInfo, 'addMessage()')
+    XoW.logger.me(_this.classInfo, 'addMessage()');
   };
 
   /**

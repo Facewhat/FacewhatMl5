@@ -191,7 +191,7 @@
       XoW.logger.ms(_this.classInfo, 'getChatByJid({0})'.f(pJid));
       pJid = XoW.utils.getBareJidFromJid(pJid);
       return _jidChats.find(function (x) {
-        return x.to === pJid
+        return x.to === pJid;
       });
     };
     /**

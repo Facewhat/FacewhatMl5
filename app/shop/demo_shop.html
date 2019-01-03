@@ -1,95 +1,114 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="author" content="order by dede58.com"/>
-    <title>客服演示-商品页面</title>
-    <link href="style/shopdetail.css" rel="stylesheet" type="text/css">
+<head prefix="facewhat: http://facewhat.online/ns#">
+  <meta charset="utf-8">
 
-    <script src="js/jquery-1.9.1.min.js"></script>
-    <script src="js/common.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var showproduct = {
-                "boxid": "showbox",
-                "sumid": "showsum",
-                "boxw": 400,
-                "boxh": 550,
-                "sumw": 60,//列表每个宽度,该版本中请把宽高填写成一样
-                "sumh": 60,//列表每个高度,该版本中请把宽高填写成一样
-                "sumi": 7,//列表间隔
-                "sums": 5,//列表显示个数
-                "sumsel": "sel",
-                "sumborder": 1,//列表边框，没有边框填写0，边框在css中修改
-                "lastid": "showlast",
-                "nextid": "shownext"
-            };//参数定义
-            $.ljsGlasses.pcGlasses(showproduct);//方法调用，务必在加载完后执行
+  <!-- 商品缩略 begin -->
+  <meta property="og:url" content="http://localhost:8888/shop/demo_shop.html"/>
+  <meta property="og:type" content="facewhat:product"/>
+  <meta property="og:image" content="https://cdn.technode.com/wp-content/uploads/2013/06/Baidu.gif"/>
+  <meta property="og:title" content="叠叠杯水杯茶杯套杯陶瓷咖啡牛奶杯具套装"/>
+  <meta property="og:description" content="单位 件 价格 ￥21.5"/>
+  <!-- 商品缩略 end -->
 
-            $(function () {
+  <title>客服演示-商品页面</title>
+  <link href="style/shopdetail.css" rel="stylesheet" type="text/css">
+  <script src="js/jquery-1.9.1.min.js"></script>
+  <script src="js/common.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var showproduct = {
+        "boxid": "showbox",
+        "sumid": "showsum",
+        "boxw": 400,
+        "boxh": 550,
+        "sumw": 60,//列表每个宽度,该版本中请把宽高填写成一样
+        "sumh": 60,//列表每个高度,该版本中请把宽高填写成一样
+        "sumi": 7,//列表间隔
+        "sums": 5,//列表显示个数
+        "sumsel": "sel",
+        "sumborder": 1,//列表边框，没有边框填写0，边框在css中修改
+        "lastid": "showlast",
+        "nextid": "shownext"
+      };//参数定义
+      $.ljsGlasses.pcGlasses(showproduct);//方法调用，务必在加载完后执行
 
-                $('.tabs a').click(function () {
+      $(function () {
+        $('.tabs a').click(function () {
+          var $this = $(this);
+          $('.panel').hide();
+          $('.tabs a.active').removeClass('active');
+          $this.addClass('active').blur();
+          var panel = $this.attr("href");
+          $(panel).show();
+          return fasle;  //告诉浏览器  不要纸箱这个链接
+        })//end click
+        $(".tabs li:first a").click()   //web 浏览器，单击第一个标签吧
+      })//end ready
 
-                    var $this = $(this);
-                    $('.panel').hide();
-                    $('.tabs a.active').removeClass('active');
-                    $this.addClass('active').blur();
-                    var panel = $this.attr("href");
-                    $(panel).show();
-                    return fasle;  //告诉浏览器  不要纸箱这个链接
-                })//end click
+      $(".centerbox li").click(function () {
+        $("li").removeClass("now");
+        $(this).addClass("now")
+      });
 
-
-                $(".tabs li:first a").click()   //web 浏览器，单击第一个标签吧
-
-
-            })//end ready
-
-            $(".centerbox li").click(function () {
-                $("li").removeClass("now");
-                $(this).addClass("now")
-
-            });
-
-
-        });
-    </script>
+      // 客服链接
+      var token = {
+        to: 'wanjia',
+        from: 'carol'
+      };
+      var msg = {
+        url:$('meta[property="og:url"]').attr('content'),
+        type:$('meta[property="og:type"]').attr('content'),
+        image:$('meta[property="og:image"]').attr('content'),
+        title:$('meta[property="og:title"]').attr('content'),
+        description:$('meta[property="og:description"]').attr('content')
+      };
+      $(document).on('click', '#ask_kefu', function () {
+        var getPara = "../index.html?token="
+            + encodeURIComponent(JSON.stringify(token))
+            + "&msg="
+            + encodeURIComponent(JSON.stringify(msg))
+            + "&mode=kefu";
+        window.location.href = getPara;
+      });
+    });
+  </script>
 </head>
 
 <body>
 <!-- -&#45;&#45;header部分-&#45;&#45;&#45;&#45;-->
 <div class="header">
-    <div class="top">
-        <div class="top1">
-            <a href="#">商城客服系统购物端演示页面</a>
-            <!--<a href="#">注册</a>-->
-            <!--<a href="#"><img src="images/index_img/top1.jpg">我的购物车</a>-->
-            <!--<a href="#"><img src="images/index_img/top3.jpg">联系我们</a>-->
-        </div>
+  <div class="top">
+    <div class="top1">
+      <a href="#">商城客服系统购物端演示页面</a>
+      <!--<a href="#">注册</a>-->
+      <!--<a href="#"><img src="images/index_img/top1.jpg">我的购物车</a>-->
+      <!--<a href="#"><img src="images/index_img/top3.jpg">联系我们</a>-->
     </div>
-    <!-----logo_search部分------->
-    <div class="logobg">
-        <div class="center">
-            <div class="logo">
-                <img src="images/index_img/logo.gif" width="249" height="55">
-            </div>
-            <!--<form id="searchForm">-->
-                <!--<input type="text" id="searchTxt">-->
-                <!--<input type="submit" value="搜  索" id="search_btn">-->
-            <!--</form>-->
-        </div>
+  </div>
+  <!-----logo_search部分------->
+  <div class="logobg">
+    <div class="center">
+      <div class="logo">
+        <img src="images/index_img/logo.gif" width="249" height="55">
+      </div>
+      <!--<form id="searchForm">-->
+      <!--<input type="text" id="searchTxt">-->
+      <!--<input type="submit" value="搜  索" id="search_btn">-->
+      <!--</form>-->
     </div>
-    <!-----主导航部分------->
-    <div class="bottom">
-        <div class="menu"><a href="#">全部商品分类</a></div>
-        <div class="nav">
-            <a href="#" class="now">首页</a>
-            <a href="#">团购促销</a>
-            <a href="#">名师荟萃</a>
-            <a href="#">艺品驿站</a>
-            <a href="#">欧式摆件</a>
-        </div>
+  </div>
+  <!-----主导航部分------->
+  <div class="bottom">
+    <div class="menu"><a href="#">全部商品分类</a></div>
+    <div class="nav">
+      <a href="#" class="now">首页</a>
+      <a href="#">团购促销</a>
+      <a href="#">名师荟萃</a>
+      <a href="#">艺品驿站</a>
+      <a href="#">欧式摆件</a>
     </div>
+  </div>
 
 
 </div>
@@ -97,74 +116,69 @@
 
 <!-----商品详情部分------->
 <div class="shopdetails">
-    <!-------放大镜-------->
-    <div id="leftbox">
-        <div id="showbox">
-            <img src="images/shopdetail/img01.png" width="400" height="550"/>
-            <img src="images/shopdetail/img02.png" width="400" height="550"/>
-            <img src="images/shopdetail/img03.png" width="400" height="550"/>
-            <img src="images/shopdetail/img04.png" width="400" height="550"/>
-            <img src="images/shopdetail/img05.png" width="400" height="400"/>
-            <img src="images/shopdetail/img01.png" width="400" height="400"/>
+  <!-------放大镜-------->
+  <div id="leftbox">
+    <div id="showbox">
+      <img src="images/shopdetail/img01.png" width="400" height="550"/>
+      <img src="images/shopdetail/img02.png" width="400" height="550"/>
+      <img src="images/shopdetail/img03.png" width="400" height="550"/>
+      <img src="images/shopdetail/img04.png" width="400" height="550"/>
+      <img src="images/shopdetail/img05.png" width="400" height="400"/>
+      <img src="images/shopdetail/img01.png" width="400" height="400"/>
 
-        </div><!--展示图片盒子-->
-        <div id="showsum"></div><!--展示图片里边-->
-        <p class="showpage">
-            <a href="javascript:void(0);" id="showlast"> < </a>
-            <a href="javascript:void(0);" id="shownext"> > </a>
-        </p>
+    </div><!--展示图片盒子-->
+    <div id="showsum"></div><!--展示图片里边-->
+    <p class="showpage">
+      <a href="javascript:void(0);" id="showlast"> < </a>
+      <a href="javascript:void(0);" id="shownext"> > </a>
+    </p>
 
-    </div>
-    <!----中间----->
-<script>
-    $(document).on('click', '#ask_kefu', function () {
-        window.location.href=encodeURI("../index.html?mode=kefu&toId=wanjia&username=carol");
-    });
-</script>
-    <div class="centerbox">
-        <p class="imgname">叠叠杯水杯茶杯套杯陶瓷咖啡牛奶杯具套装</p>
-        <p class="Aprice">价格：<samp>￥89.00</samp></p>
-        <p class="price">促销价：<samp>￥9.80</samp></p>
-        <p class="youhui">店铺优惠：<samp>购物满两件打八折</samp></p>
-        <!--<p class="kefu">客服:</p>-->
-        <div class="clear"></div>
-        <ul>
-            <li class="kuanshi">客服:</li>
-            <!--<li class="shopimg"><a title="客服一号" id="ask_kefu"><img src="images/shopdetail/kefu01.png" width="30"></a></li>-->
-            <li class="shopimg"><a title="客服二号" id="ask_kefu"><img src="images/shopdetail/kefu02.png" width="30"></a></li>
-            <!--<li class="shopimg"><a title="客服三号" id="ask_kefu"><img src="images/shopdetail/kefu03.png" width="30"></a></li>-->
-            <li class="shopimg"><a title="客服四号" id="ask_kefu"><img src="images/shopdetail/kefu04.png" width="30"></a></li>
-        </ul>
-        <div class="clear"></div>
-        <ul>
-            <li class="kuanshi">款式：</li>
-            <li class="now shopimg"><a href="#" title="熊猫套装"><img src="images/shopdetail/kuanshi01.jpg" width="45"></a></li>
-            <li class="shopimg"><a href="#" title="铁塔套装"><img src="images/shopdetail/kuanshi02.jpg" width="45"></a></li>
-            <li class="shopimg"><a href="#" title="创意胡子"><img src="images/shopdetail/kuanshi03.jpg" width="45"></a></li>
-            <li class="shopimg"><a href="#" title="四色小猫"><img src="images/shopdetail/kuanshi04.jpg" width="45"></a></li>
-        </ul>
-        <div class="clear"></div>
-        <p class="chima">尺码：</p>
-        <p class="buy"><a href="#" id="firstbuy">立即购买</a><a href="#">加入购物车</a></p>
-        <div class="clear"></div>
-        <div class="fenx"><a href="#"><img src="images/shopdetail/tell07.png"></a></div>
-        <p class="fuwu">服务承诺：</p>
-        <p class="pay">支付方式：</p>
-    </div>
+  </div>
+  <!----中间----->
+  <div class="centerbox">
+    <p class="imgname">叠叠杯水杯茶杯套杯陶瓷咖啡牛奶杯具套装</p>
+    <p class="Aprice">价格：<samp>￥89.00</samp></p>
+    <p class="price">促销价：<samp>￥9.80</samp></p>
+    <p class="youhui">店铺优惠：<samp>购物满两件打八折</samp></p>
+    <!--<p class="kefu">客服:</p>-->
+    <div class="clear"></div>
+    <ul>
+      <li class="kuanshi">客服:</li>
+      <!--<li class="shopimg"><a title="客服一号" id="ask_kefu"><img src="images/shopdetail/kefu01.png" width="30"></a></li>-->
+      <li class="shopimg"><a title="客服二号" id="ask_kefu"><img src="images/shopdetail/kefu02.png" width="30"></a></li>
+      <!--<li class="shopimg"><a title="客服三号" id="ask_kefu"><img src="images/shopdetail/kefu03.png" width="30"></a></li>-->
+      <li class="shopimg"><a title="客服四号" id="ask_kefu"><img src="images/shopdetail/kefu04.png" width="30"></a></li>
+    </ul>
+    <div class="clear"></div>
+    <ul>
+      <li class="kuanshi">款式：</li>
+      <li class="now shopimg"><a href="#" title="熊猫套装"><img src="images/shopdetail/kuanshi01.jpg" width="45"></a></li>
+      <li class="shopimg"><a href="#" title="铁塔套装"><img src="images/shopdetail/kuanshi02.jpg" width="45"></a></li>
+      <li class="shopimg"><a href="#" title="创意胡子"><img src="images/shopdetail/kuanshi03.jpg" width="45"></a></li>
+      <li class="shopimg"><a href="#" title="四色小猫"><img src="images/shopdetail/kuanshi04.jpg" width="45"></a></li>
+    </ul>
+    <div class="clear"></div>
+    <p class="chima">尺码：</p>
+    <p class="buy"><a href="#" id="firstbuy">立即购买</a><a href="#">加入购物车</a></p>
+    <div class="clear"></div>
+    <div class="fenx"><a href="#"><img src="images/shopdetail/tell07.png"></a></div>
+    <p class="fuwu">服务承诺：</p>
+    <p class="pay">支付方式：</p>
+  </div>
 
-    ---右边-----
-    <div class="rightbox">
-        <p class="name">——热卖商品</p>
-        <img src="images/shopdetail/reimai02.jpg" width="130" height="180">
-        <p>￥58元</p>
+  ---右边-----
+  <div class="rightbox">
+    <p class="name">——热卖商品</p>
+    <img src="images/shopdetail/reimai02.jpg" width="130" height="180">
+    <p>￥58元</p>
 
-        <img src="images/shopdetail/reimai01.jpg" width="130" height="180">
-        <p>￥58元</p>
+    <img src="images/shopdetail/reimai01.jpg" width="130" height="180">
+    <p>￥58元</p>
 
 
-        <img src="images/shopdetail/reimai03.jpg" width="130" height="180">
-        <p>￥58元</p>
-    </div>
+    <img src="images/shopdetail/reimai03.jpg" width="130" height="180">
+    <p>￥58元</p>
+  </div>
 
 </div>
 <!-----商品详情部分结束------->
@@ -541,47 +555,47 @@
 
 <!----bottom_页脚部分----->
 <div class="backf">
-    <!--<div id="footer">-->
-        <!--<ul>-->
-            <!--<li class="sy">支付方式</li>-->
-            <!--&lt;!&ndash;<li><a href="#">在线支付</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">货到付款</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">发票说明</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">余额宝</a></li>&ndash;&gt;-->
-        <!--</ul>-->
-        <!--<ul>-->
-            <!--<li class="sy">购物指南</li>-->
-            <!--&lt;!&ndash;<li><a href="#">免费注册</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">申请会员</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">开通支付宝</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">支付宝充值</a></li>&ndash;&gt;-->
-        <!--</ul>-->
-        <!--<ul>-->
-            <!--<li class="sy">商家服务</li>-->
-            <!--&lt;!&ndash;<li><a href="#">联系我们</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">客服服务</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">物流服务</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">缺货赔付</a></li>&ndash;&gt;-->
-        <!--</ul>-->
-        <!--<ul>-->
-            <!--<li class="sy">关于我们</li>-->
-            <!--&lt;!&ndash;<li><a href="#">知识产权</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">网站合作</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">规则意见</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">帮助中心</a></li>&ndash;&gt;-->
-        <!--</ul>-->
-        <!--<ul>-->
-            <!--<li class="sy">其他服务</li>-->
-            <!--&lt;!&ndash;<li><a href="#">诚聘英才</a></li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li><a href="#">法律声明</a></li>&ndash;&gt;-->
-        <!--</ul>-->
-        <!--<div class="clear"></div>-->
-    <!--</div>-->
-    <div class="foot">
-        <p STYLE="font-size: 25px">快消品直批商城客服系统</p>
-        <p>版权所有: 福建工程学院信息科学与工程学院</p>
+  <!--<div id="footer">-->
+  <!--<ul>-->
+  <!--<li class="sy">支付方式</li>-->
+  <!--&lt;!&ndash;<li><a href="#">在线支付</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">货到付款</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">发票说明</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">余额宝</a></li>&ndash;&gt;-->
+  <!--</ul>-->
+  <!--<ul>-->
+  <!--<li class="sy">购物指南</li>-->
+  <!--&lt;!&ndash;<li><a href="#">免费注册</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">申请会员</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">开通支付宝</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">支付宝充值</a></li>&ndash;&gt;-->
+  <!--</ul>-->
+  <!--<ul>-->
+  <!--<li class="sy">商家服务</li>-->
+  <!--&lt;!&ndash;<li><a href="#">联系我们</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">客服服务</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">物流服务</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">缺货赔付</a></li>&ndash;&gt;-->
+  <!--</ul>-->
+  <!--<ul>-->
+  <!--<li class="sy">关于我们</li>-->
+  <!--&lt;!&ndash;<li><a href="#">知识产权</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">网站合作</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">规则意见</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">帮助中心</a></li>&ndash;&gt;-->
+  <!--</ul>-->
+  <!--<ul>-->
+  <!--<li class="sy">其他服务</li>-->
+  <!--&lt;!&ndash;<li><a href="#">诚聘英才</a></li>&ndash;&gt;-->
+  <!--&lt;!&ndash;<li><a href="#">法律声明</a></li>&ndash;&gt;-->
+  <!--</ul>-->
+  <!--<div class="clear"></div>-->
+  <!--</div>-->
+  <div class="foot">
+    <p STYLE="font-size: 25px">电子商城客服系统</p>
+    <p>版权所有: 福建工程学院信息科学与工程学院</p>
 
-    </div>
+  </div>
 </div>
 
 </body>
