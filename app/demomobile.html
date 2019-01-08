@@ -266,13 +266,13 @@ layui.config({
           ,content: autoReplay[Math.random()*9|0]
         }
       }
-      layim.getMessage(obj);
+      layim.searchMessage(obj);
     }, 3000);
   });
   
   //模拟收到一条好友消息
   setTimeout(function(){
-    layim.getMessage({
+    layim.searchMessage({
       username: "贤心"
       ,avatar: "http://tp1.sinaimg.cn/1571889140/180/40030060651/1"
       ,id: "100001"

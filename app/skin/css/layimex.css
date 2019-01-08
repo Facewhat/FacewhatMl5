@@ -23,7 +23,7 @@
 .layim-msgbox-btn{position: absolute; right: 0; top: 12px; color: #999;}
 
 .layui-layim-goodinfo {margin-top: 10px; cursor:pointer}
-
+.layui-search-field {margin-right: 10px; max-width: 120px}
 /*@font-face {font-family: "facewhat-icon-font";*/
     /*src: url('../font/facewhat.eot'); !* IE9*!*/
     /*src: url('../font/facewhat.eot#iefix') format('embedded-opentype'), !* IE6-IE8 *!*/

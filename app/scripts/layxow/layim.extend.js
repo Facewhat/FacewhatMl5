@@ -4,7 +4,8 @@
  * but may be depends on the tools, constants or entities that from xow.
  */
 //layui.define(['layer', 'laytpl', 'layim'], function (exports) {
-layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function (exports) {
+layui.define(['layer', 'laytpl', 'form', 'laypage',
+  'laydate', 'util', 'element', 'flow', 'layim', 'client'], function (exports) {
   // region Fields
   this.classInfo = 'layImEx';
   var $ = layui.$;
@@ -12,7 +13,10 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
   var _layTpl = layui.laytpl;
   var _layIM = layui.layim;
   var _layFlow = layui.flow;
-  //var _layim = layui.mobile.layim;
+  var _layPage = layui.laypage;
+  var _layForm = layui.form;
+  var _layDate = layui.laydate;
+  var _layUtil = layui.util;
 
   var THIS = 'layim-this', MAX_ITEM = 20;
   var _this = this;
@@ -142,16 +146,16 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
   var _eleRemoteSearch = [
     '<div class="layui-tab layui-tab-brief">'
     ,'  <ul class="layui-tab-title">'
-    ,'    <li class="layui-this">找人</li>'
-    ,'    <li class="">找聊天室</li>'
-    ,'    <li class="">找聊天记录</li>'
+    ,'    <li class="{{# if(\'user\' === d.tab){ }}layui-this{{# } }}">找人</li>'
+    ,'    <li class="{{# if(\'room\' === d.tab){ }}layui-this{{# } }}">找聊天室</li>'
+    ,'    <li class="{{# if(\'chatLog\' === d.tab){ }}layui-this{{# } }}">找聊天记录</li>'
     ,'  </ul>'
     ,'  <div class="layui-tab-content" style="height: 100px;">'
-    ,'     <div class="layui-tab-item layui-show">'
+    ,'     <div class="layui-tab-item {{# if(\'user\' === d.tab){ }}layui-show{{# } }}">'
     //,'      <div class="layui-container">'
     ,'        <div class="layui-row layui-col-space15">'
     ,'          <div class="layui-col-xs8">'
-    ,'            <input class="layui-input" name="ipt_keyWord" id="ipt_keyWord" placeholder="请输入FaceWhat帐号/昵称/手机号" autocomplete="off" value="{{= d.username }}"/>'
+    ,'            <input class="layui-input" name="ipt_keyWord" id="ipt_keyWord" placeholder="请输入FaceWhat帐号/昵称/手机号" autocomplete="off" value="{{= d.keyword }}"/>'
     ,'          </div>'
     ,'          <div class="layui-col-xs3">'
     ,'            <button class="layui-btn" layImEx-event="search_user_remote" id="btn_search_user_remote">搜索</button>'
@@ -160,8 +164,50 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     //,'      </div>'
     ,'        <div id="search_user_remote_res"></div>'
     ,'     </div>'
-    ,'     <div class="layui-tab-item">搜索聊天室，聊天室功能加了嘛</div>'
-    ,'     <div class="layui-tab-item">搜索聊天记录，需要服务器端装载FaceWhat插件</div>'
+    ,'     <div class="layui-tab-item {{# if(\'room\' === d.tab){ }}layui-show{{# } }}">'
+    ,'      搜索聊天室，聊天室功能模块添加了嘛'
+    ,'     </div>'
+    ,'     <div class="layui-tab-item {{# if(\'chatLog\' === d.tab){ }}layui-show{{# } }}">'
+    ,'        <div><form class="layui-form" id="frmQryChatLog" action="">'
+    ,'          <div class="layui-form-item layui-input-inline layui-search-field">'
+    ,'            <select class="layui-select" name="qry_log_jid" id="qry_log_jid" lay-verify="required">'
+    ,'              <option value="">请选择好友</option>'
+    ,'            {{# layui.each(d.friend, function(index, group){ }}'
+    ,'                <optgroup label="{{ group.groupname || group.groupid }}">'
+    ,'                {{# layui.each(group.list, function(i, item){ }}'
+    ,'                    <option value="{{ item.jid }}" {{# if(d.withJid === item.jid) { }} selected {{# } }}>{{ item.username || item.name }}</option>'
+    ,'                {{# }); }}'
+    ,'                </optgroup>'
+    ,'            {{# }); }}'
+    ,'            </select>'
+    ,'          </div>'
+    ,'          <div class="layui-form-item layui-input-inline layui-search-field">'
+    ,'            <input class="layui-input" name="qry_log_keyword" id="qry_log_keyword" placeholder="请输入关键字" autocomplete="off" value="{{= d.keyword }}"/>'
+    ,'          </div>'
+    ,'          <div class="layui-form-item layui-input-inline layui-search-field">'
+    ,'            <button class="layui-btn" type="button" layImEx-event="search_chat_log_remote">搜索</button>'
+    ,'          </div>'
+    ,'          <a href="javascript:void(0);" layImEx-event="more_filter" data-chevron="down">更多筛选条件<span class="layui-icon">&#xe61a</span></a>'
+    ,'          <div class="layui-form-item layui-bg-gray layui-hide"  style="padding: 10px" id="qry_log_date">'
+    ,'            <div class="layui-inline">'
+    ,'              <label class="layui-form-label">开始日期</label>'
+    ,'              <div class="layui-input-inline layui-search-field">'
+    ,'                <input type="text" id="qry_log_start_date" name="qry_log_start_date"  class="layui-input" placeholder="请输入" lay-verify="date">'
+    ,'              </div>'
+    ,'            </div>'
+    ,'            <div class="layui-inline">'
+    ,'              <label class="layui-form-label">结束日期</label>'
+    ,'              <div class="layui-input-inline layui-search-field">'
+    ,'                <input type="text" id="qry_log_end_date" name="qry_log_end_date"  class="layui-input" placeholder="请输入" lay-verify="date">'
+    ,'              </div>'
+    ,'            </div>'
+    ,'          </div>'
+    ,'        </form></div>' // eof form
+    //,'      </div>'
+    ,'        <div id="search_user_chat_log_res"></div>'
+    ,'        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;"></fieldset>'
+    ,'        <div id="search_foot_chat_log"></div>'
+    ,'     </div>'
     ,'  </div>'
     ,'</div>'].join('');
 
@@ -345,7 +391,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
       $.each($toolSearch, function() {
         var $btn = $(this);
         this.removeAttribute('layim-event');
-        $btn.attr('layImEx-event', 'open_local_search');
+        $btn.attr('layImEx-event', 'open_local_user_search');
       });
     }
 
@@ -414,9 +460,9 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     var html = '<div data-jid="'+jid+'"><img id="addSranger" src="../../images/AddFriend.png"></img><span style="display: none">'+name+'</span><div>';
     title.html(html);
   };
-  LAYIMEX.prototype.getMessage = function(data) {
-    XoW.logger.ms(_this.classInfo, 'getMessage()');
-    _layIM.getMessage(data);
+  LAYIMEX.prototype.searchMessage = function(data) {
+    XoW.logger.ms(_this.classInfo, 'searchMessage()');
+    _layIM.searchMessage(data);
   };
   LAYIMEX.prototype.setUserSearchResult = function(data) {
     XoW.logger.ms(_this.classInfo, 'setUserSearchResult()');
@@ -616,42 +662,190 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
         item && item(param);});
       XoW.logger.me(_this.classInfo, 'stop_file()');
     },
-    open_remote_search: function (oThis, e) {
-      XoW.logger.ms(_this.classInfo, 'open_remote_search()');
-      var tag = oThis.attr('tag');
-      var content = _eleRemoteSearch;
-      if(tag) {
-        content = _layTpl(_eleRemoteSearch).render({username: tag});
+    open_remote_chat_log: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_remote_chat_log()');
+      var thatChat = _getThisChat();
+      if (!_cache.base.chatLog) {
+        return layer.msg('未开启聊天记录漫游功能');
       }
-      layer.close(events.open_remote_search.index);
-      events.open_remote_search.index = _layer.open({
-        type: 1 // 1表示页面内，2表示frame
-        ,title: '查找'
-        ,shade: false
-        ,maxmin: true
-        ,area: ['760px', '480px']
-        //,skin: 'layui-box layui-layer-border'
-        ,resize: true
-        ,content: content
-        ,success: function(layero, index) {
-          XoW.logger.ms(_this.classInfo, 'open_remote_search.cb()');
-          var $layimSearchBtn = $('#btn_search_user_remote');
-          if(!$layimSearchBtn) {
-            XoW.logger.e('There is no element of button, return.');
-            return;
+      // 陌生人加入群组,不知道会不会影响到好友订阅模块 todo [20190107]
+      var friends = _cache.friend;
+      if(thatChat.data.temporary) {
+        var has;
+        $.each(_cache.friend, function(index, group) {
+          if(group.groupid === '临时会话'){
+            group.push(thatChat.data);
+            has = true;
+            return false;
           }
-          $layimSearchBtn.click();
-          XoW.logger.me(_this.classInfo, 'open_remote_search.cb()');
+        });
+        if(!has) {
+          var gp = new XoW.FriendGroup('临时会话');
+          friends.push(gp);
+          gp.list.push(thatChat.data);
+        }
+      }
+      var param = {
+        tab: 'chatLog',
+        withJid: thatChat.data.jid,
+        keyword: '',
+        friend: friends
+      }
+      _openRemoteSearchBox(param);
+      _layPage.render({
+        elem: 'search_foot_chat_log'
+        ,count: 50
+        ,layout: ['prev', 'next']
+        ,jump: function(obj, first){
+          if(!first){
+            _layer.msg('第 '+ obj.curr +' 页');
+          }
         }
       });
-      var $search = $('.layui-layim').find('.layui-layim-search');
-      $search.find('input').val('');
-      $search.hide();
-      _layIM.events().tab(_layIM.events().tab.index|0);
-      XoW.logger.me(_this.classInfo, 'open_remote_search()');
+      _layForm.render();// 渲染下拉列表等
+
+      //设置开始-结束时间，默认7天
+      var curDate = new Date();
+      var lastWeek = new Date(curDate.getTime() - 7*24*60*60*1000); //一周前
+      var startDate = _layDate.render({
+        elem: '#qry_log_start_date',
+        value: _layUtil.toDateString(lastWeek, 'yyyy-MM-dd'),
+        done: function (value, date) {
+          if (value !== '') {
+            endDate.config.min.year = date.year;
+            endDate.config.min.month = date.month - 1;
+            endDate.config.min.date = date.date;
+          } else {
+            endDate.config.min.year = '';
+            endDate.config.min.month = '';
+            endDate.config.min.date = '';
+          }
+        }
+      });
+      var endDate = _layDate.render({
+        elem: '#qry_log_end_date',
+        value: _layUtil.toDateString(curDate, 'yyyy-MM-dd'),
+        done: function (value, date) {
+          if (value !== '') {
+            startDate.config.max.year = date.year;
+            startDate.config.max.month = date.month - 1;
+            startDate.config.max.date = date.date;
+          } else {
+            startDate.config.max.year = '';
+            startDate.config.max.month = '';
+            startDate.config.max.date = '';
+          }
+        }
+      });
+      XoW.logger.me(_this.classInfo, 'open_remote_chat_log()');
     },
-    open_local_search: function (oThis, e) {
-      XoW.logger.ms(_this.classInfo, 'open_local_search()');
+    // 统一不用form监听的形式
+    search_chat_log_remote: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'search_chat_log_remote()');
+      var elem = oThis.parents('.layui-form');
+      var field = {}, fieldElem = elem.find('input,select,textarea'); //获取所有表单域
+
+      var verify = _layForm.config.verify, stop = null
+        ,DANGER = 'layui-form-danger'
+        ,verifyElem = elem.find('*[lay-verify]'); //获取需要校验的元素
+
+      //开始校验, copy form form.js
+      layui.each(verifyElem, function(_, item){
+        var othis = $(this)
+          ,vers = othis.attr('lay-verify').split('|')
+          ,verType = othis.attr('lay-verType') //提示方式
+          ,value = othis.val();
+
+        othis.removeClass(DANGER);
+        layui.each(vers, function(_, thisVer){
+          var isTrue //是否命中校验
+            ,errorText = '' //错误提示文本
+            ,isFn = typeof verify[thisVer] === 'function';
+
+          //匹配验证规则
+          if(verify[thisVer]){
+            var isTrue = isFn ? errorText = verify[thisVer](value, item) : !verify[thisVer][0].test(value);
+            errorText = errorText || verify[thisVer][1];
+
+            //如果是必填项或者非空命中校验，则阻止提交，弹出提示
+            if(isTrue){
+              //提示层风格
+              if(verType === 'tips'){
+                layer.tips(errorText, function(){
+                  if(typeof othis.attr('lay-ignore') !== 'string'){
+                    if(item.tagName.toLowerCase() === 'select' || /^checkbox|radio$/.test(item.type)){
+                      return othis.next();
+                    }
+                  }
+                  return othis;
+                }(), {tips: 1});
+              } else if(verType === 'alert') {
+                layer.alert(errorText, {title: '提示', shadeClose: true});
+              } else {
+                layer.msg(errorText, {icon: 5, shift: 6});
+              }
+              if(!device.android && !device.ios) item.focus(); //非移动设备自动定位焦点
+              othis.addClass(DANGER);
+              return stop = true;
+            }
+          }
+        });
+        if(stop) return stop;
+      });
+      if(stop) return false;
+
+      var nameIndex = {}; //数组 name 索引
+      layui.each(fieldElem, function(_, item){
+        item.name = (item.name || '').replace(/^\s*|\s*&/, '');
+        if(!item.name) return;
+        //用于支持数组 name
+        if(/^.*\[\]$/.test(item.name)){
+          var key = item.name.match(/^(.*)\[\]$/g)[0];
+          nameIndex[key] = nameIndex[key] | 0;
+          item.name = item.name.replace(/^(.*)\[\]$/, '$1['+ (nameIndex[key]++) +']');
+        }
+        if(/^checkbox|radio$/.test(item.type) && !item.checked) return;
+        field[item.name] = item.value;
+      });
+      // _layer.msg(JSON.stringify(field));
+
+      var param = {
+        withJid: field['qry_log_jid'],
+        ownerJid: _cache.mine.jid,
+        keyword: field['qry_log_keyword'],
+        startDate: field['qry_log_start_date'],
+        endDate: field['qry_log_end_date']
+      };
+      layui.each(call.searchChatLog, function(index, item){
+        item && item(param);});
+      XoW.logger.me(_this.classInfo, 'search_chat_log_remote()');
+    },
+    more_filter: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'more_filter()');
+      var $moreFilter = oThis.find('.layui-icon');
+      if(e.currentTarget.dataset.chevron === 'down') {
+        $moreFilter.html('&#xe619');
+        oThis[0].dataset.chevron = 'up';
+        oThis.parent().find('#qry_log_date').removeClass('layui-hide');
+      }else {
+        $moreFilter.html('&#xe61a');
+        oThis[0].dataset.chevron = 'down';
+        oThis.parent().find('#qry_log_date').addClass('layui-hide');
+      }
+    },
+    open_remote_user_search: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_remote_user_search()');
+      var content = _eleRemoteSearch;
+      var tag = oThis.attr('tag');
+      var param = {
+        tab: 'user',
+        keyword: tag
+      }
+      _openRemoteSearchBox(param);
+      XoW.logger.me(_this.classInfo, 'open_remote_user_search()');
+    },
+    open_local_user_search: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_local_user_search()');
       var search = _getLayImMain().find('.layui-layim-search');
       var main = _getLayImMain().find('#layui-layim-search');
       var input = search.find('input'), find = function(){
@@ -719,7 +913,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
             html = '<li class="layim-null">无本地查找结果</li>';
           }
 
-          html += '<hr><li class="layim-null-redirect" layImEx-event="open_remote_search"  tag="'+ val + '">到查找面板查找"' + val +'"</li>';
+          html += '<hr><li class="layim-null-redirect" layImEx-event="open_remote_user_search" tag="'+ val + '">到查找面板查找"' + val +'"</li>';
           main.html(html);
           _layIM.events().tab(3);
         }
@@ -733,7 +927,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
       search.show();
       input.focus();
       input.off('keyup', find).on('keyup', find);
-      XoW.logger.me(_this.classInfo, 'open_local_search()');
+      XoW.logger.me(_this.classInfo, 'open_local_user_search()');
     },
     search_user_remote: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'search_user_remote()');
@@ -1046,7 +1240,7 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
     }
     return null;
   };
-  var _blinkSysInfoIcon = function () {
+  var _blinkSysInfoIcon = function() {
     XoW.logger.ms(_this.classInfo,  '_blinkSysInfoIcon()');
     if(!_getLayImMain()) return;
     var $msgBox = _getLayImMain().find('.layim-tool-msgbox');
@@ -1059,6 +1253,37 @@ layui.define(['layer', 'laytpl', 'element', 'flow', 'layim', 'client'], function
       _layIM.voice();
     }
     XoW.logger.me(_this.classInfo,  '_blinkSysInfoIcon()');
+  };
+  var _openRemoteSearchBox = function(pParam) {
+    XoW.logger.ms(_this.classInfo, '_openRemoteSearchBox()');
+    var content = _eleRemoteSearch;
+    content = _layTpl(_eleRemoteSearch).render(pParam);
+    layer.close(_openRemoteSearchBox.index);
+    _openRemoteSearchBox.index = _layer.open({
+      type: 1 // 1表示页面内，2表示frame
+      ,title: '查找'
+      ,shade: false
+      ,maxmin: true
+      ,area: ['600px', '520px']
+      ,skin: 'layui-box layui-layer-border'
+      ,resize: true
+      ,content: content
+      ,success: function(layero, index) {
+        XoW.logger.ms(_this.classInfo, 'open_remote_search.cb()');
+        if('user' === pParam.tab) {
+          var $layimSearchBtn = $('#btn_search_user_remote');
+          if($layimSearchBtn) {
+            $layimSearchBtn.click();
+          }
+        }
+        XoW.logger.me(_this.classInfo, 'open_remote_search.cb()');
+      }
+    });
+    var $search = $('.layui-layim').find('.layui-layim-search');
+    $search.find('input').val('');
+    $search.hide();
+    _layIM.events().tab(_layIM.events().tab.index|0);
+    XoW.logger.me(_this.classInfo, '_openRemoteSearchBox()');
   };
   // endregion Private Methods
 

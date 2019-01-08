@@ -35,6 +35,7 @@
     var _presMgr = null;
     var _chatMgr = null;
     var _fileMgr = null;
+    var _archiveMgr = null;
     // endregion Fields
 
     // region Private Methods
@@ -93,6 +94,7 @@
       _presMgr = new XoW.PresenceManager(_this);
       _chatMgr = new XoW.ChatManager(_this);
       _fileMgr = new XoW.FileManager(_this);
+      _archiveMgr = new XoW.ArchiveManager(_this);
       XoW.logger.me(_this.classInfo, '_initMgrsAfterConnected()');
     };
     var _actionsAfterConnected = function () {
@@ -408,6 +410,13 @@
       XoW.logger.ms(this.classInfo, 'searchUser({0})'.f(val, pTimeout));
       _rosterMgr.searchUser(val,pTimeout);
       XoW.logger.me(this.classInfo,'searchUser()');
+    };
+
+    this.searchChatLog = function (pParam, pTimeout){
+      XoW.logger.ms(this.classInfo, 'searchChatLog({0})'.f(pParam.keyword, pTimeout));
+      _archiveMgr.firstPage(pParam.pageSize, pParam.ownerJid, pParam.withJid,
+        pParam.keyword, pParam.startDate, pParam.endDate, pTimeout);
+      XoW.logger.me(this.classInfo,'searchChatLog()');
     };
 
     // region contact subscription

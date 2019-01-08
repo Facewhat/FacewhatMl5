@@ -146,7 +146,7 @@ layui.config({
     // test
     //var temp = '<div style="color:#00FF00"><h3>This is a header</h3><p>This is a paragraph.</p></div>';
     //params.content = _layIM.content(temp);//_layImEx.remixContent(temp);
-    _layIM.getMessage(params);
+    _layIM.searchMessage(params);
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_MSG_RCV);
   });
 
@@ -157,12 +157,12 @@ layui.config({
     if (!pFile.avatar) {
       pFile.avatar = XoW.DefaultImage.AVATAR_DEFAULT;
     }
-    _layImEx.getMessage(pFile);
+    _layImEx.searchMessage(pFile);
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_RCV);
   });
   _client.on(XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV, function (pFile) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV);
-    _layImEx.getMessage(pFile);
+    _layImEx.searchMessage(pFile);
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV);
   });
   _client.on(XoW.VIEW_EVENT.V_CHAT_IMAGE_TRANS_REQ_SUC, function (params) {
@@ -338,7 +338,7 @@ layui.config({
       _layImEx.rebindToolFileButton(_fileSelectedCb.bind(_this));
     } else if (type === 'group') {
       //模拟系统消息
-      _layIM.getMessage({
+      _layIM.searchMessage({
         system: true
         , id: res.data.id
         , type: "group"
@@ -461,6 +461,11 @@ layui.config({
     _client.denyUserSub(pUser);
     XoW.logger.me(_classInfo, 'denyUserSub()');
   });
+  _layImEx.on('searchChatLog', function (param) {
+    XoW.logger.ms(_classInfo, 'searchChatLog({0})'.f(param.username));
+    _client.searchChatLog(param, 3 * 1000);
+    XoW.logger.me(_classInfo, 'searchChatLog()');
+  });
   // endregion UI Callback By LayIM.extend
 
   // region Private Methods
@@ -478,6 +483,7 @@ layui.config({
         uploadFile: {},
         isPageThumbnail : true,
         isVideo : true,
+        chatLog : true,
         search: layui.cache.dir + '../search.html',
         find: layui.cache.dir + '../search.html',
         msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html',
@@ -485,12 +491,11 @@ layui.config({
           alias: 'code', //工具别名
           title: '发送代码', //工具名称
           icon: '&#xe64e;' //工具图标，参考图标文档
-        },
-          {
-            alias: 'link',
-            title: '发送链接',
-            icon: '&#xe698;'
-          }]
+        }, {
+          alias: 'link',
+          title: '发送商品链接',
+          icon: '&#xe698;'
+        }]
       }
     );
 

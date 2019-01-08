@@ -170,7 +170,7 @@ layui.use('layim', function(layim){
     
     setTimeout(function(){
       //接受消息（如果检测到该socket）
-      layim.getMessage({
+      layim.searchMessage({
         username: "Hi"
         ,avatar: "http://qzapp.qlogo.cn/qzapp/100280987/56ADC83E78CEC046F8DF2C5D0DD63CDE/100"
         ,id: "10000111"
@@ -178,7 +178,7 @@ layui.use('layim', function(layim){
         ,content: "临时："+ new Date().getTime()
       });
       
-      /*layim.getMessage({
+      /*layim.searchMessage({
         username: "贤心"
         ,avatar: "http://tp1.sinaimg.cn/1571889140/180/40030060651/1"
         ,id: "100001"
@@ -219,7 +219,7 @@ layui.use('layim', function(layim){
         }
         layim.setChatStatus('<span style="color:#FF5722;">在线</span>');
       }
-      layim.getMessage(obj);
+      layim.searchMessage(obj);
     }, 1000);
   });
 
@@ -237,7 +237,7 @@ layui.use('layim', function(layim){
       //layim.setChatStatus('<span style="color:#FF5722;">在线</span>');
     } else if(type === 'group'){
       //模拟系统消息
-      layim.getMessage({
+      layim.searchMessage({
         system: true
         ,id: res.data.id
         ,type: "group"

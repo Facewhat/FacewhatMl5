@@ -60,9 +60,6 @@
       presTemp.time = XoW.utils.getCurrentDatetime();
       return presTemp;
     };
-    var _onPresenceSub = function(stanza) {
-
-    };
     /**
      * 出席的handler，用于处理接收到的出席消息。
      * @param stanza 接收到的出席节
