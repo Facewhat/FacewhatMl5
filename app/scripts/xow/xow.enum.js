@@ -89,7 +89,8 @@
         CHAT: 2, // 空闲
         DND: 3, // 正忙
         AWAY: 4, // 离开
-        OFFLINE: 'offline' // 隐身
+        HIDE: 'hide', // 隐身
+        OFFLINE: 'offline'
       },
       //消息内容类型
       MessageContentType: {

@@ -56,50 +56,54 @@ layui.config({
   _client.on(XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED);
     if (params.succ) {
+      if($("#loginPage").is(":hidden")){
+        XoW.logger.d('Reconnected, return.');
+        _layImEx.setMineStatus(XoW.UserState.ONLINE);
+        _layImEx.closeReConnLoadTip();
+        var msg = {
+          system: true,
+          content: '连接已恢复',
+          Timestamp: new Date().getTime()
+        };
+        _layImEx.notifyToChatBoxes(msg);
+        return;
+      }
       $('#loginPage').css({display: 'none'}); // 隐藏登录界面div
       $('#mainPage').css({display: ''}); // 显示主页面的div
-
-      // just for test
-      //var testGroup = new XoW.Room('515@conference.120.24.53.76');
-      //testGroup.groupname = '牛的不要不要的会议室';
-      //params.data.group = [testGroup];
       _layInit(params.data);
-      // insert to local storage
-      //var currentUser = localStorage.getItem('faceWhat_user');
-      //var loginCount = 0;
-      //if(currentUser) {
-      //  currentUser = JSON.parse(currentUser);
-      //  if(params.data.mine.id === currentUser.id){
-      //    currentUser.loginCount = currentUser.loginCount + 1;
-      //  } else {
-      //
-      //  }
-      //
-      //}
-      //var userInfo = {
-      //  id: params.data.mine.id,
-      //  pwd: '',
-      //  loginCount: 1
-      //};
-      //userInfo = JSON.stringify(obj); //转化为JSON字符串
-      //localStorage.setItem('faceWhat_user', userInfo);
-      return;
+    } else {
+      $("#loginState").text(params.data);
     }
-    $("#loginState").text(params.data);
   });
   _client.on(XoW.VIEW_EVENT.V_DISCONNECTED, function () {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_DISCONNECTED);
-    _layer.alert('连接断开，可能您打开了新的页面或网络故障导致');
-    // _layImEx.setMineStatus(); // 暂时实现了设置成隐身
-    //var msg = {
-    //  system: true
-    //  , content: '连接断开'
-    //  , timestamp: Date.parse(new Date())
-    //};
-    // _layImEx.notifyToChatBoxes(msg);
-    return true;
-  });
+    if(!$("#loginPage").is(":hidden")){
+      XoW.logger.d('Disconnected by login page, return.');
+      return;
+    }
+    // WIFI场景下断网 websocket close 延迟厉害
+    _layImEx.setMineStatus(XoW.UserState.OFFLINE);
+    _layer.msg('连接断开<br>可能您打开了新的页面或网络故障导致', {
+      btn: ['知道了', '尝试重连', '关闭本页面'],
+      time: 0,
+      btn2: function(){
+        _layImEx.openReConnLoadTip();
+        _client.reconnect();
+      },
+      btn3: function(){
+        window.opener=null;
+        window.open('','_self');
+        window.close();
+      }
+    });
 
+    var msg = {
+      system: true,
+      content: '连接断开',
+      Timestamp: new Date().getTime()
+    };
+    _layImEx.notifyToChatBoxes(msg);
+  });
   _client.on(XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED);
     if (!params.isMine) {
@@ -133,7 +137,7 @@ layui.config({
 
   _client.on(XoW.VIEW_EVENT.V_ERROR_PROMPT, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ERROR_PROMPT);
-    layer.alert(params);
+    _layer.alert(params);
     return true; // 如果返回的不是true则将该触发器会被移除。
   });
   _client.on(XoW.VIEW_EVENT.V_CHAT_MSG_RCV, function (params) {
@@ -219,7 +223,7 @@ layui.config({
     });
     pSubMsg.item.groupid =  pSubMsg.item.groupid || _layIM.cache().friend[0].id;
     _layImEx.pushSysInfo(pSubMsg, false);
-    pSubMsg.item.username = pSubMsg.item.username + '(Pending)';
+    pSubMsg.item.groupid = '挂起联系人';
     _layIM.addList( pSubMsg.item);
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_REQ_SUC);
   });
@@ -232,8 +236,8 @@ layui.config({
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED);
     _layImEx.pushSysInfo(pSubMsg);
     _layIM.removeList({
-      type: 'friend'
-      ,id: pSubMsg.item.id
+      type:'friend',
+      id: pSubMsg.item.id
     });
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED);
   });
@@ -249,11 +253,15 @@ layui.config({
   // region UI CAllBack By LayIM
   //监听在线状态的切换事件
   _layIM.on('online', function (data) {
-    _layer.prompt(data);
+    var msg = '暂不支持修改状态 {0}'.f(data);
+    if(data === XoW.UserState.ONLINE) {
+      msg += '<br>如须重新登录请刷新页面';
+    }
+    _layer.msg(msg);
   });
   //监听签名修改
   _layIM.on('sign', function (value) {
-    alert(value);
+    _layer.msg('暂不支持修改心情');
   });
   /**
    * 监听layim建立就绪,注意：
@@ -461,9 +469,9 @@ layui.config({
     _client.denyUserSub(pUser);
     XoW.logger.me(_classInfo, 'denyUserSub()');
   });
-  _layImEx.on('searchChatLog', function (param) {
-    XoW.logger.ms(_classInfo, 'searchChatLog({0})'.f(param.username));
-    _client.searchChatLog(param, 3 * 1000);
+  _layImEx.on('searchChatLog', function (pParam, pCallback) {
+    XoW.logger.ms(_classInfo, 'searchChatLog({0})'.f(pParam.withJid));
+    _client.searchChatLog(pParam, pCallback,  3 * 1000);
     XoW.logger.me(_classInfo, 'searchChatLog()');
   });
   // endregion UI Callback By LayIM.extend
@@ -471,7 +479,9 @@ layui.config({
   // region Private Methods
   function _layInit(params) {
     XoW.logger.ms(_classInfo, '_layInit()');
-
+    params.mine = _layIM.cache().temp;
+    params.mine.status = XoW.UserState.ONLINE;
+    _layIM.cache().temp = null;
     //基础配置
     _layIM.config({
         //初始化接口

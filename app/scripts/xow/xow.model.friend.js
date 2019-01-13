@@ -25,7 +25,7 @@
     this.groupid = ''; // xmpp roster 仅返回 groupname，而layim仅支持 groupid
     this.avatar = XoW.DefaultImage.AVATAR_DEFAULT;  // 适配face
     this.status = XoW.UserState.OFFLINE;
-    this.sign = '这个人很懒，什么都没留下';
+    this.sign = '美好的一天，从心记录';
     this.type = 'friend';
     this.temporary = false;
     // endregion 兼容layim的属性

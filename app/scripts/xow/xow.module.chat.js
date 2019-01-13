@@ -68,7 +68,7 @@
             theMsg.contentType = XoW.MessageContentType.MSG;
             theMsg.content = $('body', $message).text();
             if ($('delay', $message).length) {
-              theMsg.time = XoW.utils.getFromatDatetime($('delay', $message).attr('stamp'));
+              theMsg.timestamp = $('delay', $message).attr('stamp');
               theMsg.contentType = XoW.MessageContentType.DELAYMSG;
             }
           } else {
@@ -133,7 +133,7 @@
               theMsg.contentType = 'msg';
               theMsg.content = $('body', $message).text();
               if ($('delay', $message).length) {
-                theMsg.time = XoW.utils.getFromatDatetime($('delay', $message).attr('stamp'));
+                theMsg.timestamp = $('delay', $message).attr('stamp');
                 theMsg.contentType = 'delaymsg';
               }
               // 在一对一会话和群聊之外被发送的独立消息，并且它期望收到接收者应答

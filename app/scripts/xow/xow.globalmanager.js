@@ -106,7 +106,6 @@
     var _onConnect = function (params) {
       XoW.logger.ms(_this.classInfo, '_onConnect({0})'.f(params.succ));
       if (params.succ) {
-        _this.getCache().mine.status = XoW.UserState.ONLINE;
         _initMgrsAfterConnected();
         _actionsAfterConnected();
       } else {
@@ -125,9 +124,9 @@
     var _onRosterRcv = function (pFriendGroups) {
       XoW.logger.ms(_this.classInfo, '_onRosterRcv()');
       // 登录成功
-      var data = {mine: _this.getCache().mine, friend: pFriendGroups};
-      var params = {data: data, succ: true};
-      _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED, params);
+      var data = {friend: pFriendGroups};
+      var loginParams = {data: data, succ: true};
+      _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED, loginParams);
 
       // get vCard for myself
       _vCardMgr.getVCard();
@@ -391,14 +390,23 @@
     this.connect = function (serviceURL, username, pass, pResource) {
       XoW.logger.ms(_this.classInfo, 'connect({0},{1},{2})'.f(serviceURL, username, pass));
       var jid = username + '@' + XoW.utils.getIPFromURL(serviceURL) + '/' + pResource;
-      _this.getCache().mine = _this.getCache().mine || new XoW.Friend(jid);
-      _this.getCache().mine.jid = jid;
-      _this.getCache().mine.pwd = pass;
-      _connMgr.connect(serviceURL, _this.getCache().mine.jid, _this.getCache().mine.pwd);
+      _this.getCache().temp = _this.getCache().temp || new XoW.Friend(jid);
+      //_this.getCache().temp.jid = jid;
+      _this.getCache().temp.pwd = pass;
+      _this.getCache().temp.serviceURL = serviceURL;
+      _connMgr.connect(serviceURL, jid, pass);
       _connMgr.addHandler(function (stanza) {
         XoW.logger.d('open-->' + Strophe.serialize(stanza));
       }, null, 'open');
       XoW.logger.me(_this.classInfo, 'connect()');
+    };
+    this.reconnect = function () {
+      XoW.logger.ms(_this.classInfo, 'reconnect()');
+      _connMgr.connect(_this.getCache().mine.serviceURL, _this.getCache().mine.jid, _this.getCache().mine.pwd);
+      _connMgr.addHandler(function (stanza) {
+        XoW.logger.d('reopen-->' + Strophe.serialize(stanza));
+      }, null, 'open');
+      XoW.logger.me(_this.classInfo, 'reconnect()');
     };
     this.sendMessage = function (content, toJid) {
       XoW.logger.ms(_this.classInfo, 'sendMessage({0})'.f(toJid));
@@ -412,10 +420,16 @@
       XoW.logger.me(this.classInfo,'searchUser()');
     };
 
-    this.searchChatLog = function (pParam, pTimeout){
-      XoW.logger.ms(this.classInfo, 'searchChatLog({0})'.f(pParam.keyword, pTimeout));
-      _archiveMgr.firstPage(pParam.pageSize, pParam.ownerJid, pParam.withJid,
-        pParam.keyword, pParam.startDate, pParam.endDate, pTimeout);
+    this.searchChatLog = function (pParam, pCallback, pTimeout){
+      XoW.logger.ms(this.classInfo, 'searchChatLog({0}, {1})'.f(pParam.after, pParam.keyword));
+      if(pParam.after === -1){
+        //_archiveMgr.firstPage(pParam.pageSize, pParam.ownerJid, pParam.withJid,
+        //  pParam.keyword, pParam.startDate, pParam.endDate, pCallback, pTimeout);
+        pParam.after = null;
+      }
+      _archiveMgr.nextPage(pParam.pageSize, pParam.ownerJid, pParam.withJid,
+         pParam.keyword, pParam.startDate, pParam.endDate, pParam.after, pCallback, pTimeout);
+
       XoW.logger.me(this.classInfo,'searchChatLog()');
     };
 

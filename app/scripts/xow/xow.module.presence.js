@@ -191,18 +191,18 @@
       XoW.logger.ms(_this.classInfo, 'sendOnline()');
       var p1 = $pres({
         id : XoW.utils.getUniqueId("presOnline")
-      }).c("status").t("在线")
-        .up().c("priority").t('1');
+      }).c('status').t('在线')
+        .up().c('priority').t('1');
       _sendPresence(p1);
       _gblMgr.getCurrentUser().state = 1;
       XoW.logger.me(_this.classInfo, 'sendOnline()');
     };
     this.sendOffline1 = function() {
       XoW.logger.ms(_this.classInfo, 'sendOffline1()');
-      var pres = $pres({id : XoW.utils.getUniqueId("presOffline"),
-        type : "unavailable"
-      }).c("status").t('Offline')
-        .up().c("priority").t('0');
+      var pres = $pres({id : XoW.utils.getUniqueId('presOffline'),
+        type : 'unavailable'
+      }).c('status').t('Offline')
+        .up().c('priority').t('0');
       _sendPresence(pres2);
 
       //_gblMgr.getUserMgr().setAllFriendsOffline();

@@ -292,7 +292,7 @@
 
     // yyyy-MM-dd'T'HH:mm:ss'Z'
     getFromatDatetime2: function (datetime) {
-      if ('' == datetime) {
+      if ('' === datetime) {
         return null;
       }
       var d = new Date(datetime);
