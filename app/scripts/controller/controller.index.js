@@ -83,7 +83,7 @@ layui.config({
     }
     // WIFI场景下断网 websocket close 延迟厉害
     _layImEx.setMineStatus(XoW.UserState.OFFLINE);
-    _layer.msg('连接断开<br>可能您打开了新的页面或网络故障导致', {
+    _layer.msg('连接断开<br>可能您打开了新的屯聊页面或网络故障导致', {
       btn: ['知道了', '尝试重连', '关闭本页面'],
       time: 0,
       btn2: function(){
@@ -223,7 +223,7 @@ layui.config({
     });
     pSubMsg.item.groupid =  pSubMsg.item.groupid || _layIM.cache().friend[0].id;
     _layImEx.pushSysInfo(pSubMsg, false);
-    pSubMsg.item.groupid = '挂起联系人';
+    pSubMsg.item.username = pSubMsg.item.username + '(Pending)';
     _layIM.addList( pSubMsg.item);
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_REQ_SUC);
   });
@@ -486,6 +486,7 @@ layui.config({
     _layIM.config({
         //初始化接口
         init: params,
+        title: '屯聊网页版',
         copyright: false, // true代表不要显示copyright = =!
         isfriend: true,
         isgroup: true,

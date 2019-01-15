@@ -84,7 +84,7 @@
         if('both' !== user.subscription  && !user.ask) {
           return true;
         } else if('both' !== user.subscription) {
-          user.groupid = '挂起联系人';
+          user.username = user.username + '(Pending)';
         }
         _addFriend(user);
        });

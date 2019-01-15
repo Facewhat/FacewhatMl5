@@ -172,7 +172,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     //,'      <div class="layui-container">'
     ,'        <div class="layui-row layui-col-space15">'
     ,'          <div class="layui-col-xs8">'
-    ,'            <input class="layui-input" name="ipt_keyWord" id="ipt_keyWord" placeholder="请输入FaceWhat帐号/昵称/手机号" autocomplete="off" value="{{= d.keyword }}"/>'
+    ,'            <input class="layui-input" name="qry_user_keyword" id="qry_user_keyword" placeholder="请输入FaceWhat帐号/昵称/手机号" autocomplete="off"/>'
     ,'          </div>'
     ,'          <div class="layui-col-xs3">'
     ,'            <button class="layui-btn" layImEx-event="search_user_remote" id="btn_search_user_remote">搜索</button>'
@@ -199,7 +199,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'            </select>'
     ,'          </div>'
     ,'          <div class="layui-form-item layui-input-inline layui-search-field">'
-    ,'            <input class="layui-input" name="qry_log_keyword" id="qry_log_keyword" placeholder="请输入关键字" autocomplete="off" value="{{= d.keyword }}"/>'
+    ,'            <input class="layui-input" name="qry_log_keyword" id="qry_log_keyword" placeholder="请输入关键字" autocomplete="off"/>'
     ,'          </div>'
     ,'          <div class="layui-form-item layui-input-inline layui-search-field">'
     ,'            <button class="layui-btn" type="button" layImEx-event="search_chat_log_remote" id="btn_search_chat_log_remote">搜索</button>'
@@ -221,7 +221,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'          </div>'
     ,'        </form></div>' // eof form
     //,'      </div>'
-    ,'        <div class="layim-chatmain"><ul id="flow_chat_log_cont"></ul></div>'
+    ,'        <div class="layim-chat-main"><ul id="flow_chat_log_cont"></ul></div>'
     ,'     </div>'
     ,'  </div>'
     ,'</div>'].join('');
@@ -735,6 +735,14 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         item && item(param);});
       XoW.logger.me(_this.classInfo, 'stop_file()');
     },
+    find: function () {
+      XoW.logger.ms(_this.classInfo, 'find()');
+      var param = {
+        tab: 'user',
+        friend: _cache.friend
+      }
+      _openRemoteSearchBox(param);
+    },
     open_remote_chat_log: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_remote_chat_log()');
       var thatChat = _getThisChat();
@@ -761,20 +769,9 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       var param = {
         tab: 'chatLog',
         withJid: thatChat.data.jid,
-        keyword: '',
         friend: friends
       }
       _openRemoteSearchBox(param);
-      //_layPage.render({
-      //  elem: 'search_foot_chat_log'
-      //  ,count: 50
-      //  ,layout: ['prev', 'next']
-      //  ,jump: function(obj, first){
-      //    if(!first){
-      //      _layer.msg('第 '+ obj.curr +' 页');
-      //    }
-      //  }
-      //});
       XoW.logger.me(_this.classInfo, 'open_remote_chat_log()');
     },
     // 统一不用form监听的形式
@@ -902,7 +899,8 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       var tag = oThis.attr('tag');
       var param = {
         tab: 'user',
-        keyword: tag
+        keyword: tag,
+        friend: _cache.friend // 聊天记录搜索框
       }
       _openRemoteSearchBox(param);
       XoW.logger.me(_this.classInfo, 'open_remote_user_search()');
@@ -1325,8 +1323,47 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     }
     XoW.logger.me(_this.classInfo,  '_blinkSysInfoIcon()');
   };
+  var _renderSearchChatLogFrm = function () {
+    XoW.logger.ms(_this.classInfo, '_renderSearchChatLogFrm()');
+    _layForm.render();// 渲染下拉列表等
+    //设置开始-结束时间，默认7天
+    var curDate = new Date();
+    var lastWeek = new Date(curDate.getTime() - 7 * 24 * 60 * 60 * 1000); //一周前
+    var startDate = _layDate.render({
+      elem: '#qry_log_start_date',
+      value: _layUtil.toDateString(lastWeek, 'yyyy-MM-dd'),
+      done: function (value, date) {
+        if (value !== '') {
+          endDate.config.min.year = date.year;
+          endDate.config.min.month = date.month - 1;
+          endDate.config.min.date = date.date;
+        } else {
+          endDate.config.min.year = '';
+          endDate.config.min.month = '';
+          endDate.config.min.date = '';
+        }
+      }
+    });
+    var endDate = _layDate.render({
+      elem: '#qry_log_end_date',
+      value: _layUtil.toDateString(curDate, 'yyyy-MM-dd'),
+      done: function (value, date) {
+        if (value !== '') {
+          startDate.config.max.year = date.year;
+          startDate.config.max.month = date.month - 1;
+          startDate.config.max.date = date.date;
+        } else {
+          startDate.config.max.year = '';
+          startDate.config.max.month = '';
+          startDate.config.max.date = '';
+        }
+      }
+    });
+  };
+  
   var _$searchBox, _openRemoteSearchBox = function(pParam) {
     XoW.logger.ms(_this.classInfo, '_openRemoteSearchBox()');
+    pParam = pParam || {tab: 'user'};
     var content = _layTpl(_eleRemoteSearchBox).render(pParam);
     layer.close(_openRemoteSearchBox.index);
     _openRemoteSearchBox.index = _layer.open({
@@ -1341,7 +1378,9 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       ,success: function(layero, index) {
         XoW.logger.ms(_this.classInfo, 'open_remote_search.cb()');
         _$searchBox = layero;
+        _renderSearchChatLogFrm();
         if('user' === pParam.tab) {
+          layero.find('#qry_user_keyword').val(pParam.keyword);
           var $layimSearchBtn = layero.find('#btn_search_user_remote');
           if($layimSearchBtn) {
             $layimSearchBtn.click();
@@ -1351,40 +1390,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
           $search.hide();
           _layIM.events().tab(_layIM.events().tab.index|0);
         } else if('chatLog' === pParam.tab) {
-          _layForm.render();// 渲染下拉列表等
-          //设置开始-结束时间，默认7天
-          var curDate = new Date();
-          var lastWeek = new Date(curDate.getTime() - 7*24*60*60*1000); //一周前
-          var startDate = _layDate.render({
-            elem: '#qry_log_start_date',
-            value: _layUtil.toDateString(lastWeek, 'yyyy-MM-dd'),
-            done: function (value, date) {
-              if (value !== '') {
-                endDate.config.min.year = date.year;
-                endDate.config.min.month = date.month - 1;
-                endDate.config.min.date = date.date;
-              } else {
-                endDate.config.min.year = '';
-                endDate.config.min.month = '';
-                endDate.config.min.date = '';
-              }
-            }
-          });
-          var endDate = _layDate.render({
-            elem: '#qry_log_end_date',
-            value: _layUtil.toDateString(curDate, 'yyyy-MM-dd'),
-            done: function (value, date) {
-              if (value !== '') {
-                startDate.config.max.year = date.year;
-                startDate.config.max.month = date.month - 1;
-                startDate.config.max.date = date.date;
-              } else {
-                startDate.config.max.year = '';
-                startDate.config.max.month = '';
-                startDate.config.max.date = '';
-              }
-            }
-          });
           var $layimSearchBtn = layero.find('#btn_search_chat_log_remote');
           if($layimSearchBtn) {
             $layimSearchBtn.click();
