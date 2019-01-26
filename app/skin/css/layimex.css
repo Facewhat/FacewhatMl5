@@ -1,3 +1,9 @@
+
+/* 加载就绪标志 */
+html #layuicss-skinlayimexcss{display:none; position: absolute; width:1989px;}
+
+.layui-layim-info .layui-layim-user{cursor: pointer}
+
 .layim_filepicture {background:url(../../images/folder1.png) no-repeat;float:left; width:102px; height:70px; text-align:center}
 .layim_filepicture span{padding: 20px 0 0 10px; position: relative; color: blue; float: left; overflow: hidden; width:70px}
 .layim_filepicture span：hover{overflow: hidden; width:70px; height: 20px}
@@ -26,28 +32,23 @@
 .layui-search-field {margin-right: 10px; max-width: 120px}
 
 .layim-status-offline{color: #E8E8E8;}
-/*@font-face {font-family: "facewhat-icon-font";*/
-    /*src: url('../font/facewhat.eot'); !* IE9*!*/
-    /*src: url('../font/facewhat.eot#iefix') format('embedded-opentype'), !* IE6-IE8 *!*/
-    /*url('../font/facewhat.woff') format('woff'), !* chrome, firefox *!*/
-    /*url('../font/facewhat.ttf') format('truetype'), !* chrome, firefox, opera, Safari, Android, iOS 4.2+*!*/
-    /*url('../font/facewhat.svg#iconfont') format('svg'); !* iOS 4.1- *!*/
-/*}*/
 
-@font-face {
-    font-family: 'facewhat-icon-font';  /* project id 988899 */
-    src: url('//at.alicdn.com/t/font_988899_k779rp0fjbl.eot');
-    src: url('//at.alicdn.com/t/font_988899_k779rp0fjbl.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_988899_k779rp0fjbl.woff') format('woff'),
-    url('//at.alicdn.com/t/font_988899_k779rp0fjbl.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_988899_k779rp0fjbl.svg#iconfont') format('svg');
-}
-.facewhat-icon {
-    font-family:"facewhat-icon-font" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-/*.icon-insertlink:before { content: "\ebd7"; }*/
-/*.layuiEx-icon-link:before { content: "\e6e6"; }*/
+.layim-vcard {}
+.layim-vcard li{position: relative; margin-bottom: 10px;  line-height: 22px; border-bottom: 1px dotted #e2e2e2;}
+.layim-vcard div{max-width: 70%}
+.layim-vcard-avatar{position: absolute; right: 30px; top: 10px; width: 100px; height: 100px;}
+.layim-vcard-item { }
+.layim-vcard-item span {float: left; display: block; padding: 9px 5px 9px 5px; width: 40px; font-weight: 400; text-align: right;color: #999;}
+.layim-vcard-item .label {float: left; display: block; padding: 9px 5px 9px 20px; width: 40px; font-weight: 400; text-align: right;}
+.layim-vcard-item .label_key{float: left; display: block; padding: 9px 5px; font-weight: 400;}
+.layim-vcard-item .block {margin-left: 55px; min-height: 36px;}
+.layim-vcard-chat {float: right; margin-top: -45px; margin-right: -110px; z-index: 999999; }
+.layim-vcard-item input {display: block; width: 90%; padding-left: 10px;}
+.layim-vcard-item textarea {display: block; width: 90%; padding-left: 10px;}
+.layim-vcard-item select {display: block; width: 80%; padding-left: 10px;}
+
+.pt5{padding-top: 5px;}
+.pt10{padding-top: 10px;}
+.pt15{padding-top: 15px;}
+.pt30{padding-top: 30px;}
+.pd0{padding: 0px;}

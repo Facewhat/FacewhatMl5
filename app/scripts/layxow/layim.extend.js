@@ -292,6 +292,102 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'      <p><em>系统：</em>{{ item.content }}<span>{{ item.timestamp }}</span></p>'
     ,'    </li>'
     ,'  {{# } }); }}'].join('');
+
+  var _eleVCard = [
+         '<div class="layui-form-item pt15">',
+          '<div class="layim-msgbox"><li>',
+            '<a href="javascript:void(0);" target="_blank"><img src="{{ d.avatar }}" class="layui-circle layim-msgbox-avatar" ></a>',
+            '<p class="layim-msgbox-user"><span>昵&nbsp;&nbsp;称 </span> {{ d.name || d.username }}</p>',
+            '<p class="layim-msgbox-user"><span>账&nbsp;&nbsp;号 </span> {{ d.id }}</p>',
+            '<button class="layui-btn layui-btn layui-btn-primary layim-vcard-chat" layImEx-event="open_chat" data-id="{{d.id}}">发送消息</button>',
+          '</li></div>',
+         '</div>',
+         '<div class="layui-col-xs12 pt10 layim-vcard-item">',
+             '<label class="label">性&nbsp;&nbsp;别</label>',
+             '<div class="block"><label class="label_key">保密</label></div>',
+         '</div>',
+         '<div class="layui-col-xs12 pt10 layim-vcard-item">',
+             '<label class="label">生&nbsp;&nbsp;日</label>',
+             '<div class="block"><div class="label_key">{{d.vcard.BDAY}}</div></div>',
+         '</div>',
+         '<div class="layui-col-xs12 pt10 layim-vcard-item">',
+           '<label class="label">手&nbsp;&nbsp;机</label>',
+           '<div class="block">',
+             '<div class="label_key">{{d.vcard.WORK.CELL_TEL || []}}</div>',
+           '</div>',
+         '</div>',
+         '<div class="layui-col-xs12 pt10 layim-vcard-item">',
+           '<label class="label">邮&nbsp;&nbsp;箱</label>',
+           '<div class="block">',
+             '<div class="label_key">{{d.vcard.EMAIL || []}}</div>',
+           '</div>',
+         '</div>',
+         '<div class="layui-col-xs12 pt10 layim-vcard-item">',
+           '<label class="label">签&nbsp;&nbsp;名</label>',
+           '<div class="block">',
+             '<div class="label_key">{{d.sign|| []}}</div>',
+           '</div>',
+         '</div>'
+].join('');
+
+  var _eleMineVCard = [
+    '<form class="layui-form" action="">',
+    '  <div class="layim-vcard">',
+    '    <li>',
+    '      <div class="layui-form-item layim-vcard-item"><label class="label">账&nbsp;&nbsp;号 </label><span>{{ d.id }}</span></div>',
+    '      <div class="layui-form-item layim-vcard-item"><label class="label">昵&nbsp;&nbsp;称 </label> ',
+    '        <div class="block">',
+    '          <input type="text" class="layui-input" name="nickname" value="{{d.name || d.username}}" lay-verify="required">',
+    '        </div>',
+    '      </div>',
+    '      <a href="javascript:void(0);" target="_blank"  title="点击上传图片" ><img src="{{ d.avatar }}" class="layui-circle layim-vcard-avatar"></a>',
+    '    </li>',
+    '  </div>',
+    '  <div class="layui-col-xs12 layim-vcard-item">',
+    '    <div class="layui-col-xs6">',
+    '      <label class="label">生&nbsp;&nbsp;日</label>',
+    '      <div class="block">',
+    '        <input type="text" class="layui-input" name="birthday" id="set_mine_vcard_bday" placeholder="请输入" lay-verify="date" value="{{ d.vcard.BDAY}}">',
+    '      </div>',
+    '    </div>',
+    '    <div class="layui-col-xs6 ">',
+    '      <label class="label">性&nbsp;&nbsp;别</label>',
+    '      <div class="block">',
+    '        <select name="gender" class="layui-select" value="{{ d.gender }}">',
+    '          <option value="">请选择性别</option>',
+    '          <option value="1" {{# if(d.gender == "male"){ }} selected="selected" {{# } }}>男</option>',
+    '          <option value="2" {{# if(d.gender == "female"){ }} selected="selected" {{# } }}>女</option>',
+    '          <option value="3" {{# if(d.gender == "secret"){ }} selected="selected" {{# } }}>保密</option>',
+    '        </select>',
+    '      </div>',
+    '    </div>',
+    '  </div>',
+    '  <div class="layui-form-item layim-vcard-item pt10">',
+    '    <label class="label">手&nbsp;&nbsp;机</label>',
+    '    <div class="block">',
+    '      <input type="text" class="layui-input" name="telephone"  value="{{ d.vcard.WORK.CELL_TEL || [] }}">',
+    '    </div>',
+    '  </div>',
+    '  <div class="layui-form-item layim-vcard-item">',
+    '    <label class="label">邮&nbsp;&nbsp;箱</label>',
+    '    <div class="block">',
+    '      <input type="text" class="layui-input" name="email"  value="{{ d.vcard.EMAIL || [] }}">',
+    '    </div>',
+    '  </div>',
+    '  <div class="layui-form-item layim-vcard-item">',
+    '    <label class="label">签&nbsp;&nbsp;名</label>',
+    '    <div class="block">',
+    '      <textarea name="signature" placeholder="请输入内容" class="layui-textarea noresize">{{d.sign}}</textarea>',
+    '    </div>',
+    '  </div>',
+    //'  <div class="layui-form-item">',
+    //'    <div class="layui-input-block">',
+    //'      <button class="layui-btn" lay-submit lay-filter="*">保存</button>',
+    //'      <button type="button" id="close" class="layui-btn layui-btn-primary">关闭</button>',
+    //'    </div>',
+    //'  </div>',
+    '</form>'
+  ].join('');
   // endregion UI templates
 
   // region APIs
@@ -310,6 +406,33 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     }
     return this;
   };
+  LAYIMEX.prototype.config = function(pOptions){
+    XoW.logger.ms(_this.classInfo, 'config()');
+    pOptions = $.extend({
+      title: '屯聊',
+      copyright: false, // true代表不要显示copyright = =!
+      isfriend: true,
+      isgroup: true,
+      uploadImage: {},
+      uploadFile: {},
+      isPageThumbnail : true,
+      isVideo : true,
+      chatLog : true,
+      search: layui.cache.dir + '../search.html',
+      find: layui.cache.dir + '../search.html',
+      msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html',
+      tool: [{
+        alias: 'code', //工具别名
+        title: '发送代码', //工具名称
+        icon: '&#xe64e;' //工具图标，参考图标文档
+      }, {
+        alias: 'link',
+        title: '发送商品链接',
+        icon: '&#xe698;'
+      }]
+    }, pOptions);
+    _layIM.config(pOptions);
+  };
   LAYIMEX.prototype.setMineStatus = function(pStatus){
     XoW.logger.ms(_this.classInfo, 'setMineStatus({0})'.f(pStatus));
     _changeMineStatus(pStatus);
@@ -325,7 +448,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       layimChat.show();
     }
     if(layimMin){
-      layer.close(layimMin.attr('times'));
+      _layer.close(layimMin.attr('times'));
     }
     var conts = layimChat.find('.layim-chat');
     layui.each(conts, function(index, item){
@@ -599,20 +722,87 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     }
     XoW.logger.me(_this.classInfo, 'pushSysInfo()');
   };
-  LAYIMEX.prototype.ready = function() {
+  LAYIMEX.prototype.onReady = function() {
+    XoW.logger.ms(_this.classInfo, 'onReady()');
+    this.bindFriendListRightMenu();
+    this.rebindToolButtons();
     var local = layui.data('layim')[_cache.mine.id] || {};
     local['hasUnreadSysInfo'] = local['hasUnreadSysInfo'] || false;
     if(local['hasUnreadSysInfo']) {
       _blinkSysInfoIcon();
     }
+    XoW.logger.me(_this.classInfo, 'onReady()');
   }
   // endregion APIs
 
   // region LayImEx-event handlers
   var events = {
-    menu_history: function (oThis, e) {
-      _layer.alert('这是右键菜单');
+    menu_chat: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_chat()');
       _layer.closeAll('tips');
+      var $par = oThis.parent();
+      var id = $par.data('id');
+      var data = _getDataFromFriendListItem(id);
+      _layIM.chat(data);
+    },
+    menu_profile: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_profile()');
+      _layer.closeAll('tips');
+      var $par = oThis.parent();
+      var id = $par.data('id');
+      var data = _getFriendById(id);
+      if(!data || !data.vcard) {
+        XoW.logger.e('There is no vCard, return.');
+        return;
+        // todo 去服务端取
+      }
+      var content = _layTpl(_eleVCard).render(data);
+      _layer.close(events.menu_profile.index);
+      events.menu_profile.index = _layer.open({
+        type: 1 // 1表示页面内，2表示frame
+        ,title: '联系人资料'
+        ,shade: false
+        ,maxmin: true
+        ,area: ['600px', '520px']
+        ,skin: 'layui-box layui-layer-border'
+        ,resize: true
+        ,content: content
+        ,success: function(layero, index) {
+        }
+      });
+    },
+    menu_history: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_history()');
+      _layer.closeAll('tips');
+      if (!_cache.base.chatLog) {
+        return _layer.msg('未开启聊天记录漫游功能');
+      }
+      var $par = oThis.parent();
+      var id = $par.data('id');
+      var data = _getDataFromFriendListItem(id);
+      var friends = _cache.friend;
+      if(data.temporary) {
+        var has;
+        $.each(_cache.friend, function(index, group) {
+          if(group.groupid === '临时会话'){
+            group.push(data);
+            has = true;
+            return false;
+          }
+        });
+        if(!has) {
+          var gp = new XoW.FriendGroup('临时会话');
+          friends.push(gp);
+          gp.list.push(data);
+        }
+      }
+      var param = {
+        tab: 'chatLog',
+        withJid: data.jid,
+        friend: friends
+      }
+      _openRemoteSearchBox(param);
+      XoW.logger.me(_this.classInfo, 'menu_history()');
     },
     menu_rm_friend: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_rm_friend()');
@@ -623,15 +813,88 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         XoW.e('There is no such user with id {0}, return.'.f(id));
         return;
       }
-      layer.msg('确定删除好友 {0} 吗？'.f(data.username), {
+      _layer.msg('确定删除好友 {0} 吗？'.f(data.username), {
         time: 0 //不自动关闭
         ,btn: ['确定', '取消']
         ,yes: function (index) {
           layui.each(call.rmvContact, function(i, item){
             item && item(data);});
-          layer.close(index);
+          _layer.close(index);
         } });
       XoW.logger.me(_this.classInfo, 'menu_rm_friend()');
+    },
+    menu_move_to: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_move_to()');
+      _layer.closeAll('tips');
+      _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
+    },
+    menu_create_group: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_create_group()');
+      _layer.closeAll('tips');
+      _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
+    },
+    open_my_info: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_my_info()');
+      if(!_cache.mine.vcard) {
+        XoW.logger.e('There is no vCard, return.');
+        return;
+        // todo 去服务端取
+      }
+      _cache.mine.gender = "secret";
+      if(!_cache.mine.vcard.BDAY) {
+        _cache.mine.vcard.BDAY = "1900-01-01";
+      }
+      var content = _layTpl(_eleMineVCard).render(_cache.mine);
+      _layer.close(events.open_my_info.index);
+      events.open_my_info.index = _layer.open({
+        type: 1 // 1表示页面内，2表示frame
+        ,title: '我的资料'
+        ,shade: false
+        ,maxmin: true
+        ,area: ['600px', '520px']
+        ,skin: 'layui-box layui-layer-border'
+        ,resize: true
+        ,content: content
+        ,btn: ['保存', '关闭']
+        ,success: function(layero, index) {
+          _layDate.render({
+            elem: '#set_mine_vcard_bday'
+            ,format: 'yyyy-MM-dd'
+          });
+        }
+        ,btn1: function(index, layero) {
+          XoW.logger.ms(_this.classInfo, 'open_my_info.btn1()');
+          var elem = layero.find('.layui-form');
+          if(!_verifyForm(elem)) {
+            return;
+          }
+          var field = _getFormFields(elem);
+_layer.alert(JSON.stringify(field));
+          // 3.搜索
+          //var param = {
+          //  withJid: field['qry_log_jid'],
+          //  ownerJid: _cache.mine.jid,
+          //  keyword: field['qry_log_keyword'],
+          //  startDate: [field['qry_log_start_date'], 'T00:00:00.000Z'].join(''),
+          //  endDate: [field['qry_log_end_date'],'T23:59:59.999Z'].join(''),
+          //  pageSize: 5
+          //};
+          //_layer.msg('ceshi');
+        }
+        ,btn2: function() {
+          _layer.close(events.open_my_info.index);
+        }
+      });
+    },
+    open_chat: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_chat()');
+      var id = oThis.data('id');
+      var data = _getFriendById(id);
+      if(!data) {
+        XoW.e('There is no such user with id {0}, return.'.f(id));
+        return;
+      }
+      _layIM.chat(data);
     },
     accept_file: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'accept_file()');
@@ -747,7 +1010,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       XoW.logger.ms(_this.classInfo, 'open_remote_chat_log()');
       var thatChat = _getThisChat();
       if (!_cache.base.chatLog) {
-        return layer.msg('未开启聊天记录漫游功能');
+        return _layer.msg('未开启聊天记录漫游功能');
       }
       // 陌生人加入群组,不知道会不会影响到好友订阅模块 todo [20190107]
       var friends = _cache.friend;
@@ -777,73 +1040,12 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     // 统一不用form监听的形式
     search_chat_log_remote: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'search_chat_log_remote()');
-      var elem = oThis.parents('.layui-form');
       $('#flow_chat_log_cont').html('');
-      var field = {}, fieldElem = elem.find('input,select,textarea'); //获取所有表单域
-      var verify = _layForm.config.verify, stop = null
-        ,DANGER = 'layui-form-danger'
-        ,verifyElem = elem.find('*[lay-verify]'); //获取需要校验的元素
-
-      //1. 开始校验, reference to form.js
-      layui.each(verifyElem, function(_, item){
-        var othis = $(this)
-          ,vers = othis.attr('lay-verify').split('|')
-          ,verType = othis.attr('lay-verType') //提示方式
-          ,value = othis.val();
-
-        othis.removeClass(DANGER);
-        layui.each(vers, function(_, thisVer){
-          var isTrue //是否命中校验
-            ,errorText = '' //错误提示文本
-            ,isFn = typeof verify[thisVer] === 'function';
-
-          //匹配验证规则
-          if(verify[thisVer]){
-            var isTrue = isFn ? errorText = verify[thisVer](value, item) : !verify[thisVer][0].test(value);
-            errorText = errorText || verify[thisVer][1];
-
-            //如果是必填项或者非空命中校验，则阻止提交，弹出提示
-            if(isTrue){
-              //提示层风格
-              if(verType === 'tips'){
-                layer.tips(errorText, function(){
-                  if(typeof othis.attr('lay-ignore') !== 'string'){
-                    if(item.tagName.toLowerCase() === 'select' || /^checkbox|radio$/.test(item.type)){
-                      return othis.next();
-                    }
-                  }
-                  return othis;
-                }(), {tips: 1});
-              } else if(verType === 'alert') {
-                layer.alert(errorText, {title: '提示', shadeClose: true});
-              } else {
-                layer.msg(errorText, {icon: 5, shift: 6});
-              }
-              if(!device.android && !device.ios) item.focus(); //非移动设备自动定位焦点
-              othis.addClass(DANGER);
-              return stop = true;
-            }
-          }
-        });
-        if(stop) return stop;
-      });
-      if(stop) return false;
-
-      // 2. 获取表单内容 reference to form.js
-      var nameIndex = {}; //数组 name 索引
-      layui.each(fieldElem, function(_, item){
-        item.name = (item.name || '').replace(/^\s*|\s*&/, '');
-        if(!item.name) return;
-        //用于支持数组 name
-        if(/^.*\[\]$/.test(item.name)){
-          var key = item.name.match(/^(.*)\[\]$/g)[0];
-          nameIndex[key] = nameIndex[key] | 0;
-          item.name = item.name.replace(/^(.*)\[\]$/, '$1['+ (nameIndex[key]++) +']');
-        }
-        if(/^checkbox|radio$/.test(item.type) && !item.checked) return;
-        field[item.name] = item.value;
-      });
-      // _layer.msg(JSON.stringify(field));
+      var elem = oThis.parents('.layui-form');
+      if(!_verifyForm(elem)) {
+        return;
+      }
+      var field = _getFormFields(elem);
 
       // 3.搜索
       var param = {
@@ -1297,7 +1499,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     });
   };
   var _getFriendById = function (pId) {
-    XoW.logger.ms(_this.classInfo,  'getContactById({0})'.f(pId));
+    XoW.logger.ms(_this.classInfo,  '_getFriendById({0})'.f(pId));
     var type = 'friend';
     for(var i = 0; i < _cache[type].length; i++) {
       var item =  _cache[type][i].list.find(function (x) {
@@ -1309,6 +1511,26 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     }
     return null;
   };
+  var _getDataFromFriendListItem = function(pId) {
+    XoW.logger.ms(_this.classInfo,  '_getDataFromFriendListItem()');
+    var li = _getLayImMain().find('.layim-list-friend .layim-friend{0}'.f(pId));
+    // copy from layim.chat()
+    var local = layui.data('layim')[_cache.mine.id] || {};
+    var type = li.data('type'), index = li.data('index');
+    var list = li.attr('data-list') || li.index(), data = {};
+    if (type === 'friend') {
+      data = _cache[type][index].list[list];
+    } else if (type === 'group') {
+      data = _cache[type][list];
+    } else if (type === 'history') {
+      data = (local.history || {})[index] || {};
+    }
+    data.name = data.name || data.username || data.groupname;
+    if (type !== 'history') {
+      data.type = type;
+    }
+    return data;
+  }
   var _blinkSysInfoIcon = function() {
     XoW.logger.ms(_this.classInfo,  '_blinkSysInfoIcon()');
     if(!_getLayImMain()) return;
@@ -1365,7 +1587,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     XoW.logger.ms(_this.classInfo, '_openRemoteSearchBox()');
     pParam = pParam || {tab: 'user'};
     var content = _layTpl(_eleRemoteSearchBox).render(pParam);
-    layer.close(_openRemoteSearchBox.index);
+    _layer.close(_openRemoteSearchBox.index);
     _openRemoteSearchBox.index = _layer.open({
       type: 1 // 1表示页面内，2表示frame
       ,title: '查找'
@@ -1399,6 +1621,82 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       }
     });
     XoW.logger.me(_this.classInfo, '_openRemoteSearchBox()');
+  };
+
+  var _verifyForm = function(pFrm) {
+    XoW.logger.ms(_this.classInfo, '_verifyForm()');
+    var verify = _layForm.config.verify, stop = null
+      ,DANGER = 'layui-form-danger'
+      ,verifyElem = pFrm.find('*[lay-verify]'); //获取需要校验的元素
+
+    //1. 开始校验, reference to form.js
+    layui.each(verifyElem, function(_, item){
+      var othis = $(this)
+        ,vers = othis.attr('lay-verify').split('|')
+        ,verType = othis.attr('lay-verType') //提示方式
+        ,value = othis.val();
+
+      othis.removeClass(DANGER);
+      layui.each(vers, function(_, thisVer){
+        var isTrue //是否命中校验
+          ,errorText = '' //错误提示文本
+          ,isFn = typeof verify[thisVer] === 'function';
+
+        //匹配验证规则
+        if(verify[thisVer]){
+          var isTrue = isFn ? errorText = verify[thisVer](value, item) : !verify[thisVer][0].test(value);
+          errorText = errorText || verify[thisVer][1];
+
+          //如果是必填项或者非空命中校验，则阻止提交，弹出提示
+          if(isTrue){
+            //提示层风格
+            if(verType === 'tips'){
+              _layer.tips(errorText, function(){
+                if(typeof othis.attr('lay-ignore') !== 'string'){
+                  if(item.tagName.toLowerCase() === 'select' || /^checkbox|radio$/.test(item.type)){
+                    return othis.next();
+                  }
+                }
+                return othis;
+              }(), {tips: 1});
+            } else if(verType === 'alert') {
+              _layer.alert(errorText, {title: '提示', shadeClose: true});
+            } else {
+              _layer.msg(errorText, {icon: 5, shift: 6});
+            }
+            if(!_device.android && !_device.ios) item.focus(); //非移动设备自动定位焦点
+            othis.addClass(DANGER);
+            return stop = true;
+          }
+        }
+      });
+      if(stop) return stop;
+    });
+    if(stop) {
+      return false
+    } else{
+      return true;
+    }
+  };
+  var _getFormFields = function(pFrm) {
+    XoW.logger.ms(_this.classInfo, '_getFormFields()');
+    // 2. 获取表单内容 reference to form.js
+    var field = {}, fieldElem = pFrm.find('input,select,textarea'); //获取所有表单域
+    var nameIndex = {}; //数组 name 索引
+    layui.each(fieldElem, function(_, item){
+      item.name = (item.name || '').replace(/^\s*|\s*&/, '');
+      if(!item.name) return;
+      //用于支持数组 name
+      if(/^.*\[\]$/.test(item.name)){
+        var key = item.name.match(/^(.*)\[\]$/g)[0];
+        nameIndex[key] = nameIndex[key] | 0;
+        item.name = item.name.replace(/^(.*)\[\]$/, '$1['+ (nameIndex[key]++) +']');
+      }
+      if(/^checkbox|radio$/.test(item.type) && !item.checked) return;
+      field[item.name] = item.value;
+    });
+    return field;
+    // _layer.msg(JSON.stringify(field));
   };
   // endregion Private Methods
 
@@ -1517,4 +1815,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
   };
   // endregion Overload functions of layim
   exports('layImEx', new LAYIMEX()); //注意，这里是模块输出的核心，模块名必须和use时的模块名一致
-});
+}).addcss(
+  '../../skin/css/layimex.css?v=2.0.2'
+  ,'skinlayimexcss'
+);

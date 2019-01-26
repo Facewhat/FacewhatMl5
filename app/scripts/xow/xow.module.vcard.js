@@ -99,6 +99,12 @@
         Strophe.forEachChild(vcard, 'NICKNAME', function (NICKNAME) {
           vCardTemp.NICKNAME = NICKNAME.textContent;
         });
+        Strophe.forEachChild(vcard, 'BDAY', function (BDAY) {
+          vCardTemp.BDAY = BDAY.textContent;
+        });
+        Strophe.forEachChild(vcard, 'DESC', function (DESC) {
+          vCardTemp.DESC = DESC.textContent;
+        });
         Strophe.forEachChild(vcard, 'PHOTO', function (PHOTO) {
           Strophe.forEachChild(PHOTO, 'BINVAL', function (BINVAL) {
             vCardTemp.PHOTO.BINVAL = BINVAL.textContent;

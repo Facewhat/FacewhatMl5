@@ -10,7 +10,7 @@
       // 命名空间
       NS: {
         PING: 'urn:xmpp:ping',
-        VCARD: 'vcard-temp',
+        VCARD: 'vcard-temp'/*server不支持'urn:ietf:params:xml:ns:vcard-4.0'*/,
         USER_SERACH: 'jabber:iq:search',
         FORM_DATA: 'jabber:x:data',
         ARCHIVE: 'urn:xmpp:archive',

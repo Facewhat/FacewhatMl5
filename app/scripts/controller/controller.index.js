@@ -1,18 +1,37 @@
 /**
  * Created by cy on 2018/3/12.
+ * 不要包含任何操作main页面的DOM代码
  */
 'use strict';
-layui.config({
-  base: './scripts/layxow/' //假设这是你存放拓展模块的根目录
-}).extend({ //设定模块别名
-  client: 'layim.client',
-  layImEx: 'layim.extend'
-}).use(['jquery', 'layer', 'layim', 'client', 'layImEx'], function () {
+var moduleNames = {};
+if(XoW.config.resource === 'fwh5_desktop'){
+  moduleNames = {layim : 'layim',
+    layImEx: 'layImEx'
+  };
+} else {
+  moduleNames = {layim : 'mobile',
+    layImEx: 'layImExMobile'
+  };
+}
+layui.extend({
+  // {/}的意思即代表采用自有路径，即不跟随 base 路径
+  // mobile会强制设置base路径，so...
+  client: '{/}./scripts/layxow/layim.client',
+  layImExMobile: '{/}./scripts/layxow/layim.mobile.extend',
+  layImEx: '{/}./scripts/layxow/layim.extend'
+}).use(['jquery', 'layer', moduleNames.layim,'client',moduleNames.layImEx], function () {
   var _this = this;
   var _client = layui.client;
-  var _layer = layui.layer;
-  var _layIM = layui.layim;
-  var _layImEx = layui.layImEx;
+  var _layer,_layIM, _layImEx;
+  if(XoW.config.resource === 'fwh5_desktop'){
+    _layer = layui.layer;
+    _layIM = layui.layim;
+    _layImEx = layui.layImEx;
+  } else {
+    _layer = layui.mobile.layer;
+    _layIM = /*layui.layim*/ layui.mobile.layim;
+    _layImEx = /*layui.layImEx*/ layui.layImExMobile;
+  }
   var _classInfo = 'Controller';
   var _clientMode = XoW.ClientMode.NORMAL; // kefu -- 独立客服页面, briefkefu -- 嵌入式客服页面(暂不支持), normal -- 默认
 
@@ -270,9 +289,7 @@ layui.config({
    */
   _layIM.on('ready', function (res) {
     XoW.logger.ms(_classInfo, 'on(ready, {0})'.f(res));
-    _layImEx.bindFriendListRightMenu();
-    _layImEx.rebindToolButtons();
-    _layImEx.ready();
+    _layImEx.onReady();
     if (_clientMode === XoW.ClientMode.KEFU) {
       var token = JSON.parse(_getPar('token'));
       var toId = token.to;
@@ -483,32 +500,7 @@ layui.config({
     params.mine.status = XoW.UserState.ONLINE;
     _layIM.cache().temp = null;
     //基础配置
-    _layIM.config({
-        //初始化接口
-        init: params,
-        title: '屯聊网页版',
-        copyright: false, // true代表不要显示copyright = =!
-        isfriend: true,
-        isgroup: true,
-        uploadImage: {},
-        uploadFile: {},
-        isPageThumbnail : true,
-        isVideo : true,
-        chatLog : true,
-        search: layui.cache.dir + '../search.html',
-        find: layui.cache.dir + '../search.html',
-        msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html',
-        tool: [{
-          alias: 'code', //工具别名
-          title: '发送代码', //工具名称
-          icon: '&#xe64e;' //工具图标，参考图标文档
-        }, {
-          alias: 'link',
-          title: '发送商品链接',
-          icon: '&#xe698;'
-        }]
-      }
-    );
+    _layImEx.config({init: params});
 
     // Simulated room acquisition
     var rooms = {
@@ -517,12 +509,15 @@ layui.config({
       ,data: {}
     };
     // that do not support sync post = =!
-    _layIM.post( rooms, function(res) {
-      $.each(res.group, function(i, item){
+    // layim mobile不支持post方法
+    // $.post( rooms, function(res) {
+    $.get( '../json/getRooms.json', {},  function(res, status, xhr) {
+      XoW.logger.d('success to get rooms');
+      $.each(res.data.group, function(i, item){
         item.type = 'group';
         _layIM.addList(item);
       });
-    }, 'Rooms Simulation');
+    }, 'json');
 
     XoW.logger.me(_classInfo, '_layInit()');
   }

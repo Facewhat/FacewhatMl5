@@ -21,12 +21,14 @@
     this.URL = ''; // 网页，公司的
     this.TITLE = ''; // 职称
     this.NICKNAME = ''; // 昵称
+    this.BDAY = ''; // Birthday, ISO 8601 formatted date or date/time value
     this.PHOTO = {
       BINVAL: '', // 图片的二进制
       TYPE: '' // 图片的类型
     };
-    // 以下做了修改简化
-    this.EMAIL = ''; // 邮箱
+    this.EMAIL = '';
+    this.DESC = '';
+
     // 商务的
     this.WORK = {
       PAGER_TEL: '', // 传呼机
