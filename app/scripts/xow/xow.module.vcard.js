@@ -1,7 +1,7 @@
 'use strict';
 (function (factory) {
-  return factory(XoW);
-}(function (XoW) {
+  return factory(XoW, Strophe);
+}(function (XoW, Strophe) {
   /**
    * 拆包解包，管理联系人、群组人员等vCard数据
    * @param globalManager
@@ -25,8 +25,9 @@
     }
     var _addVCard = function(item) {
       XoW.logger.ms(_this.classInfo, '_addVCard({0})'.f(item.jid));
+      item.jid = XoW.utils.getBareJidFromJid(item.jid);
       var vcIndex = _vCards.findIndex(function (x) {
-        return x.jid === item.jid
+        return x.jid === item.jid;
       });
       if( vcIndex < 0 ) {
         _vCards.push(item);
@@ -36,8 +37,8 @@
       }
       XoW.logger.me(_this.classInfo, '_addVCard()');
     };
-    var _errorBackCb = function (stanza) {
-      XoW.logger.ms(_this.classInfo, '_errorBackCb()');
+    var _cbError = function (stanza) {
+      XoW.logger.ms(_this.classInfo, '_cbError()');
       if (!stanza) {
         // 如果错误节为空，那么说明超时
         stanza = 'vCard请求超时';
@@ -234,7 +235,7 @@
       XoW.logger.ms(_this.classInfo, 'getVCardByJid({0})'.f(jid));
       jid = XoW.utils.getBareJidFromJid(jid);
       var theVCard = _vCards.find(function (x) {
-        return x.jid === jid
+        return x.jid === jid;
       });
       return theVCard;
     };
@@ -253,9 +254,50 @@
       }).c('vCard', {
         xmlns: XoW.NS.VCARD
       });
-      _gblMgr.getConnMgr().sendIQ(vCard, _cbGetVCard.bind(this), _errorBackCb.bind(_this), timeout);
+      _gblMgr.getConnMgr().sendIQ(vCard, _cbGetVCard.bind(this), _cbError.bind(_this), timeout);
       XoW.logger.me(_this.classInfo, 'getVCard({0})'.f(jid));
     };
+    this.getVCardWithCb = function (jid, pSucCb, timeout) {
+      XoW.logger.ms(_this.classInfo, 'getVCardWithCb({0})'.f(jid));
+      // 通过测试发现，这里的jid不能为 '' ，这样会拼装到节中。
+      if (!jid) {
+        jid = null;
+      }
+      var vCard = $iq({
+        id: XoW.utils.getUniqueId('getVCard'),
+        type: 'get',
+        to: jid
+      }).c('vCard', {
+        xmlns: XoW.NS.VCARD
+      });
+      _gblMgr.getConnMgr().sendIQ(vCard, function (stanza) {
+        XoW.logger.ms(_this.classInfo, '_cbGetVCardSync({0})'.f($(stanza).attr('id')));
+        var vCardTemp = _parseStanzaToVCard(stanza);
+        _addVCard(vCardTemp);
+        pSucCb(vCardTemp);
+        XoW.logger.me(_this.classInfo,  '_cbGetVCardSync()');
+      }, _cbError.bind(_this), timeout);
+      XoW.logger.me(_this.classInfo, 'getVCardWithCb({0})'.f(jid));
+    };
+    this.setVCard = function (pJid, pVCard, pSucCb, pTimeout) {
+      XoW.logger.ms(_this.classInfo, 'setVCard({0})'.f(pJid));
+      var iq = $iq({
+        id: XoW.utils.getUniqueId('setVCard'),
+        type: 'set'
+      }).c('vCard', {
+        xmlns: XoW.NS.VCARD
+      }).c('NICKNAME', null, pVCard.NICKNAME)
+        .c('DESC', null, pVCard.DESC)
+        .c('BDAY', null, pVCard.BDAY)
+        .c('EMAIL', null).c('INTERNET').up().c('PREF').up().c('USERID', null, pVCard.EMAIL)
+        .up().c('TEL', null).c('WORK').up().c('CELL').up().c('NUMBER', null, pVCard.WORK.CELL_TEL);
+      _gblMgr.getConnMgr().sendIQ(iq, function (stanza) {
+        XoW.logger.ms(_this.classInfo, '_cbSetVCard({0})'.f($(stanza).attr('id')));
+        pSucCb();
+        XoW.logger.me(_this.classInfo,  '_cbSetVCard()');
+      }, _cbError.bind(_this), pTimeout);
+      XoW.logger.me(_this.classInfo, 'setVCard({0})'.f(pJid));
+    }
     // endregion Public Methods
 
     _init();

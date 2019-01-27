@@ -7,6 +7,7 @@
  * 4.windows全局变量首字母大写，驼峰命名
  * 5.非一次性回调命名on + Subject + Verb(with tense)（在strophe侧，返回true继续监听，反之反之）
  * 6.一次性回调命名cb + Verb + Subject，返回值无关
+ * 7.get+noun,传回调参数（隐喻返回值形式），即采用同步形式
  */
 (function (factory) {
   'use strict';
@@ -105,10 +106,10 @@
     };
     var _onConnect = function (params) {
       XoW.logger.ms(_this.classInfo, '_onConnect({0})'.f(params.succ));
-      if (params.succ) {
+      if(params.succ) {
         _initMgrsAfterConnected();
         _actionsAfterConnected();
-      } else {
+      }else {
         // 非成功哦
         _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED, params);
       }
@@ -169,27 +170,31 @@
     var _onVCardRcv = function (pVCard) {
       XoW.logger.ms(_this.classInfo, '_onVCardRcv()');
       var friend = null;
-      if (pVCard.isMine) {
+      if(pVCard.isMine) {
         friend = _this.getCache().mine;
-      } else {
+      }else {
         // 找好友列表
         friend = _this.getContactByJid(pVCard.jid);
         // 找群组、找通讯录....
       }
-      if (friend) {
+      if(friend) {
         friend.vcard = pVCard;
-        if (pVCard.PHOTO.BINVAL) {
+        if(pVCard.PHOTO.BINVAL) {
           friend.avatar = "data:image/;base64," + pVCard.PHOTO.BINVAL;
           _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED, friend);
         }
-        if (pVCard.NICKNAME &&
+        if(pVCard.NICKNAME &&
           pVCard.NICKNAME !== friend.username) {
-          if (!friend.username || pVCard.isMine) {
+          if(!friend.username || pVCard.isMine) {
             friend.username = pVCard.NICKNAME;
-          } else {
+          }else {
             friend.username = pVCard.NICKNAME;
           }
           _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_FRIEND_NICKNAME_CHANGED, friend);
+        }
+        if(pVCard.DESC && pVCard.DESC !== friend.sign) {
+          friend.sign = pVCard.DESC;
+          _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_FRIEND_SIGN_CHANGED, friend);
         }
       }
       XoW.logger.me(_this.classInfo, '_onVCardRcv()');
@@ -197,25 +202,25 @@
     var _perfectPeerMsgInfo = function (pMsg, pChat) {
       XoW.logger.ms(_this.classInfo, '_perfectPeerMsgInfo()');
       pMsg.id = pMsg.fromid = XoW.utils.getNodeFromJid(pMsg.from);
-      if (!pChat.username) { // 如果是好友则会被设置为昵称
+      if(!pChat.username) { // 如果是好友则会被设置为昵称
         // 说明是第一条消息，先查好友列表再查群组之类的
         var theFriend = _this.getContactByJid(pMsg.from);
-        if (theFriend && theFriend.username !== pMsg.id) { // 备注名
+        if(theFriend && theFriend.username !== pMsg.id) { // 备注名
           pChat.username = theFriend.username;
         }
         var theVCard = _vCardMgr.getVCardByJid(pMsg.from);
-        if (theVCard) {
-          if (theVCard.PHOTO.BINVAL) {
+        if(theVCard) {
+          if(theVCard.PHOTO.BINVAL) {
             pChat.avatar = 'data:image/;base64,' + theVCard.PHOTO.BINVAL;
-          } else {
+          }else {
             pChat.avatar = XoW.DefaultImage.AVATAR_DEFAULT; // 要怎么判定是客服呢？
           }
-          if (theVCard.NICKNAME && !pChat.username) {
+          if(theVCard.NICKNAME && !pChat.username) {
             pChat.username = theVCard.NICKNAME;
           }
         }
       }
-      if (!pChat.username) {
+      if(!pChat.username) {
         pChat.username = XoW.utils.getNodeFromJid(pMsg.from);
       }
       pMsg.avatar = pChat.avatar;
@@ -227,7 +232,7 @@
       var theMsg = param.msg;
       var theChat = param.chat;
       _perfectPeerMsgInfo(theMsg, theChat);
-      if (theMsg.contentType === XoW.MessageContentType.MSG ||
+      if(theMsg.contentType === XoW.MessageContentType.MSG ||
         theMsg.contentType === XoW.MessageContentType.DELAYMSG) {
         _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_CHAT_MSG_RCV, theMsg);
       }
@@ -235,17 +240,17 @@
     };
     var _onPresRcv = function (pPres) {
       XoW.logger.ms(_this.classInfo, '_onPresRcv({0})'.f(pPres.from));
-      if (pPres.isMeToMe()) {
+      if(pPres.isMeToMe()) {
         return;
       }
       var friend = _this.getContactByJid(pPres.from);
-      if (friend) {
+      if(friend) {
         var res = XoW.utils.getResourceFromJid(pPres.from);
-        if (res) {
+        if(res) {
           friend.resource = res;
         }
         var newStatus = pPres.getStatus();
-        if (newStatus !== friend.status) {
+        if(newStatus !== friend.status) {
           friend.status = newStatus;
           _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED, friend);
         }
@@ -271,7 +276,7 @@
       XoW.logger.ms(_this.classInfo, '_onFileTransRequested({0})'.f(pFile.to));
       if(pFile.getIsImage()) {
         _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_CHAT_IMAGE_TRANS_REQ_SUC, pFile);
-      } else {
+      }else {
         // 不需要填写对端信息的
         _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_CHAT_FILE_TRANS_REQ_SUC, pFile);
       }
@@ -293,7 +298,7 @@
     var _onImageRcv = function (pFile) {
       XoW.logger.ms(_this.classInfo, '_onImageRcv({0},{1})'.f(pFile.from, pFile.sid));
       var theChat = _this.getChatMgr().getChatByJid(pFile.from);
-      if (!theChat) {
+      if(!theChat) {
         XoW.logger.e('Could not find the chat, return.');
       }
       _perfectPeerMsgInfo(pFile, theChat);
@@ -371,7 +376,7 @@
     // region Public Methods -- API
     this.on = function (event, callback) {
       XoW.logger.ms(_this.classInfo, 'on({0})'.f(event));
-      if (typeof callback === 'function') {
+      if(typeof callback === 'function') {
         _handlerMgr.addHandler(event, callback);
       }
     };
@@ -413,9 +418,20 @@
       _chatMgr.sendMessage(content, toJid, _this.getCache().mine.jid);
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));
     };
+    this.getMyInfo = function(pSucCb) {
+      XoW.logger.ms(_this.classInfo, 'getMyInfo()');
+      _vCardMgr.getVCardWithCb(_this.getCurrentUser().jid, pSucCb);
+      // presence update vCard todo
+      XoW.logger.me(_this.classInfo, 'getMyInfo()');
+    };
+    this.setMyInfo = function(pVCard, pSucCb, pTimeout) {
+      XoW.logger.ms(_this.classInfo, 'setMyInfo()');
+      _vCardMgr.setVCard(_this.getCurrentUser().jid, pVCard, pSucCb, pTimeout);
+      XoW.logger.me(_this.classInfo,'setMyInfo()');
+    };
 
     this.searchUser = function (val, pTimeout){
-      XoW.logger.ms(this.classInfo, 'searchUser({0})'.f(val, pTimeout));
+      XoW.logger.ms(this.classInfo, 'searchUser({0})'.f(val));
       _rosterMgr.searchUser(val,pTimeout);
       XoW.logger.me(this.classInfo,'searchUser()');
     };

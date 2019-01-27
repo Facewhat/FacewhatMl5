@@ -141,6 +141,14 @@ layui.extend({
     // layer.alert(JSON.stringify(params));
     return true;
   });
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_SIGN_CHANGED, function(pFriend) {
+    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_SIGN_CHANGED);
+    if (pFriend.vcard && pFriend.vcard.isMine) {
+      _layImEx.changeMineSign(pFriend.sign);
+    } else {
+      _layImEx.changeFriendSign(pFriend);
+    }
+  });
   _client.on(XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED, function (pFriend) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_STATUS_CHANGED + pFriend.status);
     _layIM.setFriendStatus(pFriend.id, pFriend.status);
@@ -153,7 +161,6 @@ layui.extend({
     }
     return true;
   });
-
   _client.on(XoW.VIEW_EVENT.V_ERROR_PROMPT, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ERROR_PROMPT);
     _layer.alert(params);
@@ -432,6 +439,23 @@ layui.extend({
   // endregion UI CAllBack By LayIM
 
   // region UI Callback By LayIM.extend
+  _layImEx.on('getMyInfo', function (pSucCb) {
+    XoW.logger.ms(_classInfo, 'getMyInfo()');
+    _client.getMyInfo(pSucCb);
+    XoW.logger.me(_classInfo, 'setMyInfo()');
+  });
+  _layImEx.on('setMyInfo', function (param, pSucCb) {
+    XoW.logger.ms(_classInfo, 'setMyInfo()');
+    var vCardTemp = new XoW.VCard();
+    vCardTemp.NICKNAME = param.nickname;
+    vCardTemp.BDAY = param.birthday;
+    vCardTemp.DESC = param.signature;
+    vCardTemp.WORK.CELL_TEL = param.telephone;
+    vCardTemp.EMAIL = param.email;
+    // gender not implement yet.
+    _client.setMyInfo(vCardTemp, pSucCb, 3 * 1000);
+    XoW.logger.me(_classInfo, 'setMyInfo()');
+  });
   _layImEx.on('pushExtMsg', function (param) {
     XoW.logger.ms(_classInfo, 'pushExtMsg({0},{1})'.f(param.sid, param.to));
     XoW.logger.me(_classInfo, 'pushExtMsg()');

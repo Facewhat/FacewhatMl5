@@ -26,7 +26,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
   //>cache.message:未读消息，读取之后会被清空
   //>cache.chat:未读联系人，读取之后会被清空
   //>cache.local.chatLog:上一次（登录前）聊天记录，不会实时刷新
-  var _$layMain,_$sysInfoBox, _device, _cache, _reConnLoadTipIndex;
+  var _$sysInfoBox, _device, _cache, _reConnLoadTipIndex;
   // endregion Fields
 
   // region UI templates
@@ -365,19 +365,19 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     '  <div class="layui-form-item layim-vcard-item pt10">',
     '    <label class="label">手&nbsp;&nbsp;机</label>',
     '    <div class="block">',
-    '      <input type="text" class="layui-input" name="telephone"  value="{{ d.vcard.WORK.CELL_TEL || [] }}">',
+    '      <input type="text" class="layui-input" name="telephone" lay-verify="phone" value="{{ d.vcard.WORK.CELL_TEL || [] }}">',
     '    </div>',
     '  </div>',
     '  <div class="layui-form-item layim-vcard-item">',
     '    <label class="label">邮&nbsp;&nbsp;箱</label>',
     '    <div class="block">',
-    '      <input type="text" class="layui-input" name="email"  value="{{ d.vcard.EMAIL || [] }}">',
+    '      <input type="text" class="layui-input" name="email" lay-verify="email" value="{{ d.vcard.EMAIL || [] }}">',
     '    </div>',
     '  </div>',
     '  <div class="layui-form-item layim-vcard-item">',
     '    <label class="label">签&nbsp;&nbsp;名</label>',
     '    <div class="block">',
-    '      <textarea name="signature" placeholder="请输入内容" class="layui-textarea noresize">{{d.sign}}</textarea>',
+    '      <textarea name="signature" placeholder="请输入内容" class="layui-textarea noresize">{{d.vcard.DESC}}</textarea>',
     '    </div>',
     '  </div>',
     //'  <div class="layui-form-item">',
@@ -484,6 +484,11 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     XoW.logger.ms(_this.classInfo, 'changeMineUsername({0})'.f(params));
     return _changeMineUsername(params), this;
   };
+  LAYIMEX.prototype.changeMineSign = function(pSign) {
+    XoW.logger.ms(_this.classInfo, 'changeMineSign({0})'.f(pSign));
+    $('.layui-layim .layui-layim-remark').val(pSign);
+    XoW.logger.me(_this.classInfo, 'changeMineSign({0})'.f(pSign));
+  };
   LAYIMEX.prototype.changeFriendAvatar = function(params) {
     XoW.logger.ms(_this.classInfo, 'changeFriendAvatar({0})'.f(params.id));
     return _changeFriendAvatar(params), this;
@@ -491,6 +496,16 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
   LAYIMEX.prototype.changeFriendNick = function(params) {
     XoW.logger.ms(_this.classInfo, 'changeFriendNick({0})'.f(params.id));
     return _changeFriendNick(params), this;
+  };
+  LAYIMEX.prototype.changeFriendSign = function(pFriend) {
+    XoW.logger.ms(_this.classInfo, 'changeFriendSign({0})'.f(pFriend.id));
+    var $list = $('.layui-layim') .find('.layim-friend' + pFriend.id);
+    var $p = $list.find('p');
+    if ($p.length != 0) {
+      XoW.logger.d(this.classInfo, '更新了好友列表中的心情');
+      $p.html(pFriend.sign);
+    }
+    XoW.logger.me(_this.classInfo, 'changeFriendSign({0})'.f(pFriend.id));
   };
   LAYIMEX.prototype.changeFileStatus = function(pFileThumbnail) {
     XoW.logger.ms(_this.classInfo, 'changeFileStatus()');
@@ -835,55 +850,51 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     },
     open_my_info: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_my_info()');
-      if(!_cache.mine.vcard) {
-        XoW.logger.e('There is no vCard, return.');
-        return;
-        // todo 去服务端取
-      }
-      _cache.mine.gender = "secret";
-      if(!_cache.mine.vcard.BDAY) {
-        _cache.mine.vcard.BDAY = "1900-01-01";
-      }
-      var content = _layTpl(_eleMineVCard).render(_cache.mine);
-      _layer.close(events.open_my_info.index);
-      events.open_my_info.index = _layer.open({
-        type: 1 // 1表示页面内，2表示frame
-        ,title: '我的资料'
-        ,shade: false
-        ,maxmin: true
-        ,area: ['600px', '520px']
-        ,skin: 'layui-box layui-layer-border'
-        ,resize: true
-        ,content: content
-        ,btn: ['保存', '关闭']
-        ,success: function(layero, index) {
-          _layDate.render({
-            elem: '#set_mine_vcard_bday'
-            ,format: 'yyyy-MM-dd'
-          });
-        }
-        ,btn1: function(index, layero) {
-          XoW.logger.ms(_this.classInfo, 'open_my_info.btn1()');
-          var elem = layero.find('.layui-form');
-          if(!_verifyForm(elem)) {
-            return;
+      layui.each(call.getMyInfo, function(index, item){
+        XoW.logger.ms(_this.classInfo, 'open_my_info.cb()');
+        item && item(function(pVCard){
+          _cache.mine.vcard = pVCard;
+          _cache.mine.gender = "secret";
+          if(!_cache.mine.vcard.BDAY) {
+            _cache.mine.vcard.BDAY = "1900-01-01";
           }
-          var field = _getFormFields(elem);
-_layer.alert(JSON.stringify(field));
-          // 3.搜索
-          //var param = {
-          //  withJid: field['qry_log_jid'],
-          //  ownerJid: _cache.mine.jid,
-          //  keyword: field['qry_log_keyword'],
-          //  startDate: [field['qry_log_start_date'], 'T00:00:00.000Z'].join(''),
-          //  endDate: [field['qry_log_end_date'],'T23:59:59.999Z'].join(''),
-          //  pageSize: 5
-          //};
-          //_layer.msg('ceshi');
-        }
-        ,btn2: function() {
+          var content = _layTpl(_eleMineVCard).render(_cache.mine);
           _layer.close(events.open_my_info.index);
-        }
+          events.open_my_info.index = _layer.open({
+            type: 1 // 1表示页面内，2表示frame
+            ,title: '我的资料'
+            ,shade: false
+            ,maxmin: true
+            ,area: ['600px', '520px']
+            ,skin: 'layui-box layui-layer-border'
+            ,resize: true
+            ,content: content
+            ,btn: ['保存', '关闭']
+            ,success: function(layero, index) {
+              _layDate.render({
+                elem: '#set_mine_vcard_bday'
+                ,format: 'yyyy-MM-dd'
+              });
+            }
+            ,btn1: function(index, layero) {
+              XoW.logger.ms(_this.classInfo, 'open_my_info.btn1()');
+              var elem = layero.find('.layui-form');
+              if(!_verifyForm(elem)) {
+                return;
+              }
+              var field = _getFormFields(elem);
+              // _layer.alert(JSON.stringify(field));
+              layui.each(call.setMyInfo, function(index, item){
+                item && item(field,function(){
+                  _layer.close(events.open_my_info.index);
+                });});
+            }
+            ,btn2: function() {
+              _layer.close(events.open_my_info.index);
+            }
+          });
+        });
+        XoW.logger.me(_this.classInfo, 'open_my_info.cb()');
       });
     },
     open_chat: function(oThis, e) {
@@ -1388,7 +1399,6 @@ _layer.alert(JSON.stringify(field));
     XoW.logger.ms(_this.classInfo, '_init()');
     _device = layui.device();
     _cache = _layIM.cache();
-    _$layMain = $('.layui-layim') || null;
 
     $('body').on('click', '*[layImEx-event]', function (e) {
       var oThis = $(this), method = oThis.attr('layImEx-event');

@@ -112,20 +112,20 @@
       //download("data:" + file.mime + ";base64,"+file.data, file.filename, file.mime);
 
       var chat = _gblMgr.getChatMgr().getChatByJid(pJid);
-      if (null == chat) {
+      if (null === chat) {
         XoW.logger.e('There is no chat of jid {0}, return.'.f(pJid));
         _triggerFileErr(pSid, pJid, '该会话已过期.');
         return;
       }
       var file = chat.getFileBySid(pSid);
-      if (null == file) {
+      if (null === file) {
         XoW.logger.e('There is no file of sid {0}, return.'.f(pSid));
         _triggerFileErr(pSid, pJid, '该文件已不存在.');
         return;
       }
 
       //处理doc文件类型的解码失败
-      if (file.mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+      if (file.mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         file.mime = 'text/plain';
       download("data:" + file.mime + ";base64," + file.base64, file.name, file.mime);
 
@@ -141,13 +141,13 @@
       XoW.logger.ms(_this.classInfo, 'stopFileTrans({0}, {1})'.f(pSid, pJid));
 
       var chat = _gblMgr.getChatMgr().getChatByJid(pJid);
-      if (null == chat) {
+      if (null === chat) {
         XoW.logger.e('There is no chat of jid {0}, return.'.f(pJid));
         _triggerFileErr(pSid, pJid, '该会话已过期.');
         return;
       }
       var file = chat.getFileBySid(pSid);
-      if (null == file) {
+      if (null === file) {
         XoW.logger.e('There is no file of sid {0}, return.'.f(pSid));
         _triggerFileErr(pSid, pJid, '该文件已不存在.');
         return;
@@ -168,13 +168,13 @@
       XoW.logger.ms(_this.classInfo, 'cancelFile({0}, {1})'.f(pSid, pJid));
 
       var chat = _gblMgr.getChatMgr().getChatByJid(pJid);
-      if (null == chat) {
+      if (null === chat) {
         XoW.logger.e('There is no chat of jid {0}, return.'.f(pJid));
         _triggerFileErr(pSid, pJid, '该会话已过期.');
         return;
       }
       var file = chat.getFileBySid(pSid);
-      if (null == file) {
+      if (null === file) {
         XoW.logger.e('There is no file of sid {0}, return.'.f(pSid));
         _triggerFileErr(pSid, pJid, '该文件已不存在.');
         return;
@@ -277,7 +277,7 @@
      */
     var _onIbbDataSent = function (pFile, err) {
       XoW.logger.ms(_this.classInfo, '_ibbSendDataCb({0}'.f(pFile.sid));
-      if (XoW.FileReceiveState.CLOSED == pFile.status) {
+      if (XoW.FileReceiveState.CLOSED === pFile.status) {
         XoW.logger.w('IBB has been closed, return.');
         return;
       }
@@ -289,7 +289,7 @@
         return;
       }
       // show progress
-      if(pFile.getReceivedPercent() % 5 == 0) {
+      if(pFile.getReceivedPercent() % 5 === 0) {
         if(!_changeFileStatus(pFile, XoW.FileReceiveState.RECEIVING)) {
          return;
         }
@@ -318,7 +318,7 @@
     var _onSiCanceled = function  (pFile, err) {
       XoW.logger.ms(_this.classInfo, '_onSiCanceled({0})'.f(pFile.sid));
       if (err) {
-        if(err.name == '405' || err.name == '410') {
+        if(err.name === '405' || err.name === '410') {
           pFile.errorMsg = '服务端不支持该操作';
         }
         XoW.logger.e('Failed to cancel si, cause ' + err.message);
@@ -346,7 +346,7 @@
       theFile.iqid = params.id;
       theFile.name = params.filename;
       theFile.size = params.size;
-      if (null == params.mime || '' == params.mime) {
+      if (null === params.mime || '' === params.mime) {
         theFile.mime = 'application/octet-stream';
       } else {
         theFile.mime = params.mime;
@@ -372,13 +372,13 @@
     var _onIBBRcv = function (type, pJid, pSid, data, seq, blocksize) {
       XoW.logger.ms(_this.classInfo, '_onIBBRcv()');
       var chat = _gblMgr.getChatMgr().getChatByJid(pJid); // todo 本来不允许直接依赖ChatMgr的
-      if (null == chat) {
+      if (null === chat) {
         XoW.logger.e('There is no chat of jid {0}, return.'.f(pJid));
         _triggerFileErr(pSid, pJid, '该会话已过期.');
         return;
       }
       var file = chat.getFileBySid(pSid);
-      if (null == file) {
+      if (null === file) {
         XoW.logger.e('There is no file of sid {0}, return.'.f(pSid));
         _triggerFileErr(pSid, pJid, '该文件已不存在.');
         return;
@@ -400,7 +400,7 @@
           if (null != file) {
             var fileSeq = file.seq;
             fileSeq += 1;
-            if (fileSeq == seq) {
+            if (fileSeq === seq) {
               file.appendData(data);
               file.seq = fileSeq;
               if(file.getReceivedPercent() % 5 === 0) {
