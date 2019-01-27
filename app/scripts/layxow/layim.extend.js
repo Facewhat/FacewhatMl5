@@ -83,7 +83,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
   ].join('');
 
   var _eleImage = [
-    ,'<div class="layim_file" sid="{{ d.sid }}">'
+    '<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_fileinfo">'
     ,'    <img class="layui-layim-photos" ondragstart="return false;" src="data:image/;base64,{{ d.base64 }}" alt="缩略图模式">'
     ,'  </div>'
@@ -97,7 +97,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
   ].join('');
 
   var _eleFileThumbnail = [
-    ,'<div class="layim_file" sid="{{ d.sid }}">'
+    '<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_filepicture" ><span> {{ d.getTypeDesc() }} </span></div>'
     ,'  <div class="layim_fileinfo">'
     ,' 			<span class="layim_chatname">名称：{{ d.getTrimmedName() }} </span><br/>'
@@ -337,10 +337,13 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     '      <div class="layui-form-item layim-vcard-item"><label class="label">账&nbsp;&nbsp;号 </label><span>{{ d.id }}</span></div>',
     '      <div class="layui-form-item layim-vcard-item"><label class="label">昵&nbsp;&nbsp;称 </label> ',
     '        <div class="block">',
-    '          <input type="text" class="layui-input" name="nickname" value="{{d.name || d.username}}" lay-verify="required">',
+    '          <input type="text" class="layui-input" name="nickname" value="{{ d.name }}" lay-verify="required">',
     '        </div>',
     '      </div>',
-    '      <a href="javascript:void(0);" target="_blank"  title="点击上传图片" ><img src="{{ d.avatar }}" class="layui-circle layim-vcard-avatar"></a>',
+    '      <a href="javascript:void(0);" target="_blank"  layImEx-event="set_mine_avatar" title="点击上传图片" >',
+    '        <img id="img_set_mine_avatar" src="{{ d.avatar }}" class="layui-circle layim-vcard-avatar">',
+    '      </a>',
+    '      <input type="file" id="ipt_set_mine_avatar" style="display:none" accept="image/png, image/jpeg, image/gif, image/jpg">',
     '    </li>',
     '  </div>',
     '  <div class="layui-col-xs12 layim-vcard-item">',
@@ -848,19 +851,20 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       _layer.closeAll('tips');
       _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
     },
-    open_my_info: function(oThis, e) {
-      XoW.logger.ms(_this.classInfo, 'open_my_info()');
-      layui.each(call.getMyInfo, function(index, item){
-        XoW.logger.ms(_this.classInfo, 'open_my_info.cb()');
+    open_mine_info: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_mine_info()');
+      layui.each(call.getMineInfo, function(index, item){
+        XoW.logger.ms(_this.classInfo, 'open_mine_info.cb()');
         item && item(function(pVCard){
           _cache.mine.vcard = pVCard;
           _cache.mine.gender = "secret";
           if(!_cache.mine.vcard.BDAY) {
             _cache.mine.vcard.BDAY = "1900-01-01";
           }
+          _cache.mine.name = pVCard.NICKNAME || _cache.mine.name || _cache.mine.username;
           var content = _layTpl(_eleMineVCard).render(_cache.mine);
-          _layer.close(events.open_my_info.index);
-          events.open_my_info.index = _layer.open({
+          _layer.close(events.open_mine_info.index);
+          events.open_mine_info.index = _layer.open({
             type: 1 // 1表示页面内，2表示frame
             ,title: '我的资料'
             ,shade: false
@@ -877,25 +881,72 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
               });
             }
             ,btn1: function(index, layero) {
-              XoW.logger.ms(_this.classInfo, 'open_my_info.btn1()');
+              XoW.logger.ms(_this.classInfo, 'open_mine_info.btn1()');
               var elem = layero.find('.layui-form');
               if(!_verifyForm(elem)) {
                 return;
               }
               var field = _getFormFields(elem);
               // _layer.alert(JSON.stringify(field));
-              layui.each(call.setMyInfo, function(index, item){
-                item && item(field,function(){
-                  _layer.close(events.open_my_info.index);
-                });});
+              var imgAvatar = layero.find('#img_set_mine_avatar')[0];
+              if(imgAvatar.tag === 'changed') {
+                layui.each(call.setMineInfoWithAvatar, function(index, item){
+                  // data:image/jpeg;base64,xxx
+                  var ay = imgAvatar.src.split(';base64,', 2);
+                  var type = ay[0].split(':', 2)[1];
+                  field = $.extend({base64: ay[1], type: type}, field);
+                  item && item(field, function(){
+                    _layer.close(events.open_mine_info.index);
+                  });
+                });
+              } else {
+                layui.each(call.setMineInfo, function(index, item){
+                  item && item(field, function(){
+                    _layer.close(events.open_mine_info.index);
+                  });
+                });
+              }
             }
             ,btn2: function() {
-              _layer.close(events.open_my_info.index);
+              _layer.close(events.open_mine_info.index);
             }
           });
         });
-        XoW.logger.me(_this.classInfo, 'open_my_info.cb()');
+        XoW.logger.me(_this.classInfo, 'open_mine_info.cb()');
       });
+    },
+    set_mine_avatar: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'set_mine_avatar()');
+      var $fileInput = $('#ipt_set_mine_avatar')[0];
+      $fileInput.onchange = function(e) {
+        XoW.logger.ms(_this.classInfo, '$fileInput.change()');
+        var $file = e.target.files[0]; // $file.size is base64 size?
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          XoW.logger.ms('FileReader.onload({0},{1}) '.f($file.name, $file.size));
+          if($file.size > 5*1024){
+            _layer.msg('上传的图片的不能超过5K,请重新选择');
+            return;
+          }
+          $('#img_set_mine_avatar')[0].src = e.target.result;
+          $('#img_set_mine_avatar')[0].tag = 'changed';
+          // xmpp temp-vcard不允许单独设置头像 :<
+          //layui.each(call.setMineInfoWithAvatar, function(index, item){
+          //  var photo = e.target.result.split('base64,')[1];
+          //  item && item({base64: photo, type: $file.type},function(){
+          //    _layer.msg('头像设置成功');
+          //  });
+          //});
+        };
+        if ($file) {
+          reader.readAsDataURL($file);
+          $fileInput.value = ''; // reset input value
+        }
+        //delete reader;
+        XoW.logger.me(_this.classInfo, '$fileInput.change()');
+      };
+      $fileInput.click();
+      XoW.logger.me(_this.classInfo, 'set_mine_avatar()');
     },
     open_chat: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_chat()');
@@ -1707,6 +1758,18 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     });
     return field;
     // _layer.msg(JSON.stringify(field));
+  };
+
+  var _tempUploadAvatar =  function(e) {
+    XoW.logger.ms(_this.classInfo, '$fileInput.change()');
+    var $file = e.target.files[0]; // $file.size is base64 size?
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      XoW.logger.ms('FileReader.onload() '+ $file.name);
+      $('#img_set_mine_avatar').src = e.target.result;
+    };
+    delete reader;
+    XoW.logger.me(_this.classInfo, '$fileInput.change()');
   };
   // endregion Private Methods
 

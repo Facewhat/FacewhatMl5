@@ -418,16 +418,21 @@
       _chatMgr.sendMessage(content, toJid, _this.getCache().mine.jid);
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));
     };
-    this.getMyInfo = function(pSucCb) {
-      XoW.logger.ms(_this.classInfo, 'getMyInfo()');
+    this.getMineInfo = function(pSucCb) {
+      XoW.logger.ms(_this.classInfo, 'getMineInfo()');
       _vCardMgr.getVCardWithCb(_this.getCurrentUser().jid, pSucCb);
       // presence update vCard todo
-      XoW.logger.me(_this.classInfo, 'getMyInfo()');
+      XoW.logger.me(_this.classInfo, 'getMineInfo()');
     };
-    this.setMyInfo = function(pVCard, pSucCb, pTimeout) {
-      XoW.logger.ms(_this.classInfo, 'setMyInfo()');
+    this.setMineInfo = function(pVCard, pSucCb, pTimeout) {
+      XoW.logger.ms(_this.classInfo, 'setMineInfo()');
       _vCardMgr.setVCard(_this.getCurrentUser().jid, pVCard, pSucCb, pTimeout);
-      XoW.logger.me(_this.classInfo,'setMyInfo()');
+      XoW.logger.me(_this.classInfo,'setMineInfo()');
+    };
+    this.setMineInfoWithAvatar = function(pVCard, pSucCb, pTimeout) {
+      XoW.logger.ms(_this.classInfo, 'setMineInfoWithAvatar()');
+      _vCardMgr.setMineInfoWithAvatar(_this.getCurrentUser().jid, pVCard, pSucCb, pTimeout);
+      XoW.logger.me(_this.classInfo,'setMineInfoWithAvatar()');
     };
 
     this.searchUser = function (val, pTimeout){

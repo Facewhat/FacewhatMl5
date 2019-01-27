@@ -297,6 +297,28 @@
         XoW.logger.me(_this.classInfo,  '_cbSetVCard()');
       }, _cbError.bind(_this), pTimeout);
       XoW.logger.me(_this.classInfo, 'setVCard({0})'.f(pJid));
+    };
+    this.setMineInfoWithAvatar = function (pJid, pVCard, pSucCb, pTimeout) {
+      XoW.logger.ms(_this.classInfo, 'setMineInfoWithAvatar({0})'.f(pJid));
+      var iq = $iq({
+        id: XoW.utils.getUniqueId('setVCard'),
+        type: 'set'
+      }).c('vCard', {
+        xmlns: XoW.NS.VCARD
+      }).c('NICKNAME', null, pVCard.NICKNAME)
+        .c('DESC', null, pVCard.DESC)
+        .c('BDAY', null, pVCard.BDAY)
+        .c('EMAIL', null).c('INTERNET').up().c('PREF').up().c('USERID', null, pVCard.EMAIL)
+        .up().c('TEL', null).c('WORK').up().c('CELL').up().c('NUMBER', null, pVCard.WORK.CELL_TEL)
+        .up().c('PHOTO', null)
+        .c('TYPE', null, pVCard.PHOTO.TYPE)
+        .c('BINVAL', null, pVCard.PHOTO.BINVAL);
+      _gblMgr.getConnMgr().sendIQ(iq, function (stanza) {
+        XoW.logger.ms(_this.classInfo, '_cbSetAvatar({0})'.f($(stanza).attr('id')));
+        pSucCb();
+        XoW.logger.me(_this.classInfo,  '_cbSetAvatar()');
+      }, _cbError.bind(_this), pTimeout);
+      XoW.logger.me(_this.classInfo, 'setVCard({0})'.f(pJid));
     }
     // endregion Public Methods
 

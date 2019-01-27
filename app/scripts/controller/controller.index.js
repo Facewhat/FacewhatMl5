@@ -110,9 +110,16 @@ layui.extend({
         _client.reconnect();
       },
       btn3: function(){
-        window.opener=null;
-        window.open('','_self');
-        window.close();
+        var method = navigator.userAgent.indexOf('Firefox') > -1 ?
+          function(){location.href = 'about:blank';}
+          :
+          function(){
+            // 有时候并不生效
+            window.opener = null;
+            window.open('', '_self', '');
+            window.close();
+          };
+        method();
       }
     });
 
@@ -439,13 +446,13 @@ layui.extend({
   // endregion UI CAllBack By LayIM
 
   // region UI Callback By LayIM.extend
-  _layImEx.on('getMyInfo', function (pSucCb) {
-    XoW.logger.ms(_classInfo, 'getMyInfo()');
-    _client.getMyInfo(pSucCb);
-    XoW.logger.me(_classInfo, 'setMyInfo()');
+  _layImEx.on('getMineInfo', function (pSucCb) {
+    XoW.logger.ms(_classInfo, 'getMineInfo()');
+    _client.getMineInfo(pSucCb);
+    XoW.logger.me(_classInfo, 'setMineInfo()');
   });
-  _layImEx.on('setMyInfo', function (param, pSucCb) {
-    XoW.logger.ms(_classInfo, 'setMyInfo()');
+  _layImEx.on('setMineInfo', function (param, pSucCb) {
+    XoW.logger.ms(_classInfo, 'setMineInfo()');
     var vCardTemp = new XoW.VCard();
     vCardTemp.NICKNAME = param.nickname;
     vCardTemp.BDAY = param.birthday;
@@ -453,8 +460,21 @@ layui.extend({
     vCardTemp.WORK.CELL_TEL = param.telephone;
     vCardTemp.EMAIL = param.email;
     // gender not implement yet.
-    _client.setMyInfo(vCardTemp, pSucCb, 3 * 1000);
-    XoW.logger.me(_classInfo, 'setMyInfo()');
+    _client.setMineInfo(vCardTemp, pSucCb, 3 * 1000);
+    XoW.logger.me(_classInfo, 'setMineInfo()');
+  });
+  _layImEx.on('setMineInfoWithAvatar', function (param, pSucCb) {
+    XoW.logger.ms(_classInfo, 'setMineInfoWithAvatar()');
+    var vCardTemp = new XoW.VCard();
+    vCardTemp.NICKNAME = param.nickname;
+    vCardTemp.BDAY = param.birthday;
+    vCardTemp.DESC = param.signature;
+    vCardTemp.WORK.CELL_TEL = param.telephone;
+    vCardTemp.EMAIL = param.email;
+    vCardTemp.PHOTO.BINVAL = param.base64;
+    vCardTemp.PHOTO.TYPE = param.type;
+    _client.setMineInfoWithAvatar(vCardTemp, pSucCb, 3 * 1000);
+    XoW.logger.me(_classInfo, 'setMineInfoWithAvatar()');
   });
   _layImEx.on('pushExtMsg', function (param) {
     XoW.logger.ms(_classInfo, 'pushExtMsg({0},{1})'.f(param.sid, param.to));
