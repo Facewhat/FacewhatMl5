@@ -180,7 +180,7 @@
       if(friend) {
         friend.vcard = pVCard;
         if(pVCard.PHOTO.BINVAL) {
-          friend.avatar = "data:image/;base64," + pVCard.PHOTO.BINVAL;
+          friend.avatar = 'data:image/;base64,' + pVCard.PHOTO.BINVAL;
           _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED, friend);
         }
         if(pVCard.NICKNAME &&

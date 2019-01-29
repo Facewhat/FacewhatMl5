@@ -271,11 +271,11 @@
         xmlns: XoW.NS.VCARD
       });
       _gblMgr.getConnMgr().sendIQ(vCard, function (stanza) {
-        XoW.logger.ms(_this.classInfo, '_cbGetVCardSync({0})'.f($(stanza).attr('id')));
+        XoW.logger.ms(_this.classInfo, '_cbEmbGetVCard({0})'.f($(stanza).attr('id')));
         var vCardTemp = _parseStanzaToVCard(stanza);
         _addVCard(vCardTemp);
         pSucCb(vCardTemp);
-        XoW.logger.me(_this.classInfo,  '_cbGetVCardSync()');
+        XoW.logger.me(_this.classInfo,  '_cbEmbGetVCard()');
       }, _cbError.bind(_this), timeout);
       XoW.logger.me(_this.classInfo, 'getVCardWithCb({0})'.f(jid));
     };

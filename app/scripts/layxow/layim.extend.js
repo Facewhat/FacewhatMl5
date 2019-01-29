@@ -854,14 +854,15 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     open_mine_info: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_mine_info()');
       layui.each(call.getMineInfo, function(index, item){
-        XoW.logger.ms(_this.classInfo, 'open_mine_info.cb()');
         item && item(function(pVCard){
+          XoW.logger.ms(_this.classInfo, 'getMineInfo.cb()');
           _cache.mine.vcard = pVCard;
           _cache.mine.gender = "secret";
           if(!_cache.mine.vcard.BDAY) {
             _cache.mine.vcard.BDAY = "1900-01-01";
           }
           _cache.mine.name = pVCard.NICKNAME || _cache.mine.name || _cache.mine.username;
+          _cache.mine.avatar = pVCard.PHOTO.BINVAL ? 'data:image/;base64,' + pVCard.PHOTO.BINVAL : _cache.mine.avatar;
           var content = _layTpl(_eleMineVCard).render(_cache.mine);
           _layer.close(events.open_mine_info.index);
           events.open_mine_info.index = _layer.open({
@@ -911,6 +912,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
               _layer.close(events.open_mine_info.index);
             }
           });
+          XoW.logger.me(_this.classInfo, 'getMineInfo.cb()');
         });
         XoW.logger.me(_this.classInfo, 'open_mine_info.cb()');
       });
@@ -924,8 +926,8 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         var reader = new FileReader();
         reader.onload = function (e) {
           XoW.logger.ms('FileReader.onload({0},{1}) '.f($file.name, $file.size));
-          if($file.size > 5*1024){
-            _layer.msg('上传的图片的不能超过5K,请重新选择');
+          if($file.size > 10*1024){
+            _layer.msg('上传的图片的不能超过10K,请重新选择');
             return;
           }
           $('#img_set_mine_avatar')[0].src = e.target.result;

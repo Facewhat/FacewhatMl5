@@ -449,7 +449,7 @@ layui.extend({
   _layImEx.on('getMineInfo', function (pSucCb) {
     XoW.logger.ms(_classInfo, 'getMineInfo()');
     _client.getMineInfo(pSucCb);
-    XoW.logger.me(_classInfo, 'setMineInfo()');
+    XoW.logger.me(_classInfo, 'getMineInfo()');
   });
   _layImEx.on('setMineInfo', function (param, pSucCb) {
     XoW.logger.ms(_classInfo, 'setMineInfo()');
