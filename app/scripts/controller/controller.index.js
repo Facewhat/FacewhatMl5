@@ -1,6 +1,8 @@
 /**
  * Created by cy on 2018/3/12.
- * 不要包含任何操作main页面的DOM代码
+ * 1.不要包含任何操作main页面的DOM代码，需要移出去！
+ * 2.不得依赖jquery或zepto，layim-mobile 是不支持zepto的
+ * 3.尽量不依赖layui组件
  */
 'use strict';
 var moduleNames = {};
@@ -19,7 +21,7 @@ layui.extend({
   client: '{/}./scripts/layxow/layim.client',
   layImExMobile: '{/}./scripts/layxow/layim.mobile.extend',
   layImEx: '{/}./scripts/layxow/layim.extend'
-}).use(['jquery', 'layer', moduleNames.layim,'client',moduleNames.layImEx], function () {
+}).use([/*'jquery',*/ 'layer', moduleNames.layim,'client',moduleNames.layImEx], function () {
   var _this = this;
   var _client = layui.client;
   var _layer,_layIM, _layImEx;
@@ -35,6 +37,7 @@ layui.extend({
   var _classInfo = 'Controller';
   var _clientMode = XoW.ClientMode.NORMAL; // kefu -- 独立客服页面, briefkefu -- 嵌入式客服页面(暂不支持), normal -- 默认
 
+  // todo comm by cy 涉及界面元素的移出去 [20190310]
   $(function () {
     XoW.logger.d("index.html on document ready");
     _clientMode = _getPar('mode');
@@ -443,6 +446,25 @@ layui.extend({
       });
     });
   });
+
+  // region only for mobile version recently
+  _layIM.on('moreList', function(obj){
+    switch(obj.alias){
+      case 'find':
+        _layer.msg('发现暂未集成');
+        break;
+      case 'cart': //发现
+        _layer.msg('购物车暂未集成');
+        break;
+      case 'clear':
+        _layImEx.clearCache();
+        break;
+      case 'logout':
+        _layImEx.logout();
+        break;
+    }
+  });
+  // endregion only for mobile version recently
   // endregion UI CAllBack By LayIM
 
   // region UI Callback By LayIM.extend
@@ -534,6 +556,11 @@ layui.extend({
     XoW.logger.ms(_classInfo, 'searchChatLog({0})'.f(pParam.withJid));
     _client.searchChatLog(pParam, pCallback,  3 * 1000);
     XoW.logger.me(_classInfo, 'searchChatLog()');
+  });
+  _layImEx.on('logout', function() {
+    XoW.logger.ms(_classInfo, 'logout({0})');
+    _client.logout('用户退出');
+    XoW.logger.me(_classInfo, 'logout()');
   });
   // endregion UI Callback By LayIM.extend
 
