@@ -380,11 +380,16 @@
         _handlerMgr.addHandler(event, callback);
       }
     };
-    this.login = function (serviceURL, username, pass, pResource) {
+    this.login = function(serviceURL, username, pass, pResource) {
       XoW.logger.ms(_this.classInfo, 'login()');
       _this.connect(serviceURL, username, pass, pResource);
       XoW.logger.me(_this.classInfo, 'login()');
     };
+    this.logout = function(pReason) {
+      XoW.logger.ms(_this.classInfo, 'logout()');
+      _connMgr.disconnect(pReason);
+      XoW.logger.me(_this.classInfo, 'logout()');
+    }
     /**
      * 新建XoW.Connection对象并开始连接
      * @param serviceURL 服务器URL
