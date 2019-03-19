@@ -7,19 +7,19 @@
  * 4.do not depends on jquery but zepto，have not implemented yet
  */
 //layui.define(['layer', 'laytpl', 'layim'], function (exports) {
-layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
-  'laydate', 'util', 'element', 'flow', 'client'], function (exports) {
+layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
+  'form', 'laypage',
+  'laydate', 'util', 'element', 'flow'], function (exports) {
   // region Fields
   this.classInfo = 'layImEx';
-  var $ = layui.zepto;
-  var _layer = layui.mobile.layer;
-  var _layUpload = layui.mobile.upload;
   var _layTpl = layui.laytpl;
+  var _layUpload = layui['upload-mobile'];
+  var _layer = layui.mobile.layer;
   var _layIM = layui.mobile.layim;
+  var $ = layui.zepto;
 
   var _layFlow = layui.flow;
   var _layPage = layui.laypage;
-  var _layForm = layui.form;
   var _layDate = layui.laydate;
   var _layUtil = layui.util;
 
@@ -345,80 +345,83 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
     '      <col width="70%">',
     '      <col>',
     '    </colgroup>',
-    '    <tbody>',
+    '    <tbody id="setMineInfo">',
     '      <tr>',
-    '        <td colspan="2" id="setMineAvatar">',
-    '          <div class="layim-vcard">',
+    '        <td colspan="2" class="layim-vcard">',
+    '          <div>',
     '            <li layimEx-event="set_mine_avatar">',
-    '              <img src="{{ d.avatar }}">',
+    '              <img id="img_set_mine_avatar" src="{{ d.avatar }}" class="layui-circle">',
     '              <span>账号：{{ d.id }}</span>',
     '              <p>点击更换头像</p>',
-    '         <input type="file" name="file" accpet = "image/*" capture = "camera" >',
     '           </li>',
     '         </div>',
     '         <i class="layim-vcard-edit layim-vcard-edit-mine layui-icon layui-icon-right"></i>',
-
+    '         <input type="file" accept="image/png, image/jpeg, image/gif, image/jpg">',
     '        </td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">账号</td>',
-    '        <td><span class="selfInfoRight">{{ d.id }}</span></td>',
-    '      </tr>',
-    '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">昵称</td>',
+    '        <td class="layim-vcard-title">昵称</td>',
     '        <td>',
     '          <input type="text" class="layui-input layim-vcard-input" name="nickname" value="{{ d.name }}" placeholder="点击输入" lay-verify="required">',
     '          <i class="layim-vcard-edit layui-icon layui-icon-right">',
     '        </td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">性别</td>',
-    '        <td ><span class="selfInfoRight">保密</span></td>',
+    '        <td class="layim-vcard-title">性别</td>',
+    '        <td ><span class="layim-vcard-value">保密</span></td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">生日</td>',
-    '        <td ><span class="selfInfoRight">{{d.vcard.BDAY}}</span><i class="layim-vcard-edit layui-icon layui-icon-right"></td>',
+    '        <td class="layim-vcard-title">生日</td>',
+    '        <td>',
+    '          <input type="text" class="layui-input layim-vcard-input" name="birthday" id="set_mine_vcard_bday" placeholder="请输入" lay-verify="date" value="{{ d.vcard.BDAY }}">',
+    '          <i class="layim-vcard-edit layui-icon layui-icon-right">',
+    '        </td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">手机</td>',
+    '        <td class="layim-vcard-title">手机</td>',
     '        <td>',
     '          <input type="text" class="layui-input layim-vcard-input" name="telephone" value="{{ d.vcard.WORK.CELL_TEL || [] }}" placeholder="请输入" lay-verify="phone">',
     '          <i class="layim-vcard-edit layui-icon layui-icon-right">',
     '        </td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">邮箱</td>',
+    '        <td class="layim-vcard-title">邮箱</td>',
     '        <td>',
-    '          <input type="text" class="layui-input layim-vcard-input" name="email" value="{{ d.vcard.WORK.EMAIL || [] }}" placeholder="请输入" lay-verify="email">',
+    '          <input type="text" class="layui-input layim-vcard-input" name="email" value="{{ d.vcard.EMAIL || [] }}" placeholder="请输入" lay-verify="email">',
     '          <i class="layim-vcard-edit layui-icon layui-icon-right">',
     '        </td>',
     '      </tr>',
-    '      <tr class="layui-elem-field layui-field-title" layimEx-event="open_vcard_field">',
-    '        <td class="selfInfoFont">签名</td>',
-    '        <td ><span class="selfInfoRight">{{d.sign || []}}</span><i class="layim-vcard-edit layui-icon layui-icon-right"></td>',
+    '      <tr class="layui-elem-field layui-field-title" layimEx-event="open_mine_info_field">',
+    '        <td class="layim-vcard-title">签名</td>',
+    '        <td>',
+    '          <input type="text" disabled="disabled" class="layui-input layim-vcard-input" name="signature" value="{{ d.vcard.DESC || [] }}" placeholder="请输入" lay-verify="required">',
+    '          <i class="layim-vcard-edit layui-icon layui-icon-right">',
+    //'        <td ><span class="selfInfoRight">{{d.sign || []}}</span><i class="layim-vcard-edit layui-icon layui-icon-right"></td>',
+    '        </td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td class="selfInfoFont">我的二维码</td>',
+    '        <td class="layim-vcard-title">我的二维码</td>',
     '        <td><img class="selfInfoIcon"  src="../../skin/images/mine_barcode.png"></td>',
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
-    '        <td style="text-align:center" colspan="2"><button class="layui-btn layui-btn-normal" id="saveSelfInfo">保存编辑</button></td>',
+    '        <td style="text-align:center" colspan="2">',
+    '          <button class="layui-btn layui-btn-normal" layImEx-event="set_mine_info">保存编辑</button>',
+    '        </td>',
     '      </tr>',
     '    </tbody>',
     '  </table>',
     '</div>'
   ].join('');
-
   var _elemMineVcardField = [
-    '<div>',
+    '<div class="layim-vcard-field-panel">',
     //'  <input type="text" class="layui-input">',
-    '  <textarea name="signature" placeholder="请输入内容" class="layui-textarea noresize"></textarea>',
-    '  <button class="layui-btn layui-btn-normal" layim-event="back" style="margin-top:5px;margin-left:155px">完成</button>',
+    '  <textarea name="{{ d.name }}" placeholder="请输入内容" class="layui-textarea noresize">{{ d.value }}</textarea>',
+    '  <button class="layui-btn layui-btn-normal layim-vcard-field-submit" layimEx-event="set_mine_info_field">完成</button>',
     '</div>'].join('');
 
   var _elemMineInfoBriefLi = [
     '<li layImEx-event="open_mine_info">',
-    '  <div><img src="{{ d.avatar }}"></div>',
+    '  <div><img src="{{ d.avatar }}" class="layui-circle"></div>',
     '  <span>{{ d.name || d.username }}</span>',
     '  <p>{{ d.sign }}</p>',
     '</li>'].join('');
@@ -889,6 +892,8 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
     }
     XoW.logger.me(_this.classInfo, 'pushSysInfo()');
   };
+
+  // mark mobile
   LAYIMEX.prototype.onReady = function() {
     XoW.logger.ms(_this.classInfo, 'onReady()');
     this.bindFriendListMenu();
@@ -903,7 +908,7 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
     XoW.logger.me(_this.classInfo, 'onReady()');
   };
 
-  // region more list tools
+  // region more list tools mark mobile
   LAYIMEX.prototype.clearCache = function() {
     XoW.logger.ms(_this.classInfo, 'clearCache()');
     // todo 把chrome调试器打开后再加载页面就不能正常显示，不得其解
@@ -1021,6 +1026,22 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
       _layer.closeAll('tips');
       _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
     },
+
+    // region mark mobile
+    logout: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'logout()');
+      _layer.open({
+        content:  '确认退出当前账号?'
+        ,btn: ['确认', '取消']
+        ,skin: 'footer'
+        ,yes: function(index){
+          XoW.logger.ms(_this.classInfo, 'moreList.logout.yes()');
+          layui.each(call.logout, function(index, item){
+            item && item();});
+        }
+      });
+      XoW.logger.me(_this.classInfo, 'logout()');
+    },
     open_mine_info: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_mine_info()');
       layui.each(call.getMineInfo, function(index, item){
@@ -1039,43 +1060,48 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
             type: 1 // 1表示页面内，2表示frame
             ,title: '我的资料'
             ,tpl: content
-            //,btn: ['保存', '关闭']
-            //,success: function(layero, index) {
-            //  _layDate.render({
-            //    elem: '#set_mine_vcard_bday'
-            //    ,format: 'yyyy-MM-dd'
-            //  });
-            //}
-            //,btn1: function(index, layero) {
-            //  XoW.logger.ms(_this.classInfo, 'open_mine_info.btn1()');
-            //  var elem = layero.find('.layui-form');
-            //  if(!_verifyForm(elem)) {
-            //    return;
-            //  }
-            //  var field = _getFormFields(elem);
-            //  // _layer.alert(JSON.stringify(field));
-            //  var imgAvatar = layero.find('#img_set_mine_avatar')[0];
-            //  if(imgAvatar.tag === 'changed') {
-            //    layui.each(call.setMineInfoWithAvatar, function(index, item){
-            //      // data:image/jpeg;base64,xxx
-            //      var ay = imgAvatar.src.split(';base64,', 2);
-            //      var type = ay[0].split(':', 2)[1];
-            //      field = $.extend({base64: ay[1], type: type}, field);
-            //      item && item(field, function(){
-            //        _layer.close(events.open_mine_info.index);
-            //      });
-            //    });
-            //  } else {
-            //    layui.each(call.setMineInfo, function(index, item){
-            //      item && item(field, function(){
-            //        _layer.close(events.open_mine_info.index);
-            //      });
-            //    });
-            //  }
-            //}
-            //,btn2: function() {
-            //  _layer.close(events.open_mine_info.index);
-            //}
+            ,success: function(layero) {
+              _layDate.render({
+                elem: '#set_mine_vcard_bday'
+                ,format: 'yyyy-MM-dd'
+              });
+
+              // 使用upload也是为了有早一日干掉使用base64的方式，我们也整个图片服务器存图片呗
+              var $inputEle = $(layero).find('input[type="file"]')[0];
+              _layUpload({
+                url: ''
+                ,elem: $inputEle
+                ,unwrap: true
+                ,type: 'images'
+                ,before: function(pInputItem) {
+                  XoW.logger.ms(_this.classInfo, 'set_mine_avatar.upload.before()');
+                  // prevent form to submit
+                  $(pInputItem).parent().submit(function(evt) {
+                    evt.preventDefault();
+                    return false;
+                  });
+                  typeof this.success === 'function' && this.success(pInputItem);
+                  pInputItem.value = '';
+                }
+                ,success: function(pItem){
+                  XoW.logger.ms(_this.classInfo, 'set_mine_avatar.upload.success()');
+                  var $file = pItem.files[0]; // $file.size is base64 size?
+                  var reader = new FileReader();
+                  reader.onload = function (e) {
+                    XoW.logger.ms('FileReader.onload({0},{1}) '.f($file.name, $file.size));
+                    if($file.size > 10*1024){
+                      _layer.msg('上传的图片的不能超过10K,请重新选择');
+                      return;
+                    }
+                    $('#img_set_mine_avatar')[0].src = e.target.result;
+                    $('#img_set_mine_avatar')[0].tag = 'changed';
+                  };
+                  if ($file) {
+                    reader.readAsDataURL($file);
+                  }
+                }
+              });
+            }// eof layer open success
           });
           XoW.logger.me(_this.classInfo, 'getMineInfo.cb()');
         });
@@ -1084,28 +1110,62 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
     },
     set_mine_avatar: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'set_mine_avatar()');
-      _layUpload({
-        url: ''
-        ,elem: oThis.find('input')[0]
-        ,unwrap: true
-        ,type: 'images'
-        ,success: function(res){
-          if(res.code == 0){
-            //res.data = res.data || {};
-            //if(type === 'images'){
-            //  focusInsert(thatChat.textarea[0], 'img['+ (res.data.src||'') +']');
-            //} else if(type === 'file'){
-            //  focusInsert(thatChat.textarea[0], 'file('+ (res.data.src||'') +')['+ (res.data.name||'下载文件') +']');
-            //}
-            //sendMessage();
-            _layer.msg('上传成功');
-          } else {
-            _layer.msg(res.msg||'上传失败');
-          }
-        }
-      });
       XoW.logger.me(_this.classInfo, 'set_mine_avatar()');
     },
+    set_mine_info: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'set_mine_info()');
+      var elem = $('#setMineInfo');
+      if(!_verifyForm(elem)) {
+        return;
+      }
+      var field = _getFormFields(elem);
+
+      // _layer.alert(JSON.stringify(field));
+      var imgAvatar = $('#img_set_mine_avatar')[0];
+      if(imgAvatar.tag === 'changed') {
+        layui.each(call.setMineInfoWithAvatar, function(index, item){
+          // data:image/jpeg;base64,xxx
+          var ay = imgAvatar.src.split(';base64,', 2);
+          var type = ay[0].split(':', 2)[1];
+          field = $.extend({base64: ay[1], type: type}, field);
+          item && item(field, function(){
+            _layer.msg('保存成功');
+          });
+        });
+      } else {
+        layui.each(call.setMineInfo, function(index, item){
+          item && item(field, function(){
+            _layer.msg('保存成功');
+          });
+        });
+      }
+      XoW.logger.me(_this.classInfo, 'set_mine_info()');
+    },
+    open_mine_info_field: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'open_mine_info_field()');
+      _layer.close(events.open_mine_info_field.index);
+      events.open_mine_info_field.index = _layIM.panel({
+        title: '编辑{0}'.f(oThis.find('.layim-vcard-title')[0].innerText),
+        tpl: _layTpl(_elemMineVcardField).render({
+          name: oThis.find('input').attr('name'),
+          value: oThis.find('input').val()
+        })
+      });
+      XoW.logger.me(_this.classInfo, 'open_mine_info_field()');
+    },
+    set_mine_info_field: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'set_mine_info_field()');
+      var $layero = oThis.parents('.layui-m-layer').eq(0)
+        ,PANEL = '.layim-panel';
+      var $elm = oThis.parent().find('textarea');
+      // maybe prev is upload frame
+      var $prevPnl = $layero.prev().find(PANEL).length === 0 ?
+        $layero.prev().prev().find(PANEL).eq(0) : $layero.prev().find(PANEL).eq(0);
+      $prevPnl.find('input[name={0}]'.f($elm.attr('name'))).val($elm.val());
+      _back(oThis);
+      XoW.logger.me(_this.classInfo, 'set_mine_info_field()');
+    },
+    // endregion mark mobile
     open_chat: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_chat()');
       var id = oThis.data('id');
@@ -1600,32 +1660,6 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
       window.open(pageUrl);
       XoW.logger.me(_this.classInfo, 'open_url_page()');
     },
-    logout: function(oThis, e) {
-      XoW.logger.ms(_this.classInfo, 'logout()');
-      _layer.open({
-        content:  '确认退出当前账号?'
-        ,btn: ['确认', '取消']
-        ,skin: 'footer'
-        ,yes: function(index){
-          XoW.logger.ms(_this.classInfo, 'moreList.logout.yes()');
-          layui.each(call.logout, function(index, item){
-            item && item();});
-        }
-      });
-      XoW.logger.me(_this.classInfo, 'logout()');
-    },
-    open_vcard_field: function(oThis, e) {
-      XoW.logger.ms(_this.classInfo, 'open_vcard_field()');
-      _layer.close(events.open_vcard_field.index);
-
-      events.open_vcard_field.index = _layIM.panel({
-        title: '编辑条目',
-        tpl: _layTpl(_elemMineVcardField).render({
-          name: '贤心'
-        })
-      });
-      XoW.logger.me(_this.classInfo, 'open_vcard_field()');
-    }
   };
   // endregion LayImEx-event handlers
 
@@ -1642,6 +1676,7 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
     XoW.logger.me(_this.classInfo, '_init()');
   };
 
+  // region mark mobile
   var _bindLogoutLi = function() {
     XoW.logger.ms(_this.classInfo, '_bindLogoutLi()');
     var layMain =  $('.layui-layim');
@@ -1660,7 +1695,25 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
     var listTop = tabThree.find('.layim-list-top');
     listTop.prepend(_layTpl(_elemMineInfoBriefLi).render(_cache.mine));
     XoW.logger.me(_this.classInfo, '_bindMineInfoLi()');
-  }
+  };
+  var _back = function(pOthis) {
+    XoW.logger.ms(_this.classInfo, '_back()');
+    var $layero = pOthis.parents('.layui-m-layer').eq(0)
+      ,index = $layero.attr('index')
+      ,PANEL = '.layim-panel';
+    setTimeout(function(){
+      _layer.close(index);
+    }, 300);
+    pOthis.parents(PANEL).eq(0).removeClass('layui-m-anim-left').addClass('layui-m-anim-rout');
+    $layero.prev().find(PANEL).eq(0).removeClass('layui-m-anim-lout').addClass('layui-m-anim-right');
+    layui.each(call.back, function(index, item){
+      setTimeout(function(){
+        item && item();
+      }, 200);
+    });
+    XoW.logger.me(_this.classInfo, '_back()');
+  };
+  // endregion mark mobile
 
   var _changeMineStatus = function(pStatus) {
     XoW.logger.ms(_this.classInfo, '_changeMineStatus()');
@@ -1891,7 +1944,7 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
 
   var _verifyForm = function(pFrm) {
     XoW.logger.ms(_this.classInfo, '_verifyForm()');
-    var verify = _layForm.config.verify, stop = null
+    var verify = VERIFY_REGEX, stop = null
       ,DANGER = 'layui-form-danger'
       ,verifyElem = pFrm.find('*[lay-verify]'); //获取需要校验的元素
 
@@ -1966,6 +2019,35 @@ layui.define(['layer-mobile', 'laytpl', 'form', 'laypage',
   };
   // endregion Private Methods
 
+  const VERIFY_REGEX = {
+    required: [
+    /[\S]+/
+    ,'必填项不能为空'
+    ]
+    ,phone: [
+    /^1\d{10}$/
+    ,'请输入正确的手机号'
+    ]
+    ,email: [
+    /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+    ,'邮箱格式不正确'
+    ]
+    ,url: [
+    /(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/
+    ,'链接格式不正确'
+    ]
+    ,number: function(value){
+    if(!value || isNaN(value)) return '只能填写数字'
+    }
+    ,date: [
+    /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/
+    ,'日期格式不正确'
+  ]
+    ,identity: [
+    /(^\d{15}$)|(^\d{17}(x|X|\d)$)/
+    ,'请输入正确的身份证号'
+  ]
+}
   // region Overload functions of layim
   var faces = function(){
     var alt = ["[微笑]", "[嘻嘻]", "[哈哈]", "[可爱]", "[可怜]", "[挖鼻]", "[吃惊]", "[害羞]", "[挤眼]", "[闭嘴]", "[鄙视]", "[爱你]", "[泪]", "[偷笑]", "[亲亲]", "[生病]", "[太开心]", "[白眼]", "[右哼哼]", "[左哼哼]", "[嘘]", "[衰]", "[委屈]", "[吐]", "[哈欠]", "[抱抱]", "[怒]", "[疑问]", "[馋嘴]", "[拜拜]", "[思考]", "[汗]", "[困]", "[睡]", "[钱]", "[失望]", "[酷]", "[色]", "[哼]", "[鼓掌]", "[晕]", "[悲伤]", "[抓狂]", "[黑线]", "[阴险]", "[怒骂]", "[互粉]", "[心]", "[伤心]", "[猪头]", "[熊猫]", "[兔子]", "[ok]", "[耶]", "[good]", "[NO]", "[赞]", "[来]", "[弱]", "[草泥马]", "[神马]", "[囧]", "[浮云]", "[给力]", "[围观]", "[威武]", "[奥特曼]", "[礼物]", "[钟]", "[话筒]", "[蜡烛]", "[蛋糕]"], arr = {};
