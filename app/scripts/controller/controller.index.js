@@ -133,10 +133,12 @@ layui.extend({
     };
     _layImEx.notifyToChatBoxes(msg);
   });
-  _client.on(XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED, function (params) {
+  _client.on(XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED, function (pFriend) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_FRIEND_AVATAR_CHANGED);
-    if (!params.isMine) {
-      _layImEx.changeFriendAvatar(params);
+    if (pFriend.vcard && pFriend.vcard.isMine) {
+      _layImEx.changeMineAvatar(pFriend.avatar);
+    } else {
+      _layImEx.changeFriendAvatar(pFriend);
     }
     // layer.alert(JSON.stringify(params));
     return true;

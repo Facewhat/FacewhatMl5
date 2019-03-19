@@ -665,15 +665,21 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     _layer.close(_reConnLoadTipIndex);
     XoW.logger.me(_this.classInfo, 'closeReConnLoadTip()');
   };
+
+  // region mobile remark
   LAYIMEX.prototype.changeMineUsername = function(params) {
     XoW.logger.ms(_this.classInfo, 'changeMineUsername({0})'.f(params));
     return _changeMineUsername(params), this;
   };
   LAYIMEX.prototype.changeMineSign = function(pSign) {
     XoW.logger.ms(_this.classInfo, 'changeMineSign({0})'.f(pSign));
-    $('.layui-layim .layui-layim-remark').val(pSign);
-    XoW.logger.me(_this.classInfo, 'changeMineSign({0})'.f(pSign));
+    return _changeMineSign(pSign), this;
   };
+  LAYIMEX.prototype.changeMineAvatar = function(params) {
+    XoW.logger.ms(_this.classInfo, 'changeMineAvatar({0})'.f(params.id));
+    return _changeMineAvatar(params), this;
+  };
+  // endregion mobile remark
   LAYIMEX.prototype.changeFriendAvatar = function(params) {
     XoW.logger.ms(_this.classInfo, 'changeFriendAvatar({0})'.f(params.id));
     return _changeFriendAvatar(params), this;
@@ -1166,6 +1172,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
       XoW.logger.me(_this.classInfo, 'set_mine_info_field()');
     },
     // endregion mark mobile
+
     open_chat: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_chat()');
       var id = oThis.data('id');
@@ -1696,23 +1703,6 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     listTop.prepend(_layTpl(_elemMineInfoBriefLi).render(_cache.mine));
     XoW.logger.me(_this.classInfo, '_bindMineInfoLi()');
   };
-  var _back = function(pOthis) {
-    XoW.logger.ms(_this.classInfo, '_back()');
-    var $layero = pOthis.parents('.layui-m-layer').eq(0)
-      ,index = $layero.attr('index')
-      ,PANEL = '.layim-panel';
-    setTimeout(function(){
-      _layer.close(index);
-    }, 300);
-    pOthis.parents(PANEL).eq(0).removeClass('layui-m-anim-left').addClass('layui-m-anim-rout');
-    $layero.prev().find(PANEL).eq(0).removeClass('layui-m-anim-lout').addClass('layui-m-anim-right');
-    layui.each(call.back, function(index, item){
-      setTimeout(function(){
-        item && item();
-      }, 200);
-    });
-    XoW.logger.me(_this.classInfo, '_back()');
-  };
   // endregion mark mobile
 
   var _changeMineStatus = function(pStatus) {
@@ -1723,12 +1713,44 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     }));// 暂时用隐身代替离线
     XoW.logger.me(_this.classInfo, '_changeMineStatus()');
   };
+
+  // region mark mobile
   var _changeMineUsername = function(params) {
-    XoW.logger.ms(_this.classInfo, '_changeMineAvatar()');
-    $('.layui-layim-user').text(params);
-    _cache.mine.username = params;
-    XoW.logger.ms(_this.classInfo, '_changeMineAvatar()');
+    XoW.logger.ms(_this.classInfo, '_changeMineUsername()');
+    var layMain = $('.layui-layim');
+    var tabThree = layMain.find('.layim-tab-content').eq(2);
+    var listTop = tabThree.find('.layim-list-top');
+    var $span = listTop.find('li[layimex-event="open_mine_info"] span');
+    if ($span.length != 0) {
+      $span.html(params);
+    }
+    XoW.logger.me(_this.classInfo, '_changeMineUsername()');
   };
+  var _changeMineSign = function(params) {
+    XoW.logger.ms(_this.classInfo, '_changeMineSign()');
+    var layMain = $('.layui-layim');
+    var tabThree = layMain.find('.layim-tab-content').eq(2);
+    var listTop = tabThree.find('.layim-list-top');
+    var $span = listTop.find('li[layimex-event="open_mine_info"] p');
+    if ($span.length != 0) {
+      $span.html(params);
+    }
+    XoW.logger.me(_this.classInfo, '_changeMineSign()');
+  };
+  var _changeMineAvatar = function(params) {
+    XoW.logger.ms(_this.classInfo, '_changeMineAvatar({0})'.f(params.id));
+    var layMain = $('.layui-layim');
+    var tabThree = layMain.find('.layim-tab-content').eq(2);
+    var listTop = tabThree.find('.layim-list-top');
+    var img = listTop.find(".layui-circle,img");
+    // 判断是否存在头像这个标签，因为刚登陆进来，可能界面上还没有显示好友列表
+    if (img.length != 0) {
+        img.attr('src', params);
+    }
+    // todo 如果正在聊天要改聊天面板头像
+    XoW.logger.me(_this.classInfo, "_changeMineAvatar()");
+  };
+  // endregion mark mobile
   var _changeFriendNick = function(params) {
     XoW.logger.ms(_this.classInfo, '_changeFriendNick({0})'.f(params.id));
     var id = params.id;
@@ -1740,7 +1762,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     }
     // todo 如果正在聊天要改聊天面板头像
     XoW.logger.ms(_this.classInfo, '_changeFriendNick()');
-  }
+  };
   var _changeFriendAvatar = function(params) {
     XoW.logger.ms(_this.classInfo, '_changeFriendAvatar({0})'.f(params.id));
     var id = params.id;
