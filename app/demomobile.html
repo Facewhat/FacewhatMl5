@@ -6,12 +6,12 @@
 <meta name="format-detection" content="telephone=no">
 <title>LayIM 移动版</title>
 
-<link rel="stylesheet" href="../dist/css/layui.mobile.css">
+<link rel="stylesheet" href="./layui/css/layui.mobile.css">
 
 </head>
 <body>
 
-<script src="../dist/layui.js"></script>
+<script src="./layui/layui.js"></script>
 <script>
 layui.config({
   version: true
@@ -165,6 +165,11 @@ layui.config({
       ,title: '分享与邀请'
       ,iconUnicode: '&#xe641;' //图标字体的unicode，可不填
       ,iconClass: '' //图标字体的class类名
+    },{
+      alias: 'demo'
+      ,title: 'test by shiney'
+      ,iconUnicode: '&#xe641;' //图标字体的unicode，可不填
+      ,iconClass: '' //图标字体的class类名
     }]
     
     //,tabIndex: 1 //用户设定初始打开的Tab项下标
@@ -211,6 +216,22 @@ layui.config({
   //监听点击更多列表
   layim.on('moreList', function(obj){
     switch(obj.alias){
+      case 'demo':
+//        layer.open({
+//          content:  '确认退出当前账号?'
+//          ,btn: ['确认', '取消']
+//          ,yes: function(index){
+//            layer.msg('by shiney');
+//          }
+//        });
+        layer.open({
+          title: [
+            '我是标题',
+            'background-color: #FF4351; color:#fff;'
+          ]
+          ,content: '标题风格任你定义。'
+        });
+        break;
       case 'find':
         layer.msg('自定义发现动作');
         
@@ -266,13 +287,13 @@ layui.config({
           ,content: autoReplay[Math.random()*9|0]
         }
       }
-      layim.searchMessage(obj);
+      layim.getMessage(obj);
     }, 3000);
   });
   
   //模拟收到一条好友消息
   setTimeout(function(){
-    layim.searchMessage({
+    layim.getMessage({
       username: "贤心"
       ,avatar: "http://tp1.sinaimg.cn/1571889140/180/40030060651/1"
       ,id: "100001"

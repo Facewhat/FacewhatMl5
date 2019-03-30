@@ -32,8 +32,18 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
   //>cache.chat:未读联系人，读取之后会被清空
   //>cache.local.chatLog:上一次（登录前）聊天记录，不会实时刷新
   var _$sysInfoBox, _device, _cache, _reConnLoadTipIndex, _layerIndex = {};
-  const LAYER_MENU = 'LAYER_MENU', LAYER_PROFILE = 'LAYER_PROFILE';
-
+  const LAYER_MENU_FRIEND = 'LAYER_MENU_FRIEND', LAYER_MENU_MORE_TOOL = 'LAYER_MENU_MORE_TOOL';
+  const DEMO_AUTO_REPLAY = [
+    '感谢您给提了这么惊天动地的好建议 face[阴险]',
+    '您没发错吧？face[微笑] ',
+    '我是谁？ 小冰？小度？斯瑞？ 一般人我不告诉他！face[哈哈] ',
+    '您好，我是主人的美女秘书，有什么事就跟我说吧，等他回来我会转告他的。face[心] face[心] face[心] ',
+    'face[威武] face[威武] face[威武] face[威武] ',
+    '<（@￣︶￣@）>我骄傲',
+    '你要和我说话？你真的要和我说话？你确定自己想说吗？你一定非说不可吗？那你说吧，这是自动回复。',
+    'face[黑线]  您慢慢说，别急……',
+    '(*^__^*) face[嘻嘻] ，您也是机器人吗？'
+  ];
   // endregion Fields
 
   // region UI templates
@@ -54,7 +64,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     //,'</div>'
   ].join('');
 
-  // mark mobile
+  // region mark mobile
   var _eleFriendMenu = [
     '<ul id="{{# "contextMenu_" + d.id }}" data-type="{{ d.type }}"  data-id="{{ d.id }}">'
     ,'<li layImEx-event="menu_chat"><i class="layui-icon" >&#xe611;</i>  发送即时消息</li>'
@@ -65,6 +75,16 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     ,'<li layImEx-event="menu_create_group">新建分组</li>'
     ,'</ul>'
   ].join('');
+
+  var _eleMainToolMoreMenu = [
+    '<ul id="main_tool_more">'
+    ,'<li layImEx-event="menu_add_friend"><i class="layui-icon" >&#xe66f;</i>  添加朋友</li>'
+    ,'<li layImEx-event="menu_sweep_qrcode"><i class="layui-icon">&#xe660;</i>  扫一扫</li>'
+    ,'<li layImEx-event="menu_speech"><i class="layui-icon">&#xe606;</i>  你说我懂</li>'
+    ,'<li layImEx-event="menu_help"><i class="layui-icon">&#xe607;</i>  帮助与反馈</li>'
+    ,'</ul>'
+  ].join('');
+  // endregion mark mobile
 
   //聊天内容列表模版
   var _elemChatMain = [
@@ -440,7 +460,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     '<ul class="layui-layim-search">'
     ,'<li>'
     ,'  <i class="layui-icon layui-icon-search"></i>'
-    ,'  <input placeholder="请输入关键字">'
+    ,'  <input placeholder="请输入用户名/聊天室名/消息文本...">'
     ,'  <label class="layui-icon" layImEx-event="close_search">&#x1007;</label>'
     ,'</li>'
     ,'</ul>'
@@ -549,127 +569,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
   };
   LAYIMEX.prototype.bindFriendListMenu = function() {
     XoW.logger.ms(_this.classInfo, 'bindFriendListMenu()');
-    var longPressFriendList = function(pId, pElem) {
-      XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.longPressFriendList()');
-      var data = _getDataFromFriendListItem(pId);
-      $(pElem).addClass('layui-m-layer-menu-gray');
-      _layer.open({
-        content: _layTpl(_eleFriendMenu).render(data),
-        skin: 'menu',
-        shade: 'background-color:rgba(0,0,0, .3);',
-        opacity: 0.2,
-        time: 5,
-        success: function(layero) {
-          _layerIndex[LAYER_MENU] = layero.attributes['index'].value;
-        } ,
-        end: function() {
-          XoW.logger.ms(_this.classInfo, 'longPressFriendList.end()');
-          $(pElem).removeClass('layui-m-layer-menu-gray');
-          _layerIndex[LAYER_MENU] = -1;
-        }
-      });
-      XoW.logger.me(_this.classInfo, 'bindFriendListMenu.longPressFriendList()');
-    };
-    var timers = new Map();
-    // 屏蔽layim-mobile.js中的touch
-    $('.layim-list-friend .layui-layim-list li').each(function(idx ,element) {
-      var oThis = $(element);
-      var id = oThis.data('id');
-      if(oThis.hasClass('layim-null')) {
-        return;
-      }
-
-      element.addEventListener('touchend', function(e) {
-        XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchend()');
-        if(timers.has(id)) {
-          XoW.logger.d('It is not timeout yet, so clear it {0}'.f(id));
-          clearTimeout(timers.get(id));
-          timers.delete(id);
-        } else {
-          XoW.logger.d('Prevent default event handler by {0}'.f(id));
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }, true);
-
-      element.addEventListener('touchstart', function(e) {
-        XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchstart()');
-        if (e.targetTouches.length !== 1) {
-          return;
-        }
-        XoW.logger.d('The target is {0}'.f(e.target.tagName));
-        if(!timers.has(id)) {
-          XoW.logger.d( 'There is no timer of {0}'.f(id));
-          timers.set(id, setTimeout(function() {
-            XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchstart.timeout()');
-            if(!timers.has(id)) {
-              XoW.logger.w('The timer {0} was killed'.f(id));
-              return;
-            }
-            clearTimeout(timers.get(id));
-            timers.delete(id);
-            e.preventDefault();
-            longPressFriendList(id, element);
-          }, 1*3000));
-        }
-
-        e.preventDefault();
-      }, false);
-    });
-    /*
-    var timeOutEvent=0;
-    $('.layim-list-friend .layui-layim-list li').each(function(index ,element) {
-      var oThis = $(element);
-
-
-
-      element.addEventListener('touchmove', function (e) {
-        if (e.targetTouches.length == 1) {
-          clearTimeout(timeOutEvent);
-          timeOutEvent = 0;
-        }
-      });
-      element.addEventListener('touchend', function (e) {
-        if (e.changedTouches.length == 1) {
-          clearTimeout(timeOutEvent);
-          if(timeOutEvent !==0 ){
-            element.style.background = "transparent"; // 恢复
-          }
-          return false;
-        }
-      }, false);
-
-    });*/
-
-    //$('.layim-list-friend').on('contextmenu', '.layui-layim-list li', function (e) {
-    //  var oThis = $(e.currentTarget);
-    //  var type = oThis.data('type'), index = oThis.data('index');
-    //  var list = oThis.attr('data-list') || oThis.index(), data = {};
-    //  if(type === 'friend'){
-    //    data = _cache[type][index].list[list];
-    //  } else {
-    //    XoW.e('The item type is error with {0}, return.'.type);
-    //    return;
-    //  }
-    //  if (oThis.hasClass('layim-null')) return;
-    //  _layer.tips(_layTpl(_eleFriendMenu).render(data), this, {
-    //    tips: 1
-    //    , time: 0
-    //    , anim: 5
-    //    , fixed: true
-    //    , skin: 'layui-box layui-layim-contextmenu'
-    //    , success: function (layerO) {
-    //      var stopBubble = function (e) {
-    //        layui.stope(e);
-    //      };
-    //      layerO.off('mousedown', stopBubble).on('mousedown', stopBubble);
-    //      //var layerObj = $('#contextmenu_' + id).parents('.layui-layim-contextmenu');
-    //      //_resetPosition(layerObj, -100, 0);
-    //    }
-    //  });
-    //  $(document).off('mousedown', hide).on('mousedown', hide);
-    //  $(window).off('resize', hide).on('resize', hide);
-    //});
+    _bindFriendListMenu();
     XoW.logger.me(_this.classInfo, 'bindFriendListMenu()');
   };
   // endregion mobile
@@ -983,24 +883,6 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     XoW.logger.me(_this.classInfo, 'onReady()');
   };
 
-  // region more list tools mark mobile
-  LAYIMEX.prototype.clearCache = function() {
-    XoW.logger.ms(_this.classInfo, 'clearCache()');
-    // todo 把chrome调试器打开后再加载页面就不能正常显示，不得其解
-    //>从controller.index.js调用就会有这个问题
-    let index = _layer.open({
-      content: '确认删除所有本地数据?',
-      btn: ['确定', '取消'],
-      skin: 'footer',
-      time: 10 * 1000,
-      yes: function(index){
-        XoW.logger.ms(_this.classInfo, 'moreList.clearCache.yes()');
-        localStorage.clear(); // 内置对象
-        _layer.close(index); // 从controller.index.js调用不主动关闭时关不掉，不得解
-      }
-    });
-  };
-  // endregion  more list tools
   // endregion APIs
 
   // region  UI CAllBack By LayIM(除非只涉及UI处理，否则要丢给controller去处理)
@@ -1015,6 +897,38 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     $search.hide();
     XoW.logger.ms(_this.classInfo, 'tab()');
   });
+  _layIM.on('moreList', function(obj){
+    switch(obj.alias) {
+      case 'find':
+        XoW.logger.ms(_this.classInfo, 'find()');
+        var param = {
+          tab: 'user',
+          friend: _cache.friend
+        }
+        _openRemoteSearchBox(param);
+        break;
+      case 'cart': //发现
+        _layer.msg('购物车暂未集成，敬请期待');
+        break;
+      case 'clear':
+        _clearCache();
+        break;
+    }});
+  _layIM.on('sendMessage', function(data) {
+    var To = data.to;
+    // 模擬客服自动回复
+    setTimeout(function() {
+      var obj = {
+          username: To.name
+          , avatar: To.avatar
+          , id: To.id
+          , type: To.type
+          , content: DEMO_AUTO_REPLAY[Math.random() * 9 | 0]
+        }
+      _layIM.getMessage(obj);
+    }, 3000);
+  });
+
   // endregion  UI CAllBack By LayIM
 
   // region LayImEx-event handlers
@@ -1022,7 +936,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     // region mark mobile
     menu_chat: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_chat()');
-      _layer.close(_layerIndex[LAYER_MENU]);
+      _layer.close(_layerIndex[LAYER_MENU_FRIEND]);
       var $par = oThis.parent();
       var id = $par.data('id');
       var data = _getDataFromFriendListItem(id);
@@ -1030,7 +944,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     },
     menu_profile: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_profile()');
-      _layer.close(_layerIndex[LAYER_MENU]);
+      _layer.close(_layerIndex[LAYER_MENU_FRIEND]);
       var $par = oThis.parent();
       var id = $par.data('id');
       var data = _getFriendById(id);
@@ -1051,12 +965,12 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     },
     menu_history: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_history()');
-      _layer.msg('本端暂不支持该操作，请登录PC端完成操作');
+      _layer.msg('本端暂不支持该操作，请使用PC端吧:)');
       XoW.logger.me(_this.classInfo, 'menu_history()');
     },
     menu_rm_friend: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_rm_friend()');
-      _layer.close(_layerIndex[LAYER_MENU]);
+      _layer.close(_layerIndex[LAYER_MENU_FRIEND]);
       var $par = oThis.parent();
       var id = $par.data('id');
       var data = _getFriendById(id);
@@ -1076,13 +990,46 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     },
     menu_move_to: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_move_to()');
-      _layer.close(_layerIndex[LAYER_MENU]);
+      _layer.close(_layerIndex[LAYER_MENU_FRIEND]);
       _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
     },
     menu_create_group: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_create_group()');
-      _layer.close(_layerIndex[LAYER_MENU]);
+      _layer.close(_layerIndex[LAYER_MENU_FRIEND]);
       _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
+    },
+    menu_add_friend: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_sweep_qrcode()');
+      _layer.close(_layerIndex[LAYER_MENU_MORE_TOOL]);
+      _layer.msg('等几天这个代码就合过来啦 : )');
+    },
+    menu_sweep_qrcode: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_sweep_qrcode()');
+      _layer.close(_layerIndex[LAYER_MENU_MORE_TOOL]);
+      _layer.msg('扫码是神马？程序猿回家洗衣服、扫地鸟 :（');
+    },
+    menu_speech: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_speech()');
+      _layer.close(_layerIndex[LAYER_MENU_MORE_TOOL]);
+      _layer.open({
+        content: '攻城狮玩命开发智能语音互动功能ing，敬请期待:)'
+        ,skin: 'footer'
+      });
+    },
+    menu_help: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_help()');
+      // todo 打开聊天客服界面
+      _layer.close(_layerIndex[LAYER_MENU_MORE_TOOL]);
+      let toId = 'demohelp';
+      _layIM.chat({
+        name: '进口小妹妹',
+        username: toId,
+        type: 'friend', //聊天类型不能用 kefu
+        avatar: XoW.DefaultImage.AVATAR_KEFU,
+        id: toId,
+        jid: toId + '@' + XoW.config.domain,
+        temporary: true
+      });
     },
 
     logout: function(oThis, e) {
@@ -1090,24 +1037,26 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
       _layer.open({
         content:  '确认退出当前账号?'
         ,btn: ['确认', '取消']
+        ,time: 5
         ,skin: 'footer'
         ,yes: function(index){
           XoW.logger.ms(_this.classInfo, 'moreList.logout.yes()');
           layui.each(call.logout, function(index, item){
             item && item();});
+          // todo 主动登出要跳转至登录界面
         }
       });
       XoW.logger.me(_this.classInfo, 'logout()');
     },
-    touch_main_tool: function(oThis, e){
+    touch_main_tool: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'touch_main_tool()');
       var filter = oThis.attr('lay-filter');
       switch(filter){
         case 'find':
-          events.open_local_user_search();
+          _openLocalUserSearch();
           break;
-        case 'more': //发现
-          _layer.msg('购物车暂未集成');
+        case 'more':
+          _openMainToolMore();
           break;
       }
       XoW.logger.me(_this.classInfo, 'touch_main_tool()');
@@ -1355,14 +1304,6 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
         item && item(param);});
       XoW.logger.me(_this.classInfo, 'stop_file()');
     },
-    find: function () {
-      XoW.logger.ms(_this.classInfo, 'find()');
-      var param = {
-        tab: 'user',
-        friend: _cache.friend
-      }
-      _openRemoteSearchBox(param);
-    },
     open_remote_chat_log: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_remote_chat_log()');
       var thatChat = _getThisChat();
@@ -1461,88 +1402,6 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
       _layIM.events().tab(0);
       XoW.logger.ms(_this.classInfo, 'close_search()');
     },
-    open_local_user_search: function (oThis, e) {
-      XoW.logger.ms(_this.classInfo, 'open_local_user_search()');
-      var search = _getLayImMain().find('.layui-layim-search');
-      var main = _getLayImMain().find('#layui-layim-search');
-      var input = search.find('input'), find = function(){
-        XoW.logger.ms(_this.classInfo, 'open_local_user_search.find()');
-        var val = input.val().replace(/\s/);
-        if(val === ''){
-          // events.tab(events.tab.index|0);
-        } else {
-          var dataFriends = [], dataGroups = [], dataHistories = [];
-          var friend = _cache.friend || [];
-          var group = _cache.group || [];
-          var html = '';
-          for(var i = 0; i < friend.length; i++){
-            for(var k = 0; k < (friend[i].list||[]).length; k++){
-              if(friend[i].list[k].id.indexOfIgnoreCase(val) !== -1
-                || friend[i].list[k].username.indexOfIgnoreCase(val) !== -1){
-                var item = friend[i].list[k];
-                item.type = 'friend';
-                item.name = friend[i].list[k].username || '佚名';
-                item.index = i;
-                item.list = k;
-                dataFriends.push(friend[i].list[k]);
-              }
-            }
-          }
-          for(var j = 0; j < group.length; j++){
-            if(group[j].id.indexOfIgnoreCase(val) !== -1
-              || group[j].groupname.indexOfIgnoreCase(val) !== -1){
-              group[j].type = 'group';
-              group[j].name = group[j].groupname || '未知聊天室';
-              group[j].list = j;
-              dataGroups.push(group[j]);
-            }
-          }
-          var local = layui.data('layim')[_cache.mine.id] || {};
-          var allChatLog = local.chatlog || {};
-          var history = local.history || {};
-          for (var key in allChatLog) {
-            if (allChatLog.hasOwnProperty(key)) {
-              for ( var i = allChatLog[key].length - 1; i >= 0; --i ){ // 倒序
-                var msg = allChatLog[key][i];
-                // layui.each(allChatLog[key], function (i, msg) {
-                if (msg.content && msg.content.indexOf(val) !== -1) {
-                  var item = history[key] || {};
-                  item.type = 'history';
-                  item.index = key;
-                  item.tag = msg.content;
-                  dataHistories.push(item);
-                  break;
-                }
-              }
-            }
-          }
-
-          if(dataFriends.length > 0 || dataGroups.length > 0 || dataHistories.length > 0) {
-            dataFriends.title = "好友";
-            dataGroups.title = "聊天室";
-            dataHistories.title = "聊天记录";
-            html = _layTpl(_eleLocalSearchRes).render({
-              friends: dataFriends
-              ,groups: dataGroups
-              ,histories: dataHistories
-            });
-          } else {
-            html = '<li class="layim-null">无本地查找结果</li>';
-          }
-
-          html += '<hr><li class="layim-null-redirect" layImEx-event="open_remote_user_search" tag="'+ val + '">到查找面板查找"' + val +'"</li>';
-          main.html(html);
-          _layIM.events().tab(3);
-        }
-        XoW.logger.me(_this.classInfo, 'open_local_user_search.find()');
-      };
-      input.off('input propertychange', find);
-      input[0].value = '';
-      search.show();
-      input[0].focus();
-      input.on('input propertychange', find);
-      XoW.logger.me(_this.classInfo, 'open_local_user_search()');
-    },
     open_remote_user_search: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_remote_user_search()');
       var tag = oThis.attr('tag');
@@ -1575,6 +1434,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
       XoW.logger.me(_this.classInfo, 'search_user_remote()');
     },
     // endregion mark mobile
+
     add_friend: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'add_friend()');
       var jid = e.currentTarget.dataset.jid;
@@ -1794,6 +1654,93 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     listTop.prepend(_layTpl(_elemMineInfoBriefLi).render(_cache.mine));
     XoW.logger.me(_this.classInfo, '_bindMineInfoLi()');
   };
+  var _bindFriendListMenu = function() {
+    XoW.logger.ms(_this.classInfo, '_bindFriendListMenu()');
+    var longPressFriendList = function(pId, pElem) {
+      XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.longPressFriendList()');
+      var data = _getDataFromFriendListItem(pId);
+      $(pElem).addClass('layui-m-layer-menu-gray');
+      _layer.open({
+        content: _layTpl(_eleFriendMenu).render(data),
+        skin: 'menu',
+        shade: 'background-color:rgba(0,0,0, .3);',
+        opacity: 0.2,
+        time: 5,
+        success: function(layero) {
+          _layerIndex[LAYER_MENU_FRIEND] = layero.attributes['index'].value;
+        },
+        end: function() {
+          XoW.logger.ms(_this.classInfo, 'longPressFriendList.end()');
+          $(pElem).removeClass('layui-m-layer-menu-gray');
+          _layerIndex[LAYER_MENU_FRIEND] = -1;
+        }
+      });
+      XoW.logger.me(_this.classInfo, 'bindFriendListMenu.longPressFriendList()');
+    };
+    var timers = new Map();
+    // 屏蔽layim-mobile.js中的touch
+    $('.layim-list-friend .layui-layim-list li').each(function(idx ,element) {
+      var oThis = $(element);
+      var id = oThis.data('id');
+      if(oThis.hasClass('layim-null')) {
+        return;
+      }
+
+      element.addEventListener('touchend', function(e) {
+        XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchend()');
+        if(timers.has(id)) {
+          XoW.logger.d('It is not timeout yet, so clear it {0}'.f(id));
+          clearTimeout(timers.get(id));
+          timers.delete(id);
+        } else {
+          XoW.logger.d('Prevent default event handler by {0}'.f(id));
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, true);
+
+      element.addEventListener('touchstart', function(e) {
+        XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchstart()');
+        if (e.targetTouches.length !== 1) {
+          return;
+        }
+        XoW.logger.d('The target is {0}'.f(e.target.tagName));
+        if(!timers.has(id)) {
+          XoW.logger.d( 'There is no timer of {0}'.f(id));
+          timers.set(id, setTimeout(function() {
+            XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchstart.timeout()');
+            if(!timers.has(id)) {
+              XoW.logger.w('The timer {0} was killed'.f(id));
+              return;
+            }
+            clearTimeout(timers.get(id));
+            timers.delete(id);
+            e.preventDefault();
+            longPressFriendList(id, element);
+          }, 1*3000));
+        }
+
+        e.preventDefault();
+      }, false);
+    });
+    XoW.logger.me(_this.classInfo, '_bindFriendListMenu()');
+  };
+  var _clearCache = function() {
+    XoW.logger.ms(_this.classInfo, '_clearCache()');
+    _layer.open({
+      content: '确认删除所有本地数据?',
+      btn: ['确定', '取消'],
+      time: 5,
+      skin: 'footer',
+      // shadeClose: false, //>规避touch->click点透问题，现已修复了layer中的问题
+      yes: function(index){
+        XoW.logger.ms(_this.classInfo, '_clearCache.yes()');
+        localStorage.clear(); // 内置对象
+        //_layer.close(index); // 从controller.index.js调用不主动关闭时关不掉，不得解
+      }
+    });
+    XoW.logger.me(_this.classInfo, '_clearCache()');
+  };
   // endregion mark mobile
 
   var _changeMineStatus = function(pStatus) {
@@ -1981,7 +1928,7 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
 
 
   // region mobile mark
-  var _renderSearchChatLogFrm = function () {
+  var _renderSearchChatLogFrm = function() {
     XoW.logger.ms(_this.classInfo, '_renderSearchChatLogFrm()');
    // _layForm.render();// 渲染下拉列表等
     //设置开始-结束时间，默认7天
@@ -2018,6 +1965,88 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
       }
     });
   };
+  var _openLocalUserSearch = function() {
+    XoW.logger.ms(_this.classInfo, '_openLocalUserSearch()');
+    var search = _getLayImMain().find('.layui-layim-search');
+    var main = _getLayImMain().find('#layui-layim-search');
+    var input = search.find('input'), find = function(){
+      XoW.logger.ms(_this.classInfo, 'open_local_user_search.find()');
+      var val = input.val().replace(/\s/);
+      if(val === ''){
+        // events.tab(events.tab.index|0);
+      } else {
+        var dataFriends = [], dataGroups = [], dataHistories = [];
+        var friend = _cache.friend || [];
+        var group = _cache.group || [];
+        var html = '';
+        for(var i = 0; i < friend.length; i++){
+          for(var k = 0; k < (friend[i].list||[]).length; k++){
+            if(friend[i].list[k].id.indexOfIgnoreCase(val) !== -1
+              || friend[i].list[k].username.indexOfIgnoreCase(val) !== -1){
+              var item = friend[i].list[k];
+              item.type = 'friend';
+              item.name = friend[i].list[k].username || '佚名';
+              item.index = i;
+              item.list = k;
+              dataFriends.push(friend[i].list[k]);
+            }
+          }
+        }
+        for(var j = 0; j < group.length; j++){
+          if(group[j].id.indexOfIgnoreCase(val) !== -1
+            || group[j].groupname.indexOfIgnoreCase(val) !== -1){
+            group[j].type = 'group';
+            group[j].name = group[j].groupname || '未知聊天室';
+            group[j].list = j;
+            dataGroups.push(group[j]);
+          }
+        }
+        var local = layui.data('layim')[_cache.mine.id] || {};
+        var allChatLog = local.chatlog || {};
+        var history = local.history || {};
+        for (var key in allChatLog) {
+          if (allChatLog.hasOwnProperty(key)) {
+            for ( var i = allChatLog[key].length - 1; i >= 0; --i ){ // 倒序
+              var msg = allChatLog[key][i];
+              // layui.each(allChatLog[key], function (i, msg) {
+              if (msg.content && msg.content.indexOf(val) !== -1) {
+                var item = history[key] || {};
+                item.type = 'history';
+                item.index = key;
+                item.tag = msg.content;
+                dataHistories.push(item);
+                break;
+              }
+            }
+          }
+        }
+
+        if(dataFriends.length > 0 || dataGroups.length > 0 || dataHistories.length > 0) {
+          dataFriends.title = "好友";
+          dataGroups.title = "聊天室";
+          dataHistories.title = "聊天记录";
+          html = _layTpl(_eleLocalSearchRes).render({
+            friends: dataFriends
+            ,groups: dataGroups
+            ,histories: dataHistories
+          });
+        } else {
+          html = '<li class="layim-null">无本地查找结果</li>';
+        }
+
+        html += '<hr><li class="layim-null-redirect" layImEx-event="open_remote_user_search" tag="'+ val + '">到查找面板查找"' + val +'"</li>';
+        main.html(html);
+        _layIM.events().tab(3);
+      }
+      XoW.logger.me(_this.classInfo, 'open_local_user_search.find()');
+    };
+    input.off('input propertychange', find);
+    input[0].value = '';
+    search.show();
+    input[0].focus();
+    input.on('input propertychange', find);
+    XoW.logger.me(_this.classInfo, '_openLocalUserSearch()');
+  };
   var _openRemoteSearchBox = function(pParam) {
     XoW.logger.ms(_this.classInfo, '_openRemoteSearchBox()');
     pParam = pParam || {tab: 'user'};
@@ -2053,6 +2082,21 @@ layui.define(['laytpl', 'upload-mobile', 'mobile', 'zepto',
     });
     XoW.logger.me(_this.classInfo, '_openRemoteSearchBox()');
   };
+  var _openMainToolMore = function() {
+    XoW.logger.ms(_this.classInfo, '_openMainToolMore()');
+    _layer.close(_layerIndex[LAYER_MENU_MORE_TOOL]);
+    _openMainToolMore.index = _layer.open({
+      content: _eleMainToolMoreMenu,
+      skin: 'menu_ex',
+      shade: 'background-color:rgba(0,0,0, .3);',
+      opacity: 0.2,
+      //time: 10,
+      success: function(layero) {
+        _layerIndex[LAYER_MENU_MORE_TOOL] = layero.attributes['index'].value;
+      }
+    })
+    XoW.logger.me(_this.classInfo, '_openMainToolMore()');
+  }
   var _verifyForm = function(pFrm) {
     XoW.logger.ms(_this.classInfo, '_verifyForm()');
     var verify = VERIFY_REGEX, stop = null

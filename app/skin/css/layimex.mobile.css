@@ -221,6 +221,39 @@ body .layui-m-layer .layui-m-layer-menu{width: auto; max-width: 80%; background:
 .layui-m-layer-menu .layui-m-layercont{padding: 10px 20px; text-align: left; background-color:rgba(0,0,0, .3);}
 .layui-m-layer-menu .layui-m-layercont li{padding: 6px; font-size: 16px}
 .layui-m-layer-menu-gray {background-color: #DD691D; opacity: 0.3;}
+
+body .layui-m-layer .layui-m-layer-menu_ex{
+    position: absolute;
+    width: auto;
+    max-width: 80%;
+    background: none;
+    color: #fff;
+    top: 60px; /*title高50px*/
+    right: 16px;
+}
+.layui-m-layer-menu_ex .layui-m-layercont{
+    padding: 10px 20px;
+    text-align: left;
+    background-color:rgba(0,0,0, .3);
+    border-radius: 4px;
+}
+.layui-m-layer-menu_ex .layui-m-layercont li{padding: 6px; font-size: 16px}
+.layui-m-layer-menu_ex-gray {background-color: #DD691D; opacity: 0.3;}
+
+.layui-m-layer-menu_ex:after{
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: -12px;
+    width: 0;
+    height: 0;
+    border-style: dashed;
+    border-color: transparent;
+    overflow: hidden;
+    border-width: 6px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(0,0,0, .3);
+}
 /* endregion 菜单*/
 
 /* region 退出当前账号 */

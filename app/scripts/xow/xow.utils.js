@@ -425,4 +425,11 @@ String.prototype.indexOfIgnoreCase = function () {
   var r = thisObj.match(re);
   return r == null ? -1 : r.index + idx;
 };
+
+// 提取注释文本内容
+Function.prototype.getMultiLineComm = function() {
+  var lines = new String(this);
+  lines = lines.substring(lines.indexOf("/*") + 3, lines.lastIndexOf("*/"));
+  return lines;
+}
 // endregion 其他扩展方法

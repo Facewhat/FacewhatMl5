@@ -1,7 +1,7 @@
 /**
  * Created by cy on 2019/1/7.
+ * 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
  */
-
 (function (factory) {
   factory(XoW, Strophe);
 }(function (XoW, Strophe) {
@@ -33,12 +33,11 @@
       _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ERROR, stanza);
     };
 
-    var _cbSearchMessage = function (pStanza, pWithJid, pCallback) {
+    var _cbSearchMessage = function (stanza, pWithJid, pCallback) {
       XoW.logger.ms(_this.classInfo, '_cbGetMsgArchive()');
-      var $stanza = $(pStanza);
       // 将要作为回调的参数。
       var params = {
-        stanza : pStanza,// 原始的节（报文）
+        stanza : stanza,// 原始的节（报文）
         set : {}, 		// 结果中的set
         archive : [], 	// 所有消息
         condition : {}, // 为了下次再查使用
@@ -46,14 +45,14 @@
       // params.condition = condition;
       // 对节（报文）进行解析
 
-      $('facewhatchat', $stanza).children().each(function(index, item) {
-        var $item = $(item);
+      // facewhatchat item
+      for(var item of stanza.getElementsByTagNameNS(XoW.NS.ARCHIVE,'facewhatchat')[0].childNodes) {
         var theMsg = new XoW.Message();
         theMsg.type = XoW.MessageType.CHAT;
         //theMsg.contentType = XoW.MessageContentType.MSG;
-        theMsg.content = $item.text();
-        theMsg.timestamp =  $item.attr('secs');
-        if($item.is('from')) {
+        theMsg.content = item.textContent;
+        theMsg.timestamp =  item.getAttribute('secs');
+        if(item.tagName === 'from') {
           // 对方发送给我的消息
           var contact = _gblMgr.getContactByJid(pWithJid);
           theMsg.username = contact ? contact.username : XoW.utils.getNodeFromJid(pWithJid);
@@ -62,7 +61,7 @@
           theMsg.from = pWithJid;
           theMsg.mine = false;
           params.archive.push(theMsg);
-        } else if($item.is('to')) {
+        } else if(item.tagName === 'to') {
           // 我发送给对方的消息
           theMsg.from = _gblMgr.getCurrentUser().jid;
           theMsg.username = '我';// _gblMgr.getCurrentUser().username;
@@ -70,16 +69,16 @@
           theMsg.to = pWithJid;
           theMsg.mine = true;
           params.archive.push(theMsg);
-        } else if($item.is('set')) {
+        } else if(item.tagName === 'set') {
           // 本次搜索完成后，分页的一些信息
           params.set = {
-            firstIndex : $item.find('first').text(),
-            firstIndexAttr : $item.find('first').attr('index'),
-            lastIndex : $item.find('last').text(),
-            count : $item.find('count').text()
+            firstIndex : item.getElementsByTagName('first')[0].textContent,
+            firstIndexAttr : item.getElementsByTagName('first')[0].getAttribute('index'),
+            lastIndex : item.getElementsByTagName('last')[0].textContent,
+            count : item.getElementsByTagName('count')[0].textContent
           };
         }
-      });
+      }
       if(pCallback) {
         pCallback(params);
       }

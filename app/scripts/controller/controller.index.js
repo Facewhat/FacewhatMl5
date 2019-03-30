@@ -375,7 +375,16 @@ layui.extend({
     var type = res.data.type;
     var jid = res.data.jid;
     if (!jid) {
-      _layer.alert('No Jid of that chat.');
+      if(typeof _layer.alert === 'function') {
+        _layer.alert('No Jid of that chat.');
+      } else {
+        // 有bug，生成的layerid居然与上一层重复了
+        _layer.msg('No Jid of that chat.')
+        //_layer.open({
+        //  content: 'No Jid of that chat.'
+        //  ,btn: '我知道了'
+        //});
+      }
       return;
     }
     if (type === 'friend') {
@@ -452,15 +461,6 @@ layui.extend({
   // region only for mobile version recently
   _layIM.on('moreList', function(obj){
     switch(obj.alias){
-      case 'find':
-        _layer.msg('发现暂未集成');
-        break;
-      case 'cart': //发现
-        _layer.msg('购物车暂未集成');
-        break;
-      case 'clear':
-        _layImEx.clearCache();
-        break;
       case 'logout':
         _layImEx.logout();
         break;

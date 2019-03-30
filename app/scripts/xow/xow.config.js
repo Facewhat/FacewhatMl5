@@ -6,7 +6,7 @@
 }(function (XoW) {
   "use strict";
   var config = {
-    version: '2.0',
+    version: '2.1',
     serviceUrl: 'ws://120.24.53.76:7070/ws/',
     domain: '120.24.53.76',
     password: '123456',

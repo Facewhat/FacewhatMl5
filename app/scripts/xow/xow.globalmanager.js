@@ -380,9 +380,12 @@
         _handlerMgr.addHandler(event, callback);
       }
     };
-    this.login = function(serviceURL, username, pass, pResource) {
+    this.login = function(pParam) {
       XoW.logger.ms(_this.classInfo, 'login()');
-      _this.connect(serviceURL, username, pass, pResource);
+      _this.connect(pParam.serviceUrl,
+        pParam.id,
+        pParam.password,
+        pParam.resource);
       XoW.logger.me(_this.classInfo, 'login()');
     };
     this.logout = function(pReason) {
@@ -393,17 +396,20 @@
     /**
      * 新建XoW.Connection对象并开始连接
      * @param serviceURL 服务器URL
-     * @param username 用户名，不包含后面的ip等
+     * @param  pUserId 用户名，不包含后面的ip等
      * @param pass 密码
      * @param pResource
      */
-    this.connect = function (serviceURL, username, pass, pResource) {
-      XoW.logger.ms(_this.classInfo, 'connect({0},{1},{2})'.f(serviceURL, username, pass));
-      var jid = username + '@' + XoW.utils.getIPFromURL(serviceURL) + '/' + pResource;
+    this.connect = function (serviceURL, pUserId, pass, pResource) {
+      XoW.logger.ms(_this.classInfo, 'connect({0},{1},{2})'.f(serviceURL,  pUserId, pass));
+      var jid =  pUserId + '@' + XoW.utils.getIPFromURL(serviceURL) + '/' + pResource;
+
       _this.getCache().temp = _this.getCache().temp || new XoW.Friend(jid);
       //_this.getCache().temp.jid = jid;
-      _this.getCache().temp.pwd = pass;
+      _this.getCache().temp.password = pass;
       _this.getCache().temp.serviceURL = serviceURL;
+      _this.getCache().temp.resource = pResource;
+      
       _connMgr.connect(serviceURL, jid, pass);
       _connMgr.addHandler(function (stanza) {
         XoW.logger.d('open-->' + Strophe.serialize(stanza));
@@ -412,7 +418,7 @@
     };
     this.reconnect = function () {
       XoW.logger.ms(_this.classInfo, 'reconnect()');
-      _connMgr.connect(_this.getCache().mine.serviceURL, _this.getCache().mine.jid, _this.getCache().mine.pwd);
+      _connMgr.connect(_this.getCache().mine.serviceURL, _this.getCache().mine.jid, _this.getCache().mine.password);
       _connMgr.addHandler(function (stanza) {
         XoW.logger.d('reopen-->' + Strophe.serialize(stanza));
       }, null, 'open');

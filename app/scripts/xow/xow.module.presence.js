@@ -1,5 +1,6 @@
 /**
  * Created by Administrator on 2018/3/20.
+ * 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
  */
 (function(factory) {
   return factory(XoW);
@@ -35,28 +36,30 @@
       XoW.logger.me(_this.classInfo, '_init()');
     };
     var _encapsulationToInfo = function(stanza) {
-      XoW.logger.ms(_this.classInfo, '_encapsulationToInfo()');
-      var $info = $(stanza);
-      var enCap = new XoW.Presence($info.attr('from'));
-      enCap.type = $info.attr('type');
+      XoW.logger.ms(_this.classInfo, '_encapsulationToInfo()');      
+      var enCap = new XoW.Presence(stanza.getAttribute('from'));
+      enCap.type = stanza.getAttribute('type');
       enCap.id = XoW.utils.getUniqueId(enCap.type);
       enCap.time = XoW.utils.getCurrentDatetime();
       enCap.status = 'untreated';
-      enCap.to = $info.attr('to');
+      enCap.to = stanza.getAttribute('to');
       return enCap;
     };
     var _encapsulationToPresence = function(stanza) {
-      XoW.logger.ms(_this.classInfo, '_encapsulationToPresence()');
-      var $pres = $(stanza);
-      var presTemp = new XoW.Presence($pres.attr("from"));
-      presTemp.to = $pres.attr("to");
-      presTemp.id = $pres.attr("id");
-      presTemp.type = $pres.attr("type");
-      presTemp.status = $('status', $pres).text();
-      presTemp.priority = $('priority', $pres).text();
-      presTemp.show = $('show', $pres).text();
-      presTemp.photoHash = $('photo',$('x', $pres)).text();
-      presTemp.avatarHash = $('hash',$('x', $pres)).text();
+      XoW.logger.ms(_this.classInfo, '_encapsulationToPresence()');     
+      var presTemp = new XoW.Presence(stanza.getAttribute('from'));
+      presTemp.to = stanza.getAttribute('to');
+      presTemp.id = stanza.getAttribute('id');
+      presTemp.type = stanza.getAttribute('type');
+      presTemp.status = stanza.getElementsByTagName('status').length > 0 ?
+        stanza.getElementsByTagName('status')[0].textContent : '';
+      presTemp.priority = stanza.getElementsByTagName('priority').length > 0 ?
+        stanza.getElementsByTagName('priority')[0].textContent : '';
+      //presTemp.show = stanza.getElementsByTagName('show')[0].textContent;
+      // jquery is not allowed
+      //presTemp.show = $('show', $pres).text();
+      //presTemp.photoHash = $('photo',$('x', $pres)).text();
+      //presTemp.avatarHash = $('hash',$('x', $pres)).text();
       presTemp.time = XoW.utils.getCurrentDatetime();
       return presTemp;
     };
@@ -67,29 +70,26 @@
      */
     var _onPresence = function(stanza) {
       XoW.logger.ms(_this.classInfo, '_onPresence()');
-      var $presence = $(stanza);
       var subMsg, contact;
       var params = {
         preType : '',
         data: null
       };
-      var type = $presence.attr('type');
+      var type = stanza.getAttribute('type');
       if(type) {
         XoW.logger.d('get presence type: ' + type);
         switch (type) {
           case 'subscribe' :
             XoW.logger.i(_this.classInfo + ' the remote ask to subscribe me.');
             subMsg = new XoW.SubMsg();
-            subMsg.cid = $presence.attr('id') || XoW.utils.getUniqueId($presence.attr('type'));
-            subMsg.from = $presence.attr('from');
-            subMsg.to = $presence.attr('to');
+            subMsg.cid = stanza.getAttribute('id') || XoW.utils.getUniqueId(stanza.getAttribute('type'));
+            subMsg.from = stanza.getAttribute('from');
+            subMsg.to = stanza.getAttribute('to');
             contact = _gblMgr.getContactByJid(subMsg.from);
             if(!contact) {
               subMsg.content = '申请添加您为好友';
-              var $status = $('status', $presence);
-              if($status) {
-                subMsg.remark = $status.text();
-              }
+              subMsg.remark = stanza.getElementsByTagName('status').length > 0 ?
+                stanza.getElementsByTagName('status')[0].textContent : '';
               subMsg.type = XoW.SERVICE_EVENT.SUB_ME_REQ_RCV;
               contact = new XoW.Friend(subMsg.from);
               subMsg.item = contact;
@@ -103,6 +103,7 @@
             break;
           case 'subscribed' :
             XoW.logger.i(_this.classInfo + ' the remote approve my subscription request.');
+            //var $presence = $(stanza);
             //subMsg = new XoW.SubMsg();
             //subMsg.cid = $presence.attr('id') || XoW.utils.getUniqueId($presence.attr('type'));
             //subMsg.from = $presence.attr('from');
@@ -120,9 +121,9 @@
             break;
           case 'unsubscribe' : // should be deal by roster module
             subMsg = new XoW.SubMsg();
-            subMsg.cid = $presence.attr('id') || XoW.utils.getUniqueId($presence.attr('type'));
-            subMsg.from = $presence.attr('from');
-            subMsg.to = $presence.attr('to');
+            subMsg.cid = stanza.getAttribute('id') || XoW.utils.getUniqueId(stanza.getAttribute('type'));
+            subMsg.from = stanza.getAttribute('from');
+            subMsg.to = stanza.getAttribute('to');
             subMsg.type = XoW.SERVICE_EVENT.SUB_CONTACT_BE_DENIED;
             contact = _gblMgr.getContactByJid(subMsg.from);
             if(contact && contact.subscription !== 'both') {

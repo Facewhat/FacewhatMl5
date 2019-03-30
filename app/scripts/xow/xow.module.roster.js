@@ -1,5 +1,7 @@
 /**
  * 代码模板，改动请咨询cy
+ * 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
+ * 理论上最终也要将Strophe依赖干掉，依赖xmpp不依赖于具体的协议栈
  */
 (function (factory) {
   factory(XoW, Strophe);
@@ -12,17 +14,6 @@
    * @constructor
    */
   XoW.RosterManager = function(pBus) {
-    // function继承自object
-    //var instance;
-    //// 实现单例
-    //return function( pGlobalMgr ){
-    //  if ( !instance ){
-    //    this.init(pGlobalMgr);
-    //    return instance = this;
-    //  }
-    //  return instance;
-    //};
-
     // region Fields
     var _this = this;
     var _gblMgr =  null; // 私有变量
@@ -64,30 +55,24 @@
       }
       XoW.logger.me(_this.classInfo, '_addFriend()');
     };
-    var _cbGetRoster = function (stanza) {
+    var _cbGetRoster = function(stanza) {
       XoW.logger.ms(_this.classInfo, '_cbGetRoster()');
-      var $roster = $(stanza);
-      $('item', $roster).each(function(index, item) {
-        var $item = $(item);
-        var user = new XoW.Friend($item.attr('jid'));
-        if($item.attr('name')){
-          user.username = $item.attr('name'); // xmpp name 即给好友设置的昵称
+      for(var item of stanza.getElementsByTagName('item')) {
+        var user = new XoW.Friend(item.getAttribute('jid'));
+        if(item.getAttribute('name')){
+          user.username = item.getAttribute('name'); // xmpp name 即给好友设置的昵称
         }
-        var $group = $('group', $item);
-        if($group.length > 0) {
-          $group.each(function (index, groupItem) {
-            user.groupid = ($(groupItem).text());
-          });
-        }
-        user.subscription = $item.attr('subscription');
-        user.ask = $item.attr('ask');
+        user.groupid = item.getElementsByTagName('group').length > 0 ?
+          item.getElementsByTagName('group')[0].textContent : '';
+        user.subscription = item.getAttribute('subscription');
+        user.ask = item.getAttribute('ask');
         if('both' !== user.subscription  && !user.ask) {
           return true;
         } else if('both' !== user.subscription) {
           user.username = user.username + '(Pending)';
         }
         _addFriend(user);
-       });
+      }
       XoW.logger.d(_this.classInfo + ' 获得好友列表: ' + JSON.stringify(_gblMgr.getCache().friend));
       _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROSTER_RCV, _gblMgr.getCache().friend);
       XoW.logger.me(_this.classInfo, '_cbGetRoster()');
@@ -97,29 +82,25 @@
       _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ERROR, stanza);
     };
     var _onRosterSet = function (stanza) {
-      XoW.logger.ms(_this.classInfo, '_onRosterSet({0})'.f($(stanza).attr('id')));
+      XoW.logger.ms(_this.classInfo, '_onRosterSet({0})'.f(stanza.getAttribute('id')));
       // 有多种情况
       // 好友修改--分组移动/好友name变动
       // 好友增加,就看原来自己的friends里面有没有该好友，如果有，就是修改，如果没有，就是新增。
       // 好友删除了,  remove
       // 但很奇怪= =，spark以另一种方式实现了。
       // 它使用 unsubscribe解除自己订阅对方 和 unsubscribed解除对方对自己的订阅。。。这样就O了，然后subscription变成了none，就移除了联系人列表。
-      var $stanza = $(stanza);
-      var $item = $('item', $stanza);
-      var rcvUser = new XoW.Friend($item.attr('jid'));
-      rcvUser.subscription = $item.attr('subscription');
-      rcvUser.ask = $item.attr('ask');
-      rcvUser.username = $item.attr('name') || rcvUser.username;
-      var $group = $('group', $item);
-      if ($group.length > 0) {
-        $group.each(function (index, groupItem) {
-          rcvUser.groupid = ($(groupItem).text());
-        });
+      var item = stanza.getElementsByTagName('item')[0];
+      var rcvUser = new XoW.Friend(item.getAttribute('jid'));
+      rcvUser.subscription = item.getAttribute('subscription');
+      rcvUser.ask = item.getAttribute('ask');
+      rcvUser.username = item.getAttribute('name') || rcvUser.username;
+      for(var groupEle of item.getElementsByTagName('group')) {
+        rcvUser.groupid = groupEle.textContent;
       }
       var contact, subMsg = new XoW.SubMsg();
       subMsg.item = rcvUser;
-      subMsg.cid = $stanza.attr('id') || XoW.utils.getUniqueId('sub');
-      subMsg.from = $stanza.attr('from');
+      subMsg.cid = stanza.getAttribute('id') || XoW.utils.getUniqueId('sub');
+      subMsg.from = stanza.getAttribute('from');
       XoW.logger.i('The user subscription {0}, ask {1}'.f(rcvUser.subscription, rcvUser.ask));
       switch (rcvUser.subscription) {
         case 'none':
@@ -167,15 +148,14 @@
       var iqResult = $iq({
         from: _gblMgr.getCurrentUser().jid,
         type: 'result',
-        id: $stanza.attr('id')
+        id: stanza.getAttribute('id')
       });
       _gblMgr.getConnMgr().send(iqResult);
-      XoW.logger.me(_this.classInfo,  '_onRosterSet({0})'.f($stanza.attr('id')));
+      XoW.logger.me(_this.classInfo,  '_onRosterSet({0})'.f(stanza.getAttribute('id')));
       return true;
     };
     var _cbSearchUser = function (stanza) {
       XoW.logger.ms(_this.classInfo, '_cbSearchUser()');
-      var $userSearch = $(stanza);
       var params = {
         stanza:stanza,
         items:[],
@@ -183,15 +163,14 @@
         itemsFriend:[]
       };
       var count = 0;
-      $('item',$userSearch).each(function (index,item) {
+      for(var item of stanza.getElementsByTagName('item')) {
         count++;
         if(count > _MAX_ITEM_NUM) {
           return false;
         }
-        var $item = $(item);
-        var jid = $('field[var="jid"] value',$item).text();
-        var name = $('field[var="Username"] value',$item).text(); // 和layim意义对调
-        var userName = $('field[var="Name"] value',$item).text();
+        var jid = item.querySelectorAll('field[var="jid"] value')[0].textContent;
+        var name = item.querySelectorAll('field[var="Username"] value')[0].textContent;// 和layim意义对调
+        var userName = item.querySelectorAll('field[var="Name"] value')[0].textContent;
         var mineNode = XoW.utils.getNodeFromJid(_gblMgr.getCurrentUser().jid);
         var userNode = XoW.utils.getNodeFromJid(jid);
         var currFriend = _gblMgr.getContactByJid(jid);
@@ -206,8 +185,7 @@
         } else if (currFriend.subscription === 'none' || currFriend.subscription === 'to') {
           params.itemsExcludeFriend.push(currFriend);
         }
-      }.bind(_this));
-
+      }
       _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.USER_SEARCH_RSP_RCV, params);
       XoW.logger.me(_this.classInfo, '_cbSearchUser()');
     };
@@ -265,12 +243,12 @@
       //  iq.c('group').t(userGroup[i]).up();
       //}
       _gblMgr.getConnMgr().sendIQ(iq, function (stanza) {
-        XoW.logger.ms(_this.classInfo, 'setIQRosterCb({0})'.f($(stanza).attr('id')));
+        XoW.logger.ms(_this.classInfo, 'setIQRosterCb({0})'.f(stanza.getAttribute('id')));
         // if the user is already in the roster(server),the server may not replay to the sending resource with an  IQ result
         // indicating the success of the roster set, which is defined as ROSTER_FRIEND_SUB__SVR_PREPARED.
         // But, after i send presence of subscribe request, the server will replay an roster set which include the info of the friend.
         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.SUB_CONTACT_READY, pUser);
-        XoW.logger.me(_this.classInfo, 'setIQRosterCb({0})'.f($(stanza).attr('id')));
+        XoW.logger.me(_this.classInfo, 'setIQRosterCb({0})'.f(stanza.getAttribute('id')));
       }.bind(_this), _cbError.bind(_this), timeout);
       XoW.logger.me(_this.classInfo, 'setRosterForNameAndGroup()');
     };

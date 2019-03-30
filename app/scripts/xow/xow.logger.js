@@ -28,7 +28,8 @@
       isColor: true
     },
     init: function (param) {
-      $.extend(this.options, param);
+      // 不允许依赖jquery
+      // $.extend(this.options, param);
     },
     _logTemplate: function (pContent, pLevel) {
       var format = this.options.isColor ? '%c' : '';
@@ -103,29 +104,51 @@
       this.i('[receive]' + data);
     },
     _filterEncodedBinary: function (data) {
-      var $stanza = $(data);
-      // check and hide binary value
-      if (!$stanza) {
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(data, 'text/xml');
+      if(!xmlDoc) {
         return;
       }
       var found = false;
-      $($stanza).find('binval').each(function () {
-        var field = $(this);
-        if (field.text()) {
-          field.text('Encoded Text');
+      for(var item of xmlDoc.getElementsByTagName('binval')) {
+        if (item.text()) {
+          item.text('Encoded Text');
           found = true;
         }
-      });
-      $($stanza).find('data').each(function () {
-        var field = $(this);
-        if (field.text()) {
-          field.text('Encoded Text');
-          found = true;
-        }
-      });
-      if (found) {
-        data = $stanza[0].outerHTML;
       }
+      for(var item of xmlDoc.getElementsByTagName('data')) {
+        if (item.text()) {
+          item.text('Encoded Text');
+          found = true;
+        }
+      }
+
+      if (found) {
+        data = xmlDoc.outerHTML;
+      }
+      //var $stanza = $(data);
+      //// check and hide binary value
+      //if (!$stanza) {
+      //  return;
+      //}
+      //var found = false;
+      //$($stanza).find('binval').each(function () {
+      //      var field = $(this);
+      //      if (field.text()) {
+      //        field.text('Encoded Text');
+      //        found = true;
+      //  }
+      //});
+      //$($stanza).find('data').each(function () {
+      //  var field = $(this);
+      //  if (field.text()) {
+      //    field.text('Encoded Text');
+      //    found = true;
+      //  }
+      //});
+      //if (found) {
+      //  data = $stanza[0].outerHTML;
+      //}
       return data;
     }
   };

@@ -1,12 +1,11 @@
-'use strict';
+/**
+ * 拆包解包，管理联系人、群组人员等vCard数据
+ * 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
+ */
 (function (factory) {
   return factory(XoW, Strophe);
 }(function (XoW, Strophe) {
-  /**
-   * 拆包解包，管理联系人、群组人员等vCard数据
-   * @param globalManager
-   * @constructor
-   */
+  'use strict';
   XoW.VCardManager = function (globalManager) {
     // region Fields
     var _this = this;
@@ -58,16 +57,14 @@
      */
     var _parseStanzaToVCard = function (stanza) {
       XoW.logger.ms(_this.classInfo, '_parseStanzaToVCard()');
-      var $stanza = $(stanza);
       var vCardTemp = new XoW.VCard();
       // 如果没有from（spark），或者from等于to（因为facewhatml5请求自己的vcard也带了to）则说明是自己的vCard。
-      var jid = $stanza.attr('from');
+      var jid = stanza.getAttribute('from');
       if(!jid) {
-        jid = $stanza.attr('to');
+        jid = stanza.getAttribute('to');
         vCardTemp.isMine = true;
       }
       vCardTemp.jid = jid;
-      var $vCard = $stanza.find('vCard');
       Strophe.forEachChild(stanza, 'vCard', function (vcard) {
         Strophe.forEachChild(vcard, 'N', function (N) {
           Strophe.forEachChild(N, 'FAMILY', function (FAMILY) {
@@ -109,7 +106,6 @@
         Strophe.forEachChild(vcard, 'PHOTO', function (PHOTO) {
           Strophe.forEachChild(PHOTO, 'BINVAL', function (BINVAL) {
             vCardTemp.PHOTO.BINVAL = BINVAL.textContent;
-            // $('#img1').attr('src','data:image/;base64,'+myHexData2);
           });
           Strophe.forEachChild(PHOTO, 'TYPE', function (TYPE) {
             vCardTemp.PHOTO.TYPE = TYPE.textContent;
@@ -271,7 +267,7 @@
         xmlns: XoW.NS.VCARD
       });
       _gblMgr.getConnMgr().sendIQ(vCard, function (stanza) {
-        XoW.logger.ms(_this.classInfo, '_cbEmbGetVCard({0})'.f($(stanza).attr('id')));
+        XoW.logger.ms(_this.classInfo, '_cbEmbGetVCard({0})'.f(stanza.getAttribute('id')));
         var vCardTemp = _parseStanzaToVCard(stanza);
         _addVCard(vCardTemp);
         pSucCb(vCardTemp);
@@ -281,7 +277,7 @@
     };
     this.setVCard = function (pJid, pVCard, pSucCb, pTimeout) {
       XoW.logger.ms(_this.classInfo, 'setVCard({0})'.f(pJid));
-      var iq = $iq({
+      var iq = iq({
         id: XoW.utils.getUniqueId('setVCard'),
         type: 'set'
       }).c('vCard', {
@@ -292,7 +288,7 @@
         .c('EMAIL', null).c('INTERNET').up().c('PREF').up().c('USERID', null, pVCard.EMAIL)
         .up().c('TEL', null).c('WORK').up().c('CELL').up().c('NUMBER', null, pVCard.WORK.CELL_TEL);
       _gblMgr.getConnMgr().sendIQ(iq, function (stanza) {
-        XoW.logger.ms(_this.classInfo, '_cbSetVCard({0})'.f($(stanza).attr('id')));
+        XoW.logger.ms(_this.classInfo, '_cbSetVCard({0})'.f(stanza.getAttribute('id')));
         pSucCb();
         XoW.logger.me(_this.classInfo,  '_cbSetVCard()');
       }, _cbError.bind(_this), pTimeout);
@@ -314,7 +310,7 @@
         .c('TYPE', null, pVCard.PHOTO.TYPE)
         .c('BINVAL', null, pVCard.PHOTO.BINVAL);
       _gblMgr.getConnMgr().sendIQ(iq, function (stanza) {
-        XoW.logger.ms(_this.classInfo, '_cbSetAvatar({0})'.f($(stanza).attr('id')));
+        XoW.logger.ms(_this.classInfo, '_cbSetAvatar({0})'.f(stanza.getAttribute('id')));
         pSucCb();
         XoW.logger.me(_this.classInfo,  '_cbSetAvatar()');
       }, _cbError.bind(_this), pTimeout);

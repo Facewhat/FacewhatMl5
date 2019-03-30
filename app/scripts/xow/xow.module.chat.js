@@ -1,13 +1,12 @@
+/**
+ * 拆包解包、管理所有会话数据，包括聊天室?
+ * 注意，它与layim中cache.chat不是一个概念
+ * 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
+ */
 (function (factory) {
   return factory(XoW);
 }(function (XoW) {
-  /**
-   *
-   * 拆包解包、管理所有会话数据，包括聊天室?
-   * 注意，它与layim中cache.chat不是一个概念
-   * @param globalManager
-   * @constructor
-   */
+  'use strict';
   XoW.ChatManager = function (globalManager) {
     // region Fields
     var _this = this;
@@ -44,8 +43,7 @@
     //};
     var _messageCb = function (stanza) {
       XoW.logger.ms(_this.classInfo, '_messageCb()');
-      var $message = $(stanza);
-      var fromDomain = XoW.utils.getDomainFromJid($message.attr('from'));
+      var fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
       var myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
       // 以这种方式来区分是会议室的消息/会议室的私聊 还是个人消息
       // 如果两个doamin相同，则说明是个人消息
@@ -53,22 +51,22 @@
       if (fromDomain == myDomain) {
         // 到时候这边看看要不要把type=errror的消息拦截下来。在外面进行统一的处理。
         var theMsg = new XoW.Message();
-        theMsg.cid = $message.attr('id');
-        theMsg.to = $message.attr('to'); // 非纯jid，是全jid
-        theMsg.from = $message.attr('from');
-        theMsg.thread = $('thread', $message).html();
-
-        var type = $message.attr('type');
+        theMsg.cid = stanza.getAttribute('id');
+        theMsg.to = stanza.getAttribute('to'); // 非纯jid，是全jid
+        theMsg.from = stanza.getAttribute('from');
+        theMsg.thread = stanza.getElementsByTagName('thread').length > 0 ?
+          stanza.getElementsByTagName('thread')[0].textContent : '';
+        var type = stanza.getAttribute('type');
         if (!type) {
           // 如果没有type，则认为是normal
-          XoW.logger.w(_this.classInfo + "刚到的消息没有类型！");
+          XoW.logger.w(_this.classInfo + '刚到的消息没有类型！');
           // 如果刚到的消息里面有body，则认为是 noraml msg
-          if ($('body', $message).length) {
+          if (stanza.getElementsByTagName('body').length > 0) {
             theMsg.type = XoW.MessageType.CHAT;
             theMsg.contentType = XoW.MessageContentType.MSG;
-            theMsg.content = $('body', $message).text();
-            if ($('delay', $message).length) {
-              theMsg.timestamp = $('delay', $message).attr('stamp');
+            theMsg.content = stanza.getElementsByTagName('body')[0].textContent;
+            if (stanza.getElementsByTagName('delay').length > 0) {
+              theMsg.timestamp = stanza.getElementsByTagName('delay')[0].getAttribute('stamp');
               theMsg.contentType = XoW.MessageContentType.DELAYMSG;
             }
           } else {
@@ -79,32 +77,31 @@
           switch (type) {
             case 'chat' :
               // 一对一聊天，或者是在聊天室中的私聊
-              XoW.logger.i(_this.classInfo + "刚到的消息是一个chat！");
+              XoW.logger.i(_this.classInfo + '刚到的消息是一个chat！');
               theMsg.type = 'chat';
-              if ($('active', $message).length) {
-                theMsg.contentType = "active";
+              if (stanza.getElementsByTagName('active').length > 0) {
+                theMsg.contentType = 'active';
                 theMsg.isRead = true;
-              } else if ($('inactive', $message).length) {
-                theMsg.contentType = "inactive";
+              } else if (stanza.getElementsByTagName('inactive').length > 0) {
+                theMsg.contentType = 'inactive';
                 theMsg.isRead = true;
-              } else if ($('composing', $message).length) {
-                theMsg.contentType = "composing";
+              } else if (stanza.getElementsByTagName('composing').length > 0) {
+                theMsg.contentType = 'composing';
                 theMsg.isRead = true;
-              } else if ($('paused', $message).length) {
-                theMsg.contentType = "paused";
+              } else if (stanza.getElementsByTagName('paused').length > 0) {
+                theMsg.contentType = 'paused';
                 theMsg.isRead = true;
-              } else if ($('gone', $message).length) {
-                theMsg.contentType = "gone";
+              } else if (stanza.getElementsByTagName('gone').length > 0) {
+                theMsg.contentType = 'gone';
                 theMsg.isRead = true;
               }
-              if ($('body', $message).length) {
-                theMsg.content = $('body', $message).text();
+              if (stanza.getElementsByTagName('body').length > 0) {
+                theMsg.content = stanza.getElementsByTagName('body')[0].textContent;
                 theMsg.isRead = false;
                 theMsg.contentType = 'msg';
               }
-              if ($('delay', $message).length) {
-                // msg.time = XoW.utils.getFromatDatetime($('delay', $message).attr('stamp'));
-                theMsg.timestamp = $('delay', $message).attr('stamp');
+              if (stanza.getElementsByTagName('delay').length > 0) {
+                theMsg.timestamp = stanza.getElementsByTagName('delay')[0].getAttribute('stamp');
                 theMsg.contentType = 'delaymsg';
               }
               XoW.logger.d(_this.classInfo + "消息内容");
@@ -125,15 +122,17 @@
               XoW.logger.d(_this.classInfo + "刚到的消息是一个headline！");
               theMsg.Type = 'headline';
               // msg.contentType = 'msg';
-              theMsg.content = $('body', $message).text();
+              theMsg.content = stanza.getElementsByTagName('body').length > 0 ?
+                stanza.getElementsByTagName('body')[0].textContent : '';
               break;
             case 'normal' :
               XoW.logger.d(_this.classInfo + "刚到的消息是一个normal！");
               theMsg.type = 'normal';
               theMsg.contentType = 'msg';
-              theMsg.content = $('body', $message).text();
-              if ($('delay', $message).length) {
-                theMsg.timestamp = $('delay', $message).attr('stamp');
+              theMsg.content = stanza.getElementsByTagName('body').length > 0 ?
+                stanza.getElementsByTagName('body')[0].textContent : '';
+              if (stanza.getElementsByTagName('delay').length > 0) {
+                theMsg.timestamp = stanza.getElementsByTagName('delay')[0].getAttribute('stamp');
                 theMsg.contentType = 'delaymsg';
               }
               // 在一对一会话和群聊之外被发送的独立消息，并且它期望收到接收者应答
@@ -148,7 +147,7 @@
         }
         if ('chat' == theMsg.type || 'headline' == theMsg.type || 'normal' == theMsg.type) {
           // 放行
-          var theChat = _this.getOrCreateChatByJid($message.attr('from'));
+          var theChat = _this.getOrCreateChatByJid(stanza.getAttribute('from'));
           theChat.addMessage(theMsg);
           var param = { chat: theChat, msg: theMsg};
           _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_MSG_RCV, param);
@@ -227,7 +226,7 @@
         from: msg.fromid,
         to: msg.to,
         type: msg.type
-      }).c("body").t(msg.content);
+      }).c('body').t(msg.content);
       _gblMgr.getConnMgr().send(xmppmsg);
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));
     };
