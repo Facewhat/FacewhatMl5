@@ -110,21 +110,28 @@
         return;
       }
       var found = false;
-      for(var item of xmlDoc.getElementsByTagName('binval')) {
-        if (item.text()) {
-          item.text('Encoded Text');
+      for(var item of xmlDoc.getElementsByTagName('BINVAL')) {
+        if (item.textContent) {
+          item.textContent = 'Encoded Text';
           found = true;
         }
       }
+      for(var item of xmlDoc.getElementsByTagName('binval')) {
+        if (item.textContent) {
+          item.textContent = 'Encoded Text';
+          found = true;
+        }
+      }
+
       for(var item of xmlDoc.getElementsByTagName('data')) {
-        if (item.text()) {
-          item.text('Encoded Text');
+        if (item.textContent) {
+          item.textContent = 'Encoded Text';
           found = true;
         }
       }
 
       if (found) {
-        data = xmlDoc.outerHTML;
+        data = xmlDoc.documentElement.outerHTML;
       }
       //var $stanza = $(data);
       //// check and hide binary value

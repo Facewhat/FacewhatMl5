@@ -1,7 +1,9 @@
 /**
  * 代码模板，改动请咨询cy
  * 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
- * 理论上最终也要将Strophe依赖干掉，依赖xmpp不依赖于具体的协议栈
+ * 最终目标：
+ * 1.要将Strophe依赖干掉，依赖xmpp不依赖于具体的协议栈
+ * 2.把报文拼装和解析放到Strophe插件完成，即不依赖xmpp协议以及Strophe
  */
 (function (factory) {
   factory(XoW, Strophe);

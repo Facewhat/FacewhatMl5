@@ -337,7 +337,7 @@
      * @private
      */
     var _onSiReqRcv = function (params) {
-      XoW.logger.ms(_this.classInfo, '_onSiRcv({0})'.f(params.mime));
+      XoW.logger.ms(_this.classInfo, '_onSiReqRcv({0})'.f(params.mime));
       var theFile = new XoW.File(params.to);
       // theFile.sid = params.sid;
       theFile.mine = false;
@@ -366,7 +366,7 @@
       } else {
         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_FILE_TRANS_REQ_RCV, theFile);
       }
-      XoW.logger.me(_this.classInfo, '_onSiRcv()');
+      XoW.logger.me(_this.classInfo, '_onSiReqRcv()');
     };
 
     var _onIBBRcv = function (type, pJid, pSid, data, seq, blocksize) {
@@ -400,7 +400,7 @@
           if (null != file) {
             var fileSeq = file.seq;
             fileSeq += 1;
-            if (fileSeq === seq) {
+            if (parseInt(seq) === fileSeq) {
               file.appendData(data);
               file.seq = fileSeq;
               if(file.getReceivedPercent() % 5 === 0) {

@@ -1,13 +1,13 @@
 /*global Strophe $iq $ */
 /*
-
   (c) 2013 - Arlo Breault <arlolra@gmail.com>
   Freely distributed under the MPL v2.0 license.
 
   File: strophe.ibb.js
   XEP-0047: In-Band Bytestreams
   http://xmpp.org/extensions/xep-0047.html
-
+  参考：https://github.com/strophe/strophejs-plugin-ibb
+ 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
 */
 ;(function () {
   "use strict";
@@ -36,11 +36,10 @@
       })
       return iq;
     },
-    _receive: function (m) {
+    _receive: function (stanza) {
       XoW.logger.ms('ibb', '_receive() ');
-      var $m = $(m);
-      var from = $m.attr('from');
-      var id = $m.attr('id');
+      var from = stanza.getAttribute('from');
+      var id = stanza.getAttribute('id');
       // support ibb?
       // proceed?
       // prefer smaller chunks?
@@ -51,17 +50,15 @@
       });
       this._send(iq, noop, noop);
 
-      var child = $m.children().get(0);
+      var child = stanza.childNodes[0];
       var type = child.tagName.toLowerCase();
-      var sid = $(child).attr('sid');
-      /**2016/12/27 林兴洋
-       * 新增，我需要block-size的值
-       */
-      var blockSize = $(child).attr('block-size');
+      var sid = child.getAttribute('sid');
+      // 2016/12/27 林兴洋 新增，我需要block-size的值
+      var blockSize = child.getAttribute('block-size');
       var data, seq;
       if (type === 'data') {
-        data = $(child).text();
-        seq = $(child).attr('seq');
+        data = child.textContent;
+        seq = child.getAttribute('seq');
       }
       // callback message
       if (typeof this._cb === 'function') {
@@ -75,15 +72,17 @@
     },
     _fail: function (cb, stanza) {
       XoW.logger.ms('ibb', '_fail() ');
-      var err = 'timed out';
-      if (stanza) {
-        err = $('error', stanza)
-                .children()
-                .get(0)
-                .tagName
-                .toLowerCase();
+      var err = new Error('time out');
+      if (!stanza) {
+        cb(err);
+        return;
       }
-      cb(new Error(err));
+      if(stanza.getElementsByTagName('error').length > 0) {
+        var errorEle = stanza.getElementsByTagName('error')[0];
+        err.name = errorEle.getAttribute('code');
+        err.message = errorEle.getAttribute('type');
+      }
+      cb(err);
     },
     _send: function (iq, success, fail) {
       XoW.logger.ms('ibb', '_send() ');

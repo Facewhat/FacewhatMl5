@@ -1,13 +1,11 @@
-/*global Strophe $iq $ */
 /*
-
  (c) 2013 - Arlo Breault <arlolra@gmail.com>
  Freely distributed under the MPL v2.0 license.
-
  File: strophe.si-filetransfer.js
  XEP-0096: SI File Transfer
  http://xmpp.org/extensions/xep-0096.html
-
+ 参考：https://github.com/strophe/strophejs-plugin-si-filetransfer
+ 不允许依赖jquery这样的第三方UI库,已完成清理 by cy [20190402]
  */
 
 ;(function () {
@@ -17,12 +15,11 @@
   }
 
   function inVals(stanza, ns) {
-    var ok = false;
-    var $mthds = $('si feature x field[var="stream-method"] value', stanza);
-    $mthds.each(function (i, m) {
-      if ($(m).text() === ns) ok = true;
-    });
-    return ok;
+    var text = stanza.querySelector('si>feature>x>field[var="stream-method"]>value').textContent;
+    if(text === ns) {
+      return true;
+    }
+    return false;
   }
 
   Strophe.addConnectionPlugin('si_filetransfer', {
@@ -43,35 +40,17 @@
      * 这种是不需要点击同意就直接接受文件（它直接返回了iq-result），
      * 和spark不同，要进行修改
      */
-    _receive: function (m) {
-      var $m = $(m);
-      var from = $m.attr('from');
-      var id = $m.attr('id');
-      var sid = $('si', $m).attr('id');
-//      var iq = $iq({
-//        type: 'result',
-//        to: from,
-//        id: id
-//      }).c('si', {
-//        xmlns: Strophe.NS.SI,
-//        id: sid
-//      }).c('file', {
-//        xmlns: Strophe.NS.SI_FILE_TRANSFER
-//      }).up().c('feature', {
-//        xmlns: Strophe.NS.FEATURE_NEG
-//      }).c('x', {
-//        xmlns: 'jabber:x:data',
-//        type: 'submit'
-//      }).c('field', {
-//        'var': 'stream-method'
-//      });
+    _receive: function (stanza) {
+      var from = stanza.getAttribute('from');
+      var id = stanza.getAttribute('id');
+      var sid = stanza.getElementsByTagName('si')[0].getAttribute('id');
       /* 林兴洋修改2016/12/8
        * 1，这里增加了一个to
        * 2，这里隐掉了file一项，有了这一项，当spark发送文件给自己的web端时
        * spark端会出现错误：发生一个错误，连接被关闭。
        * 具体原因不知，协议里面也没有提及。
        */
-      var to = $m.attr('to');
+      var to = stanza.getAttribute('to');
       var iq = $iq({type: 'result', to: from, from: to, id: id})
         .c('si', {xmlns: Strophe.NS.SI}) // ,id: sid
         //.c('file', {xmlns: Strophe.NS.SI_FILE_TRANSFER}).up()
@@ -82,24 +61,21 @@
       // check for In-Band Bytestream plugin
       // and IBB accepted
       if (Object.hasOwnProperty.call(this._c, 'ibb') &&
-        inVals(m, Strophe.NS.IBB)
+        inVals(stanza, Strophe.NS.IBB)
       ) iq.c('value').t(Strophe.NS.IBB);
-
 
       this._send(iq, noop, noop);
 
-      var $file = $('file', $m);
-      var filename = $file.attr('name');
-      var size = $file.attr('size');
-      var mime = $('si', $m).attr('mime-type');
+      var fileEle = stanza.querySelector('si>file');
+      var filename = fileEle.getAttribute('name');
+      var size = fileEle.getAttribute('size');
+      var mime = stanza.getElementsByTagName('si')[0].getAttribute('mime-type');
 
       // callback message
       if (typeof this._cb === 'function') {
         this._cb(from, sid, filename, size, mime);
       }
-
       return true;
-
     },
 
     /**
@@ -109,18 +85,16 @@
      * 也把_receive_2作为回调的参数传上去
      * _receive_2 : 根据界面选择的结果，做出接受还是不接受的处理。
      */
-    _receive_1: function (m) {
+    _receive_1: function (stanza) {
       XoW.logger.ms('si-filetransfer', '_receive_1 ');
-      var $m = $(m);
-      var from = $m.attr('from');
-      var to = $m.attr('to');
-      var id = $m.attr('id');
-      var sid = $('si', $m).attr('id');
-      var $file = $('file', $m);
-      var filename = $file.attr('name');
-      var size = $file.attr('size');
-      var mime = $('si', $m).attr('mime-type');
-
+      var from = stanza.getAttribute('from');
+      var to = stanza.getAttribute('to');
+      var id = stanza.getAttribute('id');
+      var sid = stanza.getElementsByTagName('si')[0].getAttribute('id');
+      var fileEle = stanza.querySelector('si>file');
+      var filename = fileEle.getAttribute('name');
+      var size = fileEle.getAttribute('size');
+      var mime = stanza.getElementsByTagName('si')[0].getAttribute('mime-type');
       XoW.logger.p({from: from, to: to, id: id, sid: sid, name: filename, size: size, mime: mime});
       var params = {
         from: from,
@@ -131,24 +105,15 @@
         size: size,
         mime: mime
       };
-      // 需要判断是否支持IBB
-      // check for In-Band Bytestream plugin
-      // and IBB accepted这个东西可能要移到上面 _receive_1里面去判断
-      //if ( Object.hasOwnProperty.call(this._c, 'ibb') &&
-      //         inVals(m, Strophe.NS.IBB)
-      //   )
-
       // callback message
       if (typeof this._cb === 'function') {
         // this._cb(params, this._receive_2.bind(this));
         this._cb(params);
       }
-
       XoW.logger.me('si-filetransfer', ' _receive_1');
       return true;
     },
     /**
-     *
      * @param from 发送者
      * @param to 接收者
      */
@@ -171,6 +136,20 @@
 
       XoW.logger.me('si-filetransfer', '_receive_2 ');
     },
+    /*
+      <iq xmlns="jabber:client"
+        	id="filetransfer_32a6be5de1779"
+      		to="lxy@user-20160421db/a2rhen1cem"
+       		from="lxy3@user-20160421db/Spark"
+      		type="result">
+      	<si xmlns="http://jabber.org/protocol/si">
+      		<feature xmlns="http://jabber.org/protocol/feature-neg">
+      			<x xmlns="jabber:x:data" type="submit">
+      			<field var="stream-method"><value>http://jabber.org/protocol/ibb</value></field></x>
+      		</feature>
+      	</si>
+      </iq>
+     */
     _success: function (cb, stanza) {
       XoW.logger.ms('si-filetransfer', '_success()');
       var err;
@@ -178,24 +157,11 @@
       if (!inVals(stanza, Strophe.NS.IBB)) {
         err = new Error('In-Band Bytestream not supported');
       }
-      // <iq xmlns="jabber:client"
-      //  	id="filetransfer_32a6be5de1779"
-      //		to="lxy@user-20160421db/a2rhen1cem"
-      // 		from="lxy3@user-20160421db/Spark"
-      //		type="result">
-      //	<si xmlns="http://jabber.org/protocol/si">
-      //		<feature xmlns="http://jabber.org/protocol/feature-neg">
-      //			<x xmlns="jabber:x:data" type="submit">
-      //			<field var="stream-method"><value>http://jabber.org/protocol/ibb</value></field></x>
-      //		</feature>
-      //	</si>
-      // </iq>
-      var $stanza = $(stanza);
-      var id = $stanza.attr('id');
-//		var to = $stanza.attr('to');
-      var from = $stanza.attr('from');
+      var id = stanza.getAttribute('id');
+//		var to = stanza.getAttribute('to');
+      var from = stanza.getAttribute('from');
 //		var $si = $('si', $stanza);
-//		alert($stanza.attr('id') + $stanza.attr('to'));
+//		alert(stanza.getAttribute('id') + stanza.getAttribute('to'));
       cb(err, id, from);
       XoW.logger.me('si-filetransfer', '_success()');
     },
@@ -211,14 +177,14 @@
         cb(err);
         return;
       }
-      var $stanza = $(stanza);
-      var $error = $('error', $stanza);
-      if($error) {
-        err.name = $error.attr('code');
-        err.message = $error.attr('type');
+
+      if(stanza.getElementsByTagName('error').length > 0) {
+        var errorEle = stanza.getElementsByTagName('error')[0];
+        err.name = errorEle.getAttribute('code');
+        err.message = errorEle.getAttribute('type');
       }
-      //var id = $stanza.attr('id');
-      //var from = $stanza.attr('from');
+      //var id = stanza.getAttribute('id');
+      //var from = stanza.getAttribute('from');
       cb(err);
       XoW.logger.me('si-filetransfer', '_fail()');
     },
@@ -226,16 +192,12 @@
     _send: function (iq, success, fail) {
       this._c.sendIQ(iq, success, fail, 60 * 1000);
     },
-
-    // 此处多了一个ID，因为我要用我传进来的ID
-//    send: function (to, sid, filename, size, mime, cb) {
     send: function (id, to, sid, filename, size, mime, cb) {
       // check for In-Band Bytestream plugin
       if (!Object.hasOwnProperty.call(this._c, 'ibb')) {
         Strophe.warn('The In-Band Bytestream plugin is required.');
         return;
       }
-
       var iq = $iq({
         type: 'set',
         to: to,
