@@ -58,6 +58,23 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'</ul>'
   ].join('');
 
+  var _eleMainMoreTool = [
+    '<div style="padding: 20px; background-color: #F2F2F2;">'
+    ,'  <div class="layui-row layui-col-space15">'
+    ,'{{# layui.each(d, function(index, item){ }}'
+    ,'    <div class="layui-col-xs4 layim-tool-card">'
+    ,'       <div class="layui-card" layImEx-event="select_main_tool" lay-filter="{{ item.alias }}">'
+    ,'          <div class="layui-card-header">{{ item.title }}</div>'
+    ,'          <div class="layui-card-body">'
+    ,'             <i style="font-size: 24px" class="layui-icon {{item.iconClass||\"\"}}">{{item.iconUnicode||""}}</i>'
+    ,'          </div>'
+    ,'       </div>'
+    ,'    </div>'
+    ,'{{# }); }}'
+    ,'  </div>'
+    ,'</div>'
+  ].join('');
+
   //聊天内容列表模版
   var _elemChatMain = [
     '<li {{ d.mine ? "class=layim-chat-mine" : "" }} {{# if(d.cid){ }}data-cid="{{d.cid}}"{{# } }}>'
@@ -424,6 +441,32 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       search: layui.cache.dir + '../search.html',
       find: layui.cache.dir + '../search.html',
       msgbox: layui.cache.dir + '../../layui/css/modules/layim/html/msgbox.html',
+      moreList: [{
+        alias: 'find'
+        ,title: '发现'
+        ,iconUnicode: '&#xe665' //图标字体的unicode，可不填
+        ,iconClass: ''
+      },{
+        alias: 'cart'
+        ,title: '购物车'
+        ,iconClass: 'layui-icon-cart'
+      },{
+        alias: 'clear'
+        ,title: '清空缓存'
+        ,iconClass: 'layui-icon-delete'
+      },{
+        alias: 'qrcode'
+        ,title: '扫码加我'
+        ,iconUnicode: '&#xe660'
+      },{
+        alias: 'speak'
+        ,title: '你说我懂'
+        ,iconUnicode: '&#xe606'
+      },{
+        alias: 'help'
+        ,title: '帮助与反馈'
+        ,iconUnicode: '&#xe607'
+      }],
       tool: [{
         alias: 'code', //工具别名
         title: '发送代码', //工具名称
@@ -662,7 +705,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
           reader.readAsDataURL($file);
           $fileInput[0].children[0].value = ''; // reset input value
         }
-        delete reader;
       });
     });
     XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
@@ -671,7 +713,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     var name = jid;
     var chatPanel = $('.layim-chat-other').eq(1);
     var title = $('.layim-title',chatPanel);
-    var html = '<div data-jid="'+jid+'"><img id="addSranger" src="../../images/AddFriend.png"></img><span style="display: none">'+name+'</span><div>';
+    var html = '<div data-jid="'+jid+'">< id="addSranger" src="../../images/AddFriend.png"><span style="display: none">'+name+'</span><div>';
     title.html(html);
   };
   LAYIMEX.prototype.searchMessage = function(data) {
@@ -850,6 +892,89 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       XoW.logger.ms(_this.classInfo, 'menu_create_group()');
       _layer.closeAll('tips');
       _layer.msg('本端暂不支持该操作，请联系管理员完成操作');
+    },
+
+    menu_remote_search: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_remote_search()');
+      var param = {
+        tab: 'user',
+        friend: _cache.friend
+      }
+      _openRemoteSearchBox(param);
+      XoW.logger.me(_this.classInfo, 'menu_remote_search()');
+    },
+    menu_speak: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_speak()');
+      _layer.msg('攻城狮玩命开发智能语音互动功能ing，敬请期待:)');
+    },
+    menu_help: function (oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'menu_help()');
+      // todo 打开聊天客服界面
+      _layer.close('tips');
+      var toId = 'demohelp';
+      _layIM.chat({
+        name: '进口小妹妹',
+        username: toId,
+        type: 'friend', //聊天类型不能用 kefu
+        avatar: XoW.DefaultImage.AVATAR_KEFU,
+        id: toId,
+        jid: toId + '@' + XoW.config.domain,
+        temporary: true
+      });
+    },
+    login: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'login()');
+      var elem = oThis.parents('.layui-form');
+      var settings = {
+        verify_username: function (value, item) { //value：表单的值、item：表单的DOM对象
+          if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+            return '用户名不能有特殊字符';
+          }
+          if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+            return '用户名首尾不能出现下划线\'_\'';
+          }
+          if (/^\d+\d+\d$/.test(value)) {
+            return '用户名不能全为数字';
+          }
+        },
+        verify_password: [
+          /^[\S]{6,12}$/
+          , '密码必须6到12位，且不能出现空格'
+        ]
+      };
+      if(!_verifyForm(elem, settings)) {
+        return;
+      }
+      var field = _getFormFields(elem);
+
+      layui.each(call.login, function(i, item){
+        item && item(field);});
+      XoW.logger.me(_this.classInfo, 'login()');
+    },
+    select_main_tool: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'select_main_tool()');
+      var filter = oThis.attr('lay-filter');
+      switch(filter){
+        case 'find':
+          events.menu_remote_search(oThis, e);
+          break;
+        case 'qrcode':
+          _layer.msg('扫码是神马？程序猿回家洗衣服、扫地鸟 :（');
+          break;
+        case 'speak':
+          events.menu_speak(oThis, e);
+          break;
+        case 'help':
+          events.menu_help(oThis, e);
+          break;
+        case 'cart':
+          _layer.msg('购物车暂未集成，敬请期待');
+          break;
+        case 'clear':
+          _clearCache();
+          break;
+      }
+      XoW.logger.me(_this.classInfo, 'select_main_tool()');
     },
     open_mine_info: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_mine_info()');
@@ -1064,11 +1189,19 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     },
     find: function () {
       XoW.logger.ms(_this.classInfo, 'find()');
-      var param = {
-        tab: 'user',
-        friend: _cache.friend
-      }
-      _openRemoteSearchBox(param);
+      var content  = _layTpl(_eleMainMoreTool).render(_layIM.cache().base.moreList);
+      _layer.close(events.find.index);
+      events.find.index = _layer.open({
+        type: 1 // 1表示页面内，2表示frame
+        ,title: '更多'
+        ,shade: false
+        ,maxmin: true
+        ,area: ['600px', '520px']
+        ,skin: 'layui-box layui-layer-border'
+        ,resize: true
+        ,content: content
+      });
+      XoW.logger.me(_this.classInfo, 'find()');
     },
     open_remote_chat_log: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'open_remote_chat_log()');
@@ -1772,6 +1905,19 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     };
     delete reader;
     XoW.logger.me(_this.classInfo, '$fileInput.change()');
+  };
+  var _clearCache = function() {
+    XoW.logger.ms(_this.classInfo, '_clearCache()');
+    _layer.msg('确认删除所有本地数据吗？', {
+      time: 5 * 1000
+      ,btn: ['确定', '取消']
+      ,yes: function(index){
+        XoW.logger.ms(_this.classInfo, '_clearCache.yes()');
+        localStorage.clear();
+        _layer.close(index);
+      }
+    });
+    XoW.logger.me(_this.classInfo, '_clearCache()');
   };
   // endregion Private Methods
 
