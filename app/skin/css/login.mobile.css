@@ -1,11 +1,11 @@
-body {
-    background: #ebebeb;
-    font-family: "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "\9ED1\4F53", Arial, sans-serif;
-    color: #222;
-    font-size: 12px;
-}
+/* 加载就绪标志 */
+html #skin-login-css{display: none; position: absolute; width: 1989px;}
 
 .login {
+    font-family: "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "\9ED1\4F53", Arial, sans-serif;
+    color: #222;
+    font-size: 15px;
+
     width: 266px;
     height: 195px;
     padding: 20px;
@@ -22,7 +22,7 @@ body {
     top: -96px;
     width: 100px;
     height: 96px;
-    left: 150px;
+    left: 103px;
 }
 .cartoon_head {
     background: url(../images/login/tou.png) no-repeat;

@@ -103,11 +103,11 @@
         COMPOSING: 'composing',
         PAUSED: 'paused'
       },
-      //消息类型,对应Xmpp message节type属性
+      //消息类型,适配Xmpp message节type属性,但是值与layim
       MessageType: {
         NORMAL: 'normal', // 缺省值，该消息是一个在一对一聊天会话或群聊上下文之外的被发送的独立消息
-        CHAT: 'chat', // 一对一聊天
-        GROUPCHAT: 'groupchat', // 聊天室
+        CONTACT_CHAT: 'friend', // 一对一聊天，xmpp对应'chat'
+        GROUP_CHAT: 'group', // 聊天室, xmpp对应'groupchat'
         HEADLINE: 'headline', // 通知，不期望回复
         ERROR: 'error' // 错误
       },
@@ -118,11 +118,12 @@
         AVATAR_KEFU: '../skin/images/kefu.png',
         AVATAR_STRANGER: '../skin/images/avatar_stranger.png',
         AVATAR_ROOM: '../skin/images/avatar_room.png',
-        TransFile_IMAGE: '../skin/images/defaultTransImg.png'
+        FILE_IMAGE_DAMAGE: '../skin/images/img_damage.png',
+	      SYSINFO_NOTIFY: '../skin/images/sysinfo_notify.png'
       },
       ClientMode: {
         KEFU: 'kefu', // 独立客服页面
-        BRIEFKEFU: 'briefkefu', // 嵌入式客服页面(暂不支持)
+        BRIEF_KEFU: 'briefkefu', // 嵌入式客服页面(暂不支持)
         NORMAL: 'normal' // 默认
       },
       FileReceiveState: {

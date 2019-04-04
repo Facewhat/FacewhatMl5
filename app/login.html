@@ -6,15 +6,15 @@
     </DIV>
     <div class="layui-form">
         <div class="layui-form-item">
-            <input class="layui-input" id="username" placeholder="用户名" value="" lay-verify="verify_username" type="text"
+            <input class="layui-input" id="username" placeholder="用户名" value="{{ d.username }}" lay-verify="verify_username" type="text"
                    autocomplete="off">
         </div>
         <div class="layui-form-item">
-            <input class="layui-input" id="password" placeholder="密码" value="" lay-verify="verify_password"
+            <input class="layui-input" id="password" placeholder="密码" value="{{ d.password }}" lay-verify="verify_password"
                    type="password" autocomplete="off">
         </div>
         <div class="layui-form-item">
-            <input class="layui-input" id="service" placeholder="请输入服务器地址" value="" lay-verify="required"
+            <input class="layui-input" id="service" placeholder="请输入服务器地址" value="{{ d.serviceUrl }}" lay-verify="required"
                    autocomplete="off">
         </div>
         <div class="layui-input-block">
@@ -22,6 +22,4 @@
             <div class="layui-form-mid layui-word-aux" id="loginState">未登录</div>
         </div>
     </div>
-    <SCRIPT type="text/javascript" src="scripts/controller/controller.login.js?time=New Date()"></SCRIPT>
-
 </DIV>

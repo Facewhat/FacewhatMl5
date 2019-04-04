@@ -72,6 +72,16 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'    </div>'
     ,'{{# }); }}'
     ,'  </div>'
+    ,'  <div class="layui-row layui-col-space15">'
+    ,'    <div class="layui-col-xs12 layim-tool-card">'
+    ,'       <div class="layui-card" layImEx-event="logout">'
+    ,'          <div class="layui-card-header"><span>退出当前账号</span></div>'
+    ,'          <div class="layui-card-body">'
+    ,'             <i class="layui-icon layui-icon-engine"></i>'
+    ,'          </div>'
+    ,'       </div>'
+    ,'    </div>'
+    ,'  </div>'
     ,'</div>'
   ].join('');
 
@@ -102,7 +112,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
   var _eleImage = [
     '<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_fileinfo">'
-    ,'    <img class="layui-layim-photos" ondragstart="return false;" src="data:image/;base64,{{ d.base64 }}" alt="缩略图模式">'
+    ,'    <img class="layui-layim-photos" ondragstart="return false;" src="data:{{ d.mime }};base64,{{ d.base64 }}" alt="缩略图模式">'
     ,'  </div>'
     ,'  {{# if(d.mine){ }}'
     ,'    <div class="layim_filestate">'
@@ -478,6 +488,18 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       }]
     }, pOptions);
     _layIM.config(pOptions);
+
+    // Simulated room acquisition
+    // that do not support sync post = =!
+    // layim mobile不支持post方法
+    // 暂时先注释掉掉jquery/zepto [20190401]
+    $.get( '../json/getRooms.json', {},  function(res, status, xhr) {
+      XoW.logger.d('success to get rooms');
+      $.each(res.data.group, function(i, item){
+        item.type = 'group';
+        _layIM.addList(item);
+      });
+    }, 'json');
   };
   LAYIMEX.prototype.setMineStatus = function(pStatus){
     XoW.logger.ms(_this.classInfo, 'setMineStatus({0})'.f(pStatus));
@@ -571,7 +593,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       return x.sid == pFileThumbnail.sid;
     });
     if(!theFile) {
-      XoW.logger.e('There is no such file, return.');
+      XoW.logger.e(_this.classInfo + ' There is no such file(may be is image), return.');
       return;
     }
     theFile = $.extend(theFile, {status: pFileThumbnail.status
@@ -716,8 +738,9 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     var html = '<div data-jid="'+jid+'">< id="addSranger" src="../../images/AddFriend.png"><span style="display: none">'+name+'</span><div>';
     title.html(html);
   };
-  LAYIMEX.prototype.searchMessage = function(data) {
-    XoW.logger.ms(_this.classInfo, 'searchMessage()');
+	// 如果是非好友&聊天窗口未打开，message中需要带jid用以创建chat窗口
+  LAYIMEX.prototype.getMessage = function(data) {
+    XoW.logger.ms(_this.classInfo, 'getMessage()');
     _layIM.searchMessage(data);
   };
   LAYIMEX.prototype.setUserSearchResult = function(data) {
@@ -734,6 +757,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     XoW.logger.ms(_this.classInfo, 'pushExtMsg()');
     pMsg.avatar = _cache.mine ? _cache.mine.avatar :  XoW.DefaultImage.AVATAR_DEFAULT;
     var thatChat = _getThisChat(), ul = thatChat.elem.find('.layim-chat-main ul');
+    // 貌似没有找具体哪一个ul，默认最外层的? ask by cy [20190408]
     var maxLength = _cache.base.maxLength || 3000;
     if(pMsg.content.replace(/\s/g, '') !== ''){
       var noLimited = $.isFunction(pMsg.getIsImage) ? pMsg.getIsImage() : false;
@@ -782,6 +806,14 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     }
     XoW.logger.me(_this.classInfo, 'pushSysInfo()');
   };
+  // 最前端面板插入并发送消息
+  LAYIMEX.prototype.sendMsgForTop = function(pMsgCont) {
+    XoW.logger.ms(_this.classInfo, 'sendMsgForTop()');
+    var thatChat = _getThisChat()
+    _layIM.focusInsert(thatChat.textarea[0], pMsgCont);
+    _layIM.sendMessage();
+    XoW.logger.ms(_this.classInfo, 'sendMsgForTop()');
+  }
   LAYIMEX.prototype.onReady = function() {
     XoW.logger.ms(_this.classInfo, 'onReady()');
     this.bindFriendListRightMenu();
@@ -794,6 +826,68 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     XoW.logger.me(_this.classInfo, 'onReady()');
   }
   // endregion APIs
+
+  // region  UI CAllBack By LayIM(除非只涉及UI处理，否则要丢给controller去处理)
+  //监听自定义工具栏点击，添加代码
+  _layIM.on('tool(code)', function(pInsert, pSendMessage){
+    XoW.logger.ms(_this.classInfo, 'tool(code)()');
+    _layer.prompt({
+      title: '插入代码'
+      ,formType: 2
+      ,shade: 0
+    }, function(text, index){
+      _layer.close(index);
+      pInsert('[pre class=layui-code]' + text + '[/pre]'); //将内容插入到编辑器
+      pSendMessage();
+    });
+    XoW.logger.me(_this.classInfo, 'tool(code)()');
+  });
+  _layIM.on('tool(link)', function(pInsert, pSendMessage){
+    XoW.logger.ms(_this.classInfo, 'tool(link)()');
+    var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+    _layer.prompt({
+      title: '请输入网页地址'
+      ,shade: false
+      ,offset: [
+        this.offset().top - scrollTop - 158 + 'px'
+        ,this.offset().left + 'px'
+      ]
+    }, function(src, index) {
+      var regExp = /(https?):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
+      if(!regExp.test(src)) {
+        _layer.msg('网址格式错误,格式范例"http://www.baidu.com"');
+        XoW.logger.d('Invalid href format,return.');
+        return;
+      }
+      _layer.close(index);
+      // 不支持跨域
+      $.ajax({
+        async: false,
+        url: src,
+        type: 'GET',
+        dataType: "html",
+        timeout: 5000,
+        success: function (data) {
+          var doc = (new DOMParser()).parseFromString(data, "text/html");
+          var content = {
+            url:$('meta[property="og:url"]', doc) ? $('meta[property="og:url"]', doc).attr('content') : '',
+            type:$('meta[property="og:type"]', doc) ? $('meta[property="og:type"]', doc).attr('content') : '',
+            image:$('meta[property="og:image"]', doc) ? $('meta[property="og:image"]', doc).attr('content') : '',
+            title:$('meta[property="og:title"]', doc) ? $('meta[property="og:title"]', doc).attr('content') : '',
+            description:$('meta[property="og:description"]', doc) ? $('meta[property="og:description"]', doc).attr('content') : ''
+          };
+          var msg = 'linkEx[{0}]'.f(JSON.stringify(content));
+          pInsert(msg);
+          pSendMessage();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          _layer.msg('网络不可达或跨域了.'); // 若使用dataType: 'jsonp'来跨域，也不支持返回为html/text的类型
+        }
+      });
+    });
+    XoW.logger.me(_this.classInfo, 'tool(link)()');
+  });
+  // endregion  UI CAllBack By LayIM
 
   // region LayImEx-event handlers
   var events = {
@@ -910,7 +1004,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     menu_help: function (oThis, e) {
       XoW.logger.ms(_this.classInfo, 'menu_help()');
       // todo 打开聊天客服界面
-      _layer.close('tips');
+      _layer.close(events.find.index);
       var toId = 'demohelp';
       _layIM.chat({
         name: '进口小妹妹',
@@ -950,6 +1044,21 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       layui.each(call.login, function(i, item){
         item && item(field);});
       XoW.logger.me(_this.classInfo, 'login()');
+    },
+    logout: function(oThis, e) {
+      XoW.logger.ms(_this.classInfo, 'logout()');
+      _layer.msg('确认退出当前账号吗？', {
+        time: 5 * 1000
+        ,btn: ['确定', '取消']
+        ,yes: function(index){
+          XoW.logger.ms(_this.classInfo, 'logout.yes()');
+          _layer.close(index);
+          layui.each(call.logout, function(index, item){
+            item && item();});
+          // todo 主动登出要跳转至登录界面
+        }
+      });
+      XoW.logger.me(_this.classInfo, 'logout()');
     },
     select_main_tool: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'select_main_tool()');
@@ -1428,7 +1537,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         var cont = $(window.event.currentTarget).parent().parent();
         this.groupid = pGroupName;
         this.remark = pRemark;
-        this.username = '人工NICK_' + this.username;
+        // this.username = '人工NICK_' + this.username;
         layui.each(call.subContact, function(index, item){
           item && item(stranger);});
         _layer.close(pIndex);
@@ -1506,7 +1615,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             item && item({
               jid: userJid,
               groupid: pGroupName,
-              username: '人工NICK_'+ $grPar.find('p.layim-msgbox-user>a').html()
+              username: /*'人工NICK_'+*/ $grPar.find('p.layim-msgbox-user>a').html()
             });});
           _layer.close(pIndex);
           // todo if disconnected

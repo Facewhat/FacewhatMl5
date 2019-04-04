@@ -2,9 +2,7 @@
   XoW.utils = factory(Strophe, XoW);
 }(this, function (Strophe, XoW) {
   var utils = {
-
-    /****************************/
-    /* 使用Strophe的工具*/
+    // region 使用Strophe的工具
     /**
      * 转义xml标签
      */
@@ -40,10 +38,9 @@
     getFullJid: function (jid, resource) {
       return this.getBareJidFromJid(jid) + '/' + resource;
     },
+    // endregion 使用Strophe的工具
 
-    /****************************/
-
-    /* 自定义的工具或用别人的工具*/
+    // region 自定义的工具或用别人的工具
     //private boolean isImage(String fileName) {
 //	    fileName = fileName.toLowerCase();
     //
@@ -250,14 +247,14 @@
       return obj;
     },
 
-    getFromatDatetimeFromNS: function (nS) {
-      return this.getFromatDatetime(new Date(parseInt(nS))); // .toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+    getFormatDatetimeFromNS: function (nS) {
+      return this.getFormatDatetime(new Date(parseInt(nS))); // .toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
 //	    	var newDate = new Date();
 //	    	newDate.setTime(timestamp3 * 1000);
     },
 
     // yyyy-MM-dd HH:mm:ss
-    getFromatDatetime: function (datetime) {
+    getFormatDatetime: function (datetime) {
       var now = new Date(datetime);
       var year = now.getFullYear();       //年
       var month = now.getMonth() + 1;     //月
@@ -336,6 +333,30 @@
       clock += ss;
       return (clock);
     },
+
+    /**
+     * 获取url get参数
+     * @param par
+     * @returns {*}
+     */
+    getUrlPar: function(par) {
+    //获取当前URL
+    var get_par, local_url = document.location.href;
+    //获取要取得的get参数位置
+    var start = local_url.indexOf(par + "=");
+    if(start === -1) {
+      return null;
+    }
+    start = start + par.length + 1;
+    var end = local_url.indexOf("&", start);
+    if(end === -1) {
+      get_par = local_url.slice(start);
+    } else {
+      get_par = local_url.slice(start, end);
+    }
+    return decodeURIComponent(get_par);
+  }
+    // endregion
   };
   return utils;
 }));

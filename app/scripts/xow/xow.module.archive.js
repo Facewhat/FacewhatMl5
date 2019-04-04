@@ -48,7 +48,7 @@
       // facewhatchat item
       for(var item of stanza.getElementsByTagNameNS(XoW.NS.ARCHIVE,'facewhatchat')[0].childNodes) {
         var theMsg = new XoW.Message();
-        theMsg.type = XoW.MessageType.CHAT;
+        theMsg.type = XoW.MessageType.CONTACT_CHAT;
         //theMsg.contentType = XoW.MessageContentType.MSG;
         theMsg.content = item.textContent;
         theMsg.timestamp =  item.getAttribute('secs');

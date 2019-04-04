@@ -34,7 +34,7 @@
       file.from = _gblMgr.getCurrentUser().jid;
       file.to = toFullJid;
       file.isRead = false;
-      file.type = 'friend';// 临时
+      file.type = XoW.MessageType.CONTACT_CHAT;// 临时
 
       file.sid = XoW.utils.getUniqueId('jsi');
       //file.sid = XoW.utils.getUniqueId('file');
@@ -65,7 +65,7 @@
       // initiate stream and send file content that depends on negotiation result
       _gblMgr.getConnMgr().sendFileSi(null, file.to, file.sid,
         file.name, file.size, file.mime,
-        _onSiResultRcv.bind(_this, file));
+        _cbSiResultRcv.bind(_this, file));
       XoW.logger.me(_this.classInfo, 'sendFile()');
     };
 
@@ -160,7 +160,7 @@
       }
 
       _changeFileStatus(file, XoW.FileReceiveState.LOCAL_STOPPED);
-      _gblMgr.getConnMgr().closeIBB(pJid, pSid, _onIbbClosed.bind(_this, file));
+      _gblMgr.getConnMgr().closeIBB(pJid, pSid, _cbIbbClosed.bind(_this, file));
       XoW.logger.me(_this.classInfo, 'stopFileTrans()');
     };
 
@@ -180,7 +180,7 @@
         return;
       }
 
-      _gblMgr.getConnMgr().cancelFileSi(null, pJid, pSid, _onSiCanceled.bind(_this, file));
+      _gblMgr.getConnMgr().cancelFileSi(null, pJid, pSid, _cbSiCanceled.bind(_this, file));
       XoW.logger.me(_this.classInfo, 'cancelFile()');
     };
     //endregion Public Methods
@@ -204,8 +204,8 @@
       return true;
     };
     var _triggerFileErr = function (pSid, pRemoteJid, pErrMsg, pType) {
-      XoW.logger.ms(_this.classInfo, '_triggerFileErr()');
-      pType = pType || 'friend';
+      XoW.logger.ms(_this.classInfo, '_triggerFileErr({0})'.f(pSid));
+      pType = pType || XoW.MessageType.CONTACT_CHAT;
       var file = new XoW.File();
       file.id = XoW.utils.getNodeFromJid(pRemoteJid);
       file.sid = pSid;
@@ -214,7 +214,7 @@
       file.errorMsg = pErrMsg;
       _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_FILE_OVERDUE, file);
       XoW.logger.me(_this.classInfo, '_triggerFileErr()');
-    }
+    };
     // endregion Private Methods
 
     // region Private Methods -- local start a transform
@@ -222,11 +222,9 @@
      * Negotiation callback for Stream initiation of file transform
      * when local end start a si.
      * todo 确认一下是否IqId我们把它固定住，整个会话过程中不会改变
-     * @param err
-     * @private
      */
-    var _onSiResultRcv = function (pFile, err) {
-      XoW.logger.ms(_this.classInfo, '_onSiResultRcv({0})'.f(pFile.sid));
+    var _cbSiResultRcv = function (pFile, err) {
+      XoW.logger.ms(_this.classInfo, '_cbSiResultRcv({0})'.f(pFile.sid));
       if (err) {
         XoW.logger.w('协商失败，对方不接受文件{0}, 错误是{1} {2}'.f(pFile.sid, err.name, err.message));
         _changeFileStatus(pFile, XoW.FileReceiveState.REJECTED);
@@ -235,17 +233,16 @@
       XoW.logger.d('the remote accept the file {0}, then start to transfer it.'.f(pFile.sid));
       if(_changeFileStatus(pFile, XoW.FileReceiveState.ACCEPTED)) {
         _gblMgr.getConnMgr().openIBB(pFile.to, pFile.sid,
-          pFile.blockSize, _onIbbOpen.bind(_this, pFile));
+          pFile.blockSize, _cbIbbOpen.bind(_this, pFile));
       }
-      XoW.logger.me(_this.classInfo, '_onSiResultRcv({0})'.f(pFile.sid));
+      XoW.logger.me(_this.classInfo, '_cbSiResultRcv({0})'.f(pFile.sid));
     };
 
     /**
      * open的回调，如果err为空，则说明open成功，可以继续发送数据了。
-     * @param err 错误
      */
-    var _onIbbOpen = function  (pFile, err) {
-      XoW.logger.ms(_this.classInfo, '_ibbOpenCb({0})'.f(pFile.sid));
+    var _cbIbbOpen = function  (pFile, err) {
+      XoW.logger.ms(_this.classInfo, '_cbIbbOpen({0})'.f(pFile.sid));
       if (err) {
         XoW.logger.e('Failed to open IBB, cause' + err.message);
         _changeFileStatus(pFile, XoW.FileReceiveState.ERROR);
@@ -255,28 +252,25 @@
         pFile.seq = 0;
         _sendIBBData(pFile);
       }
-      XoW.logger.me(this.classInfo, '_ibbOpenCb({0})'.f(pFile.sid));
+      XoW.logger.me(this.classInfo, '_cbIbbOpen({0})'.f(pFile.sid));
     };
 
-    var _onIbbClosed = function  (pFile, err) {
-      XoW.logger.ms(_this.classInfo, '_ibbCloseCb({0})'.f(pFile.sid));
+    var _cbIbbClosed = function  (pFile, err) {
+      XoW.logger.ms(_this.classInfo, '_cbIbbClosed({0})'.f(pFile.sid));
       if (err) {
         XoW.logger.e('Failed to close IBB, cause' + err.message);
         _changeFileStatus(pFile, XoW.FileReceiveState.ERROR);
         return;
       }
       _changeFileStatus(pFile, XoW.FileReceiveState.CLOSED); // 如果已被stop则状态不改
-      XoW.logger.me(this.classInfo, '_ibbCloseCb({0})'.f(pFile.sid));
+      XoW.logger.me(this.classInfo, '_cbIbbClosed({0})'.f(pFile.sid));
     };
 
     /**
      * todo 有时候传完了但是spark报错，需要抓包进行分析
-     * @param pCopyedFile
-     * @param err
-     * @private
      */
-    var _onIbbDataSent = function (pFile, err) {
-      XoW.logger.ms(_this.classInfo, '_ibbSendDataCb({0}'.f(pFile.sid));
+    var _cbIbbDataSent = function (pFile, err) {
+      XoW.logger.ms(_this.classInfo, '_ibbSendDataCb({0},{1})'.f(pFile.sid, pFile.seq));
       if (XoW.FileReceiveState.CLOSED === pFile.status) {
         XoW.logger.w('IBB has been closed, return.');
         return;
@@ -285,7 +279,7 @@
         XoW.logger.e('IBB Failed to trans data, cause ' + err.message);
         _changeFileStatus(pFile, XoW.FileReceiveState.ERROR);
         // todo re-sent or close it
-        _gblMgr.getConnMgr().closeIBB(pFile.to, pFile.sid, _onIbbClosed.bind(_this, pFile));
+        _gblMgr.getConnMgr().closeIBB(pFile.to, pFile.sid, _cbIbbClosed.bind(_this, pFile));
         return;
       }
       // show progress
@@ -298,25 +292,25 @@
       pFile.seq = pFile.seq + 1;
       _sendIBBData(pFile);
       XoW.logger.me(_this.classInfo, '_ibbSendDataCb()');
-    }
+    };
 
     var _sendIBBData = function (pFile) {
       XoW.logger.ms(_this.classInfo, '_sendIBBData({0},{1})'.f(pFile.sid, pFile.seq));
       var fileSize = pFile.base64.length; // 1 byte per char
       // original seq is 0
       if(pFile.seq * pFile.blockSize >= fileSize) {
-        _gblMgr.getConnMgr().closeIBB(pFile.to, pFile.sid, _onIbbClosed.bind(_this, pFile));
+        _gblMgr.getConnMgr().closeIBB(pFile.to, pFile.sid, _cbIbbClosed.bind(_this, pFile));
         return;
       }
       // 左闭右开 0<= x < 4096
       var dataSeq = pFile.base64.substring(pFile.blockSize * (pFile.seq), (pFile.seq + 1) * pFile.blockSize);
       _gblMgr.getConnMgr().sendDataByIBB(pFile.to, pFile.sid, pFile.seq,
-        dataSeq, _onIbbDataSent.bind(_this, pFile));
+        dataSeq, _cbIbbDataSent.bind(_this, pFile));
       XoW.logger.me(_this.classInfo, '_sendIBBData()');
     };
 
-    var _onSiCanceled = function  (pFile, err) {
-      XoW.logger.ms(_this.classInfo, '_onSiCanceled({0})'.f(pFile.sid));
+    var _cbSiCanceled = function  (pFile, err) {
+      XoW.logger.ms(_this.classInfo, '_cbSiCanceled({0})'.f(pFile.sid));
       if (err) {
         if(err.name === '405' || err.name === '410') {
           pFile.errorMsg = '服务端不支持该操作';
@@ -326,7 +320,7 @@
         return;
       }
       _changeFileStatus(pFile, XoW.FileReceiveState.CANCELED);
-      XoW.logger.me(this.classInfo, '_onSiCanceled()');
+      XoW.logger.me(this.classInfo, '_cbSiCanceled()');
     };
     // endregion Private Methods -- local start a transform
 
@@ -337,7 +331,7 @@
      * @private
      */
     var _onSiReqRcv = function (params) {
-      XoW.logger.ms(_this.classInfo, '_onSiReqRcv({0})'.f(params.mime));
+      XoW.logger.ms(_this.classInfo, '_onSiReqRcv({0},{1})'.f(params.mime, params.sid));
       var theFile = new XoW.File(params.to);
       // theFile.sid = params.sid;
       theFile.mine = false;
@@ -354,7 +348,8 @@
       theFile.isRead = false;
       theFile.status = XoW.FileReceiveState.UNACCEPTED;
       if (theFile.getIsImage()) {
-        // theFile.content = 'img[{0}]'.f(XoW.DefaultImage.TransFile_IMAGE);
+        // add by cy for 特定的图片大小计算问题导致无法显示 [20190404]
+        theFile.content = 'img[{0}]'.f(XoW.DefaultImage.FILE_IMAGE_DAMAGE);
       } else {
         theFile.content = 'fileEx(www.facewhat.com/file33)[{0}]'.f(JSON.stringify(theFile));
       }
@@ -369,8 +364,8 @@
       XoW.logger.me(_this.classInfo, '_onSiReqRcv()');
     };
 
-    var _onIBBRcv = function (type, pJid, pSid, data, seq, blocksize) {
-      XoW.logger.ms(_this.classInfo, '_onIBBRcv()');
+    var _onIBBRcv = function (type, pJid, pSid, data, pSeq, blocksize) {
+      XoW.logger.ms(_this.classInfo, '_onIBBRcv({0},{1})'.f(pSid, pSeq));
       var chat = _gblMgr.getChatMgr().getChatByJid(pJid); // todo 本来不允许直接依赖ChatMgr的
       if (null === chat) {
         XoW.logger.e('There is no chat of jid {0}, return.'.f(pJid));
@@ -380,7 +375,7 @@
       var file = chat.getFileBySid(pSid);
       if (null === file) {
         XoW.logger.e('There is no file of sid {0}, return.'.f(pSid));
-        _triggerFileErr(pSid, pJid, '该文件已不存在.');
+        _triggerFileErr(pSid, pJid, '该文件已不存在');
         return;
       }
 
@@ -400,15 +395,16 @@
           if (null != file) {
             var fileSeq = file.seq;
             fileSeq += 1;
-            if (parseInt(seq) === fileSeq) {
+            if (parseInt(pSeq) === fileSeq) {
               file.appendData(data);
               file.seq = fileSeq;
+              file.sizeRecved += data.length;
               if(file.getReceivedPercent() % 5 === 0) {
                 _changeFileStatus(file, XoW.FileReceiveState.RECEIVING);
               }
             } else {
               // _triggerFileErr(pSid, pJid, '文件传输错误.');
-              XoW.logger.e(this.classInfo + ' seq错误，期望 :' + fileSeq + ',但是收到 :' + seq);
+              XoW.logger.e(this.classInfo + ' seq错误，期望 :' + fileSeq + ',但是收到 :' + pSeq);
             }
           }
           break;
@@ -419,15 +415,20 @@
           // 然后与seq相比较，这样比较正确的得到对方是不是终止了发送。
           XoW.logger.d(_this.classInfo + 'receive ibb close of sid ' + pSid);
           // spark ibb时，block Size 4096， 实验室及其实际发送base64长度5664 = ceil(4096 / 4) * 3，而家里及其发送的是4096 ？？
-          // var resize = file.blockSize * (file.seq + 1);
+          // var resize = file.blockSize * (file.pSeq + 1);
           var resize = Math.ceil(file.blockSize * (file.seq + 1) / 4) * 3;
           var size = file.size; // 总大小
-          XoW.logger.d('receive ibb close with resize {0} of size {1} ', resize, size);
-          if (file.getIsImage() && resize >= size) {
-            file.content = file.base64;
-            file.content = 'imgEx[{0}]'.f(JSON.stringify(file)); // exclude base64
-            file.content = file.content.replace('"content":', '"base64":');
-            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_RCV, file);
+          XoW.logger.d('receive ibb close with resize {0} - {1} of size {2} '.f(resize, file.sizeRecved, size));
+          if (file.getIsImage()) {
+            if(resize >= size || size === file.sizeRecved) {
+              file.content = file.base64;
+              file.content = 'imgEx[{0}]'.f(JSON.stringify(file)); // exclude base64
+              file.content = file.content.replace('"content":', '"base64":');
+              _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_RCV, file);
+            } else {
+              // add by cy for 特定的图片大小计算问题导致无法显示 [20190404]
+              _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_IMAGE_RCV, file);
+            }
           } else if (resize >= size) {
             _changeFileStatus(file, XoW.FileReceiveState.CLOSED);
           } else {

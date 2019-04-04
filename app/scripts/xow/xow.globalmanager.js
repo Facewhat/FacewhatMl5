@@ -199,10 +199,12 @@
       }
       XoW.logger.me(_this.classInfo, '_onVCardRcv()');
     };
+    // 填充msg消息体，用以显示
     var _perfectPeerMsgInfo = function (pMsg, pChat) {
       XoW.logger.ms(_this.classInfo, '_perfectPeerMsgInfo()');
       pMsg.id = pMsg.fromid = XoW.utils.getNodeFromJid(pMsg.from);
-      if(!pChat.username) { // 如果是好友则会被设置为昵称
+      if(!pChat.username) {
+        // 如果是好友则会被设置为昵称
         // 说明是第一条消息，先查好友列表再查群组之类的
         var theFriend = _this.getContactByJid(pMsg.from);
         if(theFriend && theFriend.username !== pMsg.id) { // 备注名
@@ -225,6 +227,8 @@
       }
       pMsg.avatar = pChat.avatar;
       pMsg.username = pChat.username;
+	    // 非好友&聊天面板没打开，则设置jid让layui把jid写到聊天窗口 add by cy [20190413]
+	    pMsg.jid = pChat.to;
       XoW.logger.me(_this.classInfo, '_perfectPeerMsgInfo()');
     };
     var _onChatMsgRcv = function (param) {
@@ -401,7 +405,7 @@
      * @param pResource
      */
     this.connect = function (serviceURL, pUserId, pass, pResource) {
-      XoW.logger.ms(_this.classInfo, 'connect({0},{1},{2})'.f(serviceURL,  pUserId, pass));
+      XoW.logger.ms(_this.classInfo, 'connect({0},{1},{2},{3})'.f(serviceURL,  pUserId, pass, pResource));
       var jid =  pUserId + '@' + XoW.utils.getIPFromURL(serviceURL) + '/' + pResource;
 
       _this.getCache().temp = _this.getCache().temp || new XoW.Friend(jid);
@@ -413,15 +417,19 @@
       _connMgr.connect(serviceURL, jid, pass);
       _connMgr.addHandler(function (stanza) {
         XoW.logger.d('open-->' + Strophe.serialize(stanza));
-      }, null, 'open');
+      }, null, 'stream:open');
       XoW.logger.me(_this.classInfo, 'connect()');
     };
     this.reconnect = function () {
       XoW.logger.ms(_this.classInfo, 'reconnect()');
+      if(!_this.getCache().mine) {
+        XoW.logger.e('There is no info of last login.')
+        return;
+      }
       _connMgr.connect(_this.getCache().mine.serviceURL, _this.getCache().mine.jid, _this.getCache().mine.password);
       _connMgr.addHandler(function (stanza) {
         XoW.logger.d('reopen-->' + Strophe.serialize(stanza));
-      }, null, 'open');
+      }, null, 'stream:open');
       XoW.logger.me(_this.classInfo, 'reconnect()');
     };
     this.sendMessage = function (content, toJid) {

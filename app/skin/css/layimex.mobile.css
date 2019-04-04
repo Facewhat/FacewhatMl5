@@ -34,7 +34,7 @@ html #skinlayimex-mobilecss{display: none; position: absolute; width: 1989px;}
 .layui-layim-tool{position: absolute; right: 13px; top: 0px; font-size: 0; border-radius:0 0 2px 2px;}
 .layui-layim-tool li{position: relative; margin-left:22px; text-align: center; cursor: pointer;}
 .layui-layim-tool *{font-size: 22px;}
-.layui-layim-tool li:active{background-color: #e2e2e2; opacity: 0.2}
+.layui-layim-tool li:active{background-color: #FFFFFF; opacity: 0.2}
 /* endregion 主界面 */
 
 /* region 搜索栏 */
@@ -276,3 +276,72 @@ body .layui-m-layer .layui-m-layer-menu_ex{
     font-size: 17px;
 }
 /* endregion 退出当前账号 */
+
+/* region 消息中心/新的朋友 */
+.layim-msgbox-btn * {
+    font-size: 14px;
+}
+.layim-msgbox-btn{
+    position: absolute;
+    right: 6px;
+    bottom: 8px;
+    color: #999;
+    padding-right: 2px;
+}
+.layim-msgbox-btn .layui-btn-small{
+    padding: 0 6px;
+    margin-left: 2px;
+}
+/* endregion 消息中心/新的朋友 */
+
+/* region 添加朋友 */
+.layim-add-box{margin: 15px; font-size: 0;}
+.layim-add-img{
+}
+.layim-add-img img{
+    left: 0px;
+    top: 2px;
+    width: 55px;
+    height: 55px;}
+.layim-add-img span{
+    max-width: 155px;
+    font-size: 20px;
+    padding-left: 10px;
+}
+.layim-add-img p {
+    display: block;
+    padding-right: 30px;
+    line-height: 18px;
+    font-size: 13px;
+    color: #999;
+}
+
+.layim-add-remark{width: 260px;}
+.layim-add-remark p{
+    margin-bottom: 10px;
+    font-size: 14px;
+    padding-top: 10px;
+    color: #999;}
+.layim-add-remark .layui-select{
+    width: 80%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    -webkit-appearance: menulist-button;
+}
+.layim-add-remark .layui-textarea{height: 80px; min-height: 80px; resize: none;}
+/* endregion 添加朋友 */
+
+
+/* region 电商 */
+.layui-layim-goodinfo {
+    margin-top: 10px;
+    padding-left: 60px;
+}
+.layui-layim-goodinfo img {
+    position: absolute;
+    height: 55px;
+    width: 55px;
+    margin-top: 2px;
+    left: 10px;
+}
+/* endregion 电商 */

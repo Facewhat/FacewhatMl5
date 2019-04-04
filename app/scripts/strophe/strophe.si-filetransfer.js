@@ -86,7 +86,7 @@
      * _receive_2 : 根据界面选择的结果，做出接受还是不接受的处理。
      */
     _receive_1: function (stanza) {
-      XoW.logger.ms('si-filetransfer', '_receive_1 ');
+      XoW.logger.ms('si-filetransfer', '_receive_1()');
       var from = stanza.getAttribute('from');
       var to = stanza.getAttribute('to');
       var id = stanza.getAttribute('id');
@@ -110,7 +110,7 @@
         // this._cb(params, this._receive_2.bind(this));
         this._cb(params);
       }
-      XoW.logger.me('si-filetransfer', ' _receive_1');
+      XoW.logger.me('si-filetransfer', ' _receive_1()');
       return true;
     },
     /**

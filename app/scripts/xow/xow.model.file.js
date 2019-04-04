@@ -7,7 +7,7 @@ XoW.File = function (toJid) {
   // region adapt for message
   this.username = ''; // 发送者用户名
   this.avatar = XoW.DefaultImage.AVATAR_DEFAULT; // 发送者头像,每一条消息都记录一个base64串太耗存储了（layim原本记录的是地址而非值，fw存储值） todo
-  this.type = 'friend'; // friend, group, system
+  this.type = XoW.MessageType.CONTACT_CHAT; // friend, group, system
   this.content = 'space holder'; // 文件概要信息，用于界面显示，fileEx(url)[thumbnail json]
   this.id = ''; // 对端ID（如果是私聊，则是用户id;如果是群聊，则是群组id）
   this.fromid = ''; // 消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
@@ -117,6 +117,7 @@ XoW.File = function (toJid) {
   this.appendData = function (pData) {
     XoW.logger.ms(_this.classInfo,  'appendData()');
     _this.base64 += pData;
+    XoW.logger.me(_this.classInfo,  'appendData()');
   };
 
   /**

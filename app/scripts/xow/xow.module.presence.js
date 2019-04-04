@@ -195,7 +195,7 @@
       }).c('status').t('在线')
         .up().c('priority').t('1');
       _sendPresence(p1);
-      _gblMgr.getCurrentUser().state = 1;
+      // _gblMgr.getCurrentUser().state = 1;
       XoW.logger.me(_this.classInfo, 'sendOnline()');
     };
     this.sendOffline1 = function() {
@@ -207,7 +207,7 @@
       _sendPresence(pres2);
 
       //_gblMgr.getUserMgr().setAllFriendsOffline();
-      _gblMgr.getCurrentUser().state = 5;
+      //_gblMgr.getCurrentUser().state = 5;
       XoW.logger.me(_this.classInfo, 'sendOffline1()');
     };
 

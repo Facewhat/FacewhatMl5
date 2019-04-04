@@ -6,7 +6,7 @@
   <!-- 商品缩略 begin -->
   <meta property="og:url" content="http://localhost:8888/shop/demo_shop.html"/>
   <meta property="og:type" content="facewhat:product"/>
-  <meta property="og:image" content="https://cdn.technode.com/wp-content/uploads/2013/06/Baidu.gif"/>
+  <meta property="og:image" content="./shop/images/beizi.jpg"/>
   <meta property="og:title" content="叠叠杯水杯茶杯套杯陶瓷咖啡牛奶杯具套装"/>
   <meta property="og:description" content="单位 件 价格 ￥21.5"/>
   <!-- 商品缩略 end -->
@@ -68,7 +68,8 @@
             + encodeURIComponent(JSON.stringify(token))
             + "&msg="
             + encodeURIComponent(JSON.stringify(msg))
-            + "&mode=kefu";
+            + "&mode=kefu"
+            + "&res=fwh5_mobile";
         window.location.href = getPara;
       });
     });

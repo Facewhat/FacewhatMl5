@@ -69,7 +69,7 @@
         user.subscription = item.getAttribute('subscription');
         user.ask = item.getAttribute('ask');
         if('both' !== user.subscription  && !user.ask) {
-          return true;
+          continue;
         } else if('both' !== user.subscription) {
           user.username = user.username + '(Pending)';
         }
@@ -207,7 +207,7 @@
       }).c('query', {xmlns: Strophe.NS.ROSTER});
       _gblMgr.getConnMgr().sendIQ(roster, _cbGetRoster.bind(_this),
         _cbError.bind(_this), timeout);
-      XoW.logger.me(_this.classInfo + 'getRoster()');
+      XoW.logger.me(_this.classInfo, 'getRoster()');
     };
 
     this.searchUser = function(username, timeout){

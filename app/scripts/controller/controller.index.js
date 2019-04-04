@@ -3,30 +3,53 @@
  * 1.不要包含任何操作main页面的DOM代码，需要移出去！
  * 2.不得依赖jquery或zepto，layim-mobile 是不支持zepto的
  * 3.尽量不依赖layui组件
+ * 4.layui内置组件中layer、util、element、flow依赖jquery
  */
 'use strict';
-var moduleNames = {};
-if(XoW.config.resource === 'fwh5_desktop'){
-  moduleNames = {layim : 'layim',
-    layImEx: 'layImEx'
+var MODULE_DEPED = {};
+var CSS_DEPED = {};
+
+var LOGIN_OPTION = {
+  id: XoW.utils.getUrlPar('token') ? JSON.parse(XoW.utils.getUrlPar('token')).from : XoW.config.userId,
+  password: XoW.config.password,
+  serviceUrl: XoW.config.serviceUrl,
+  resource: XoW.utils.getUrlPar('res') ? XoW.utils.getUrlPar('res') : XoW.config.resource,
+  mode: XoW.utils.getUrlPar('mode')? XoW.utils.getUrlPar('mode') : XoW.ClientMode.NORMAL
+};
+
+if(LOGIN_OPTION.resource === 'fwh5_desktop'){
+  MODULE_DEPED = {
+    layim: 'layim',
+    layImEx: 'layImEx',
   };
+  CSS_DEPED = {
+    login: '../../skin/css/login.css?v=2.0.2'
+  }
 } else {
-  moduleNames = {layim : 'mobile',
+  MODULE_DEPED = {
+    layim : 'mobile',
     layImEx: 'layImExMobile'
   };
+  CSS_DEPED = {
+    login: '../../skin/css/login.mobile.css?v=2.0.2'
+  }
 }
+
 layui.extend({
   // {/}的意思即代表采用自有路径，即不跟随 base 路径
   // mobile会强制设置base路径，so...
   client: '{/}./scripts/layxow/layim.client',
+  loginLayer: '{/}./scripts/layxow/layim.login',
   layImExMobile: '{/}./scripts/layxow/layim.mobile.extend',
   layImEx: '{/}./scripts/layxow/layim.extend'
-}).use([/*'jquery',*/ 'layer', moduleNames.layim,'client',moduleNames.layImEx], function () {
+}).use(['loginLayer', MODULE_DEPED.layim, MODULE_DEPED.layImEx, 'client'], function () {
   var _this = this;
   var _client = layui.client;
+  var _layLogin = layui.loginLayer;
   var _layer,_layIM, _layImEx;
-  if(XoW.config.resource === 'fwh5_desktop'){
-    _layer = layui.layer;
+
+  if(LOGIN_OPTION.resource === 'fwh5_desktop'){
+    _layer = layui.layer; // layim 已经依赖了layer,layer 依赖jquery
     _layIM = layui.layim;
     _layImEx = layui.layImEx;
   } else {
@@ -34,51 +57,28 @@ layui.extend({
     _layIM = /*layui.layim*/ layui.mobile.layim;
     _layImEx = /*layui.layImEx*/ layui.layImExMobile;
   }
-  var _classInfo = 'Controller';
-  var _clientMode = XoW.ClientMode.NORMAL; // kefu -- 独立客服页面, briefkefu -- 嵌入式客服页面(暂不支持), normal -- 默认
+  var _classInfo = 'ConIndex';
 
   // todo comm by cy 涉及界面元素的移出去 [20190310]
-  $(function () {
+  (function () {
     XoW.logger.d("index.html on document ready");
-    _clientMode = _getPar('mode');
     _client.getCache = _layIM.cache;
-    if (_clientMode === XoW.ClientMode.KEFU) {
-      // 独立客服页面
-      _autoLogin();
+    if (LOGIN_OPTION.mode === XoW.ClientMode.KEFU) {
+      _client.login(LOGIN_OPTION);
     } else {
-      // 正常页面
-      $('#loginPage').load("login.html"); // 载入登陆页面
-    }
-
-    $("#clearLogs").bind("click", function () {
-      $('#logContainer').text("");
-    });
-    $("#clearCache").bind("click", function () {
-       //var chat = _layIM.cache().chat; // 这是指消息盒子中的未打开聊天，并非xow中chat概念
-      var local;
-      var cache =  layui.layim.cache();
-      if(cache.mine) { // 已登录
-        local = layui.data('layim')[cache.mine.id];
-      } else if($('#username').val()) {
-        local = layui.data('layim')[$('#username').val()];
-      } else {
-        _layer.alert('请输入待清空数据的用户id');
-        return;
+      var local = layui.data('layim')[0] || layui.data('layim-mobile')[0];
+      if(local) {
+        LOGIN_OPTION.id = local.key;
       }
-      delete local.chatlog; // 删除本地聊天记录为例
-      delete local.history;
-
-      // 以上代码没卵用
-      localStorage.clear();
-      _layer.alert('清理成功');
-    });
-  });
+      _layLogin.open(LOGIN_OPTION);
+    }
+  })();
 
   // region 网络消息回调，通知界面
   _client.on(XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_LOGIN_STATE_CHANGED);
     if (params.succ) {
-      if($("#loginPage").is(":hidden")){
+      if(!_layLogin.isOpen() && LOGIN_OPTION.mode !== XoW.ClientMode.KEFU){
         XoW.logger.d('Reconnected, return.');
         _layImEx.setMineStatus(XoW.UserState.ONLINE);
         _layImEx.closeReConnLoadTip();
@@ -90,16 +90,17 @@ layui.extend({
         _layImEx.notifyToChatBoxes(msg);
         return;
       }
-      $('#loginPage').css({display: 'none'}); // 隐藏登录界面div
-      $('#mainPage').css({display: ''}); // 显示主页面的div
+      _layLogin.close();
+      //$('#loginPage').css({display: 'none'}); // 隐藏登录界面div
+      //$('#mainPage').css({display: ''}); // 显示主页面的div
       _layInit(params.data);
     } else {
-      $("#loginState").text(params.data);
+      _layLogin.setStatusDesc(params.data);
     }
   });
   _client.on(XoW.VIEW_EVENT.V_DISCONNECTED, function () {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_DISCONNECTED);
-    if(!$("#loginPage").is(":hidden")){
+    if(_layLogin.isOpen()) {
       XoW.logger.d('Disconnected by login page, return.');
       return;
     }
@@ -188,7 +189,7 @@ layui.extend({
     // test
     //var temp = '<div style="color:#00FF00"><h3>This is a header</h3><p>This is a paragraph.</p></div>';
     //params.content = _layIM.content(temp);//_layImEx.remixContent(temp);
-    _layIM.searchMessage(params);
+    _layImEx.getMessage(params);
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_CHAT_MSG_RCV);
   });
 
@@ -309,8 +310,8 @@ layui.extend({
   _layIM.on('ready', function (res) {
     XoW.logger.ms(_classInfo, 'on(ready, {0})'.f(res));
     _layImEx.onReady();
-    if (_clientMode === XoW.ClientMode.KEFU) {
-      var token = JSON.parse(_getPar('token'));
+    if (LOGIN_OPTION.mode === XoW.ClientMode.KEFU) {
+      var token = JSON.parse(XoW.utils.getUrlPar('token'));
       var toId = token.to;
       if (!toId) {
         XoW.logger.e('There is no toId, return.');
@@ -336,20 +337,13 @@ layui.extend({
 
       // content template
       //>[linkEx(url)[{"title":"某商品","description":"价格$2.7 质量上乘","image":"../images/prod.jpg"}]
-      var getMsg = _getPar('msg');
+      var getMsg = XoW.utils.getUrlPar('msg');
       if(!getMsg) {
         XoW.logger.e('There is no parameter of micro data for the the page, return.');
         return;
-      }
-      var msg={
-        content: 'linkEx[{0}]'.f(getMsg),
-        mine: true,
-        avatar: _client.getCurrentUser().avatar,
-        username: _client.getCurrentUser().username
       };
-      _layImEx.pushExtMsg(msg);
+      _layImEx.sendMsgForTop( 'linkEx[{0}]'.f(getMsg));
     }
-    // _layIM()
   });
   //监听发送消息
   _layIM.on('sendMessage', function (data) {
@@ -391,7 +385,7 @@ layui.extend({
       _layImEx.rebindToolFileButton(_fileSelectedCb.bind(_this));
     } else if (type === 'group') {
       //模拟系统消息
-      _layIM.searchMessage({
+      _layImEx.getMessage({
         system: true
         , id: res.data.id
         , type: "group"
@@ -400,76 +394,14 @@ layui.extend({
     }
     XoW.logger.me(_classInfo, 'chatChange({0})'.f(res.data.jid));
   });
-  //监听自定义工具栏点击，添加代码
-  _layIM.on('tool(code)', function(pInsert, pSendMessage){
-    XoW.logger.ms(_classInfo, 'tool(code)()');
-    _layer.prompt({
-      title: '插入代码'
-      ,formType: 2
-      ,shade: 0
-    }, function(text, index){
-      _layer.close(index);
-      pInsert('[pre class=layui-code]' + text + '[/pre]'); //将内容插入到编辑器
-      pSendMessage();
-    });
-    XoW.logger.me(_classInfo, 'tool(code)()');
-  });
-  _layIM.on('tool(link)', function(pInsert, pSendMessage){
-    _layer.prompt({
-      title: '请输入网页地址'
-      ,shade: false
-      ,offset: [
-        this.offset().top - $(window).scrollTop() - 158 + 'px'
-        ,this.offset().left + 'px'
-      ]
-    }, function(src, index) {
-      var regExp = /(https?):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
-      if(!regExp.test(src)) {
-        _layer.msg('网址格式错误,格式范例"http://www.baidu.com"');
-        XoW.logger.d('Invalid href format,return.');
-        return;
-      }
-      _layer.close(index);
-
-      // 不支持跨域
-      $.ajax({
-        async: false,
-        url: src,
-        type: 'GET',
-        dataType: "html",
-        timeout: 5000,
-        success: function (data) {
-          var doc = (new DOMParser()).parseFromString(data, "text/html");
-          var content = {
-            url:$('meta[property="og:url"]', doc) ? $('meta[property="og:url"]', doc).attr('content') : '',
-            type:$('meta[property="og:type"]', doc) ? $('meta[property="og:type"]', doc).attr('content') : '',
-            image:$('meta[property="og:image"]', doc) ? $('meta[property="og:image"]', doc).attr('content') : '',
-            title:$('meta[property="og:title"]', doc) ? $('meta[property="og:title"]', doc).attr('content') : '',
-            description:$('meta[property="og:description"]', doc) ? $('meta[property="og:description"]', doc).attr('content') : ''
-          };
-          var msg = 'linkEx[{0}]'.f(JSON.stringify(content));
-          pInsert(msg);
-          pSendMessage();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          _layer.msg('网络不可达或跨域了.'); // 若使用dataType: 'jsonp'来跨域，也不支持返回为html/text的类型
-        }
-      });
-    });
-  });
-
-  // region only for mobile version recently
-  _layIM.on('moreList', function(obj){
-    switch(obj.alias){
-      case 'logout':
-        _layImEx.logout();
-        break;
-    }
-  });
-  // endregion only for mobile version recently
   // endregion UI CAllBack By LayIM
 
   // region UI Callback By LayIM.extend
+  _layImEx.on('login', function (pParam) {
+    XoW.logger.ms(_classInfo, 'getMineInfo()');
+    _client.login(pParam);
+    XoW.logger.me(_classInfo, 'getMineInfo()');
+  });
   _layImEx.on('getMineInfo', function (pSucCb) {
     XoW.logger.ms(_classInfo, 'getMineInfo()');
     _client.getMineInfo(pSucCb);
@@ -569,68 +501,12 @@ layui.extend({
   // region Private Methods
   function _layInit(params) {
     XoW.logger.ms(_classInfo, '_layInit()');
-    params.mine = _layIM.cache().temp;
+    params.mine = _layIM.cache().temp ? _layIM.cache().temp : _layIM.cache().mine;
     params.mine.status = XoW.UserState.ONLINE;
     _layIM.cache().temp = null;
     //基础配置
     _layImEx.config({init: params});
-
-    // Simulated room acquisition
-    var rooms = {
-      url: '../json/getRooms.json'
-      ,type: 'get'
-      ,data: {}
-    };
-    // that do not support sync post = =!
-    // layim mobile不支持post方法
-    // $.post( rooms, function(res) {
-    $.get( '../json/getRooms.json', {},  function(res, status, xhr) {
-      XoW.logger.d('success to get rooms');
-      $.each(res.data.group, function(i, item){
-        item.type = 'group';
-        _layIM.addList(item);
-      });
-    }, 'json');
-
     XoW.logger.me(_classInfo, '_layInit()');
-  }
-
-  /**
-   * 获取url get参数
-   * @param par
-   * @returns {*}
-   */
-  function _getPar(par) {
-    XoW.logger.ms(_classInfo, '_getPar()');
-    //获取当前URL
-    var local_url = document.location.href;
-    //获取要取得的get参数位置
-    var get = local_url.indexOf(par + "=");
-    if (get == -1) {
-      return false;
-    }
-    //截取字符串
-    var get_par = local_url.slice(par.length + get + 1);
-    //判断截取后的字符串是否还有其他get参数
-    var nextPar = get_par.indexOf("&");
-    if (nextPar != -1) {
-      get_par = get_par.slice(0, nextPar);
-    }
-    return decodeURIComponent(get_par);
-  }
-
-  /**
-   * 自动登录，发布时需要硬编码地址和密码（暂时采用通用密码）
-   */
-  function _autoLogin() {
-    XoW.logger.ms(_classInfo, '_autoLogin()');
-    var token = JSON.parse(_getPar('token'));
-    var username = token.from;
-    _client.login(XoW.config.serviceUrl,
-      username,
-      XoW.config.password,
-      XoW.config.resource);
-    XoW.logger.me(_classInfo, '_autoLogin()');
   }
 
   var _fileSelectedCb = function (pThatChat, pFileInfo, pData) {
@@ -638,4 +514,7 @@ layui.extend({
     _client.sendFile(pFileInfo.name, pFileInfo.size, pFileInfo.type, toFullJid, pData);
   };
   // endregion Private Methods
-});
+}).addcss(
+  CSS_DEPED['login']
+  ,'skin-login-css'
+);

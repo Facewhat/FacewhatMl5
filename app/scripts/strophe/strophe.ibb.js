@@ -64,6 +64,7 @@
       if (typeof this._cb === 'function') {
         this._cb(type, from, sid, data, seq, blockSize);
       }
+      XoW.logger.me('ibb', '_receive() ');
       return true;  // keep handler active
     },
     _success: function (cb) {

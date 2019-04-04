@@ -20,7 +20,7 @@
       XoW.logger.ms(_this.classInfo, '_init()');
       _gblMgr = globalManager;
       // 监听消息节
-      _gblMgr.getConnMgr().addHandler(_messageCb.bind(_this), null, 'message');
+      _gblMgr.getConnMgr().addHandler(_onMessage.bind(_this), null, 'message');
       XoW.logger.me(_this.classInfo, '_init()');
     };
     //var _addJidChat = function (item) {
@@ -41,14 +41,14 @@
     //  }
     //  XoW.logger.me(_this.classInfo, '_addJidChat');
     //};
-    var _messageCb = function (stanza) {
-      XoW.logger.ms(_this.classInfo, '_messageCb()');
+    var _onMessage = function (stanza) {
+      XoW.logger.ms(_this.classInfo, '_onMessage()');
       var fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
       var myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
       // 以这种方式来区分是会议室的消息/会议室的私聊 还是个人消息
       // 如果两个doamin相同，则说明是个人消息
       XoW.logger.d(_this.classInfo, 'fromDomain：{0} toDomain: {1}'.f(fromDomain, myDomain));
-      if (fromDomain == myDomain) {
+      if (fromDomain === myDomain) {
         // 到时候这边看看要不要把type=errror的消息拦截下来。在外面进行统一的处理。
         var theMsg = new XoW.Message();
         theMsg.cid = stanza.getAttribute('id');
@@ -62,7 +62,7 @@
           XoW.logger.w(_this.classInfo + '刚到的消息没有类型！');
           // 如果刚到的消息里面有body，则认为是 noraml msg
           if (stanza.getElementsByTagName('body').length > 0) {
-            theMsg.type = XoW.MessageType.CHAT;
+            theMsg.type = XoW.MessageType.CONTACT_CHAT;
             theMsg.contentType = XoW.MessageContentType.MSG;
             theMsg.content = stanza.getElementsByTagName('body')[0].textContent;
             if (stanza.getElementsByTagName('delay').length > 0) {
@@ -70,7 +70,8 @@
               theMsg.contentType = XoW.MessageContentType.DELAYMSG;
             }
           } else {
-            alert('检查一下这是什么信息:)');
+	          // msg 时候 是delivered / displayed 消息，是不是指ack？
+            // alert('检查一下这是什么信息:)');
             // 可能是invite信息。。。
           }
         } else {
@@ -78,7 +79,7 @@
             case 'chat' :
               // 一对一聊天，或者是在聊天室中的私聊
               XoW.logger.i(_this.classInfo + '刚到的消息是一个chat！');
-              theMsg.type = 'chat';
+              theMsg.type = XoW.MessageType.CONTACT_CHAT;
               if (stanza.getElementsByTagName('active').length > 0) {
                 theMsg.contentType = 'active';
                 theMsg.isRead = true;
@@ -110,7 +111,7 @@
             case 'error' :
               XoW.logger.w(_this.classInfo + "刚到的消息是一个error！");
               // 错误
-              theMsg.type = 'error';
+              theMsg.type = XoW.MessageType.ERROR;
               XoW.logger.d(_this.classInfo + "有个错误的消息节");
               break;
             case 'groupchat' :
@@ -120,14 +121,14 @@
             case 'headline' :
               // 警告，通知，不期望应答的临时消息（新闻，运动更新）
               XoW.logger.d(_this.classInfo + "刚到的消息是一个headline！");
-              theMsg.Type = 'headline';
+              theMsg.Type = XoW.MessageType.HEADLINE;
               // msg.contentType = 'msg';
               theMsg.content = stanza.getElementsByTagName('body').length > 0 ?
                 stanza.getElementsByTagName('body')[0].textContent : '';
               break;
             case 'normal' :
               XoW.logger.d(_this.classInfo + "刚到的消息是一个normal！");
-              theMsg.type = 'normal';
+              theMsg.type = XoW.MessageType.NORMAL;
               theMsg.contentType = 'msg';
               theMsg.content = stanza.getElementsByTagName('body').length > 0 ?
                 stanza.getElementsByTagName('body')[0].textContent : '';
@@ -145,7 +146,9 @@
               break;
           }
         }
-        if ('chat' == theMsg.type || 'headline' == theMsg.type || 'normal' == theMsg.type) {
+        if (XoW.MessageType.CONTACT_CHAT === theMsg.type ||
+          XoW.MessageType.HEADLINE == theMsg.type ||
+          XoW.MessageType.NORMAL == theMsg.type) {
           // 放行
           var theChat = _this.getOrCreateChatByJid(stanza.getAttribute('from'));
           theChat.addMessage(theMsg);
@@ -161,7 +164,7 @@
       } else {
         XoW.logger.d(_this.classInfo + "是群聊消息，不做处理");
       }
-      XoW.logger.me(_this.classInfo, "_messageCb()");
+      XoW.logger.me(_this.classInfo, "_onMessage()");
       return true; // 必须返回true
     };
     /**
@@ -214,8 +217,8 @@
       msg.cid = XoW.utils.getUniqueId('msg');
       msg.to = toJid;
       msg.fromid = fromJid;
-      msg.type = 'chat';
-      msg.contentType = "msg";
+      msg.type = XoW.MessageType.CONTACT_CHAT;
+      msg.contentType = 'msg';
       msg.isRead = false;
       msg.content = content;
       chat.addMessage(msg);
@@ -225,7 +228,7 @@
         id: msg.cid,
         from: msg.fromid,
         to: msg.to,
-        type: msg.type
+        type: 'chat'
       }).c('body').t(msg.content);
       _gblMgr.getConnMgr().send(xmppmsg);
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));

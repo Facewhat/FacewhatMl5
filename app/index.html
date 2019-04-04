@@ -11,15 +11,13 @@
   <link rel="icon" href="./skin/images/facewhat.ico" type="image/x-icon"/>
   <link rel="shortcut icon" href="./skin/images/facewhat.ico" type="image/x-icon"/>
 
-  <link rel="stylesheet" href="./skin/css/login.css">
-  <!--<link rel="stylesheet" href="./skin/css/layimex.css">-->
-
-  <!--<script type="text/javascript" src="at.alicdn.com/t/font_988899_lygt9wbt9jr.js"></script>-->
 
   <!-- 界面的 ，使用layim-->
   <link rel="stylesheet" href="./layui/css/layui.css" media="all">
   <link rel="stylesheet" href="layui/css/layui.mobile.css"> <!-- mobile版增加之 -->
   <script type="text/javascript" src="./layui/layui.js"></script>
+
+
   <!-- strophe及其插件 -->
   <script type="text/javascript" src="scripts/strophe/strophe.js"></script>
   <!-- strophe扩展，XEP-0096: SI File Transfer -->
@@ -33,7 +31,7 @@
   <!-- ibb文件下载，用到的 插件，弹出保存框 -->
   <script type="text/javascript" src="scripts/download/download.js"></script>
 
-  <!-- Facewhat -->
+  <!-- region Facewhat, 早日模块化，干掉这些东西吧 -->
   <SCRIPT type="text/javascript" src="scripts/xow/xow.enum.js?time=New Date()"></SCRIPT>
   <SCRIPT type="text/javascript" src="scripts/xow/xow.logger.js?time=New Date()"></SCRIPT>
   <SCRIPT type="text/javascript" src="scripts/xow/xow.config.js?time=New Date()"></SCRIPT>
@@ -59,14 +57,13 @@
   <SCRIPT type="text/javascript" src="scripts/xow/xow.module.chat.js?time=New Date()"></SCRIPT>
   <SCRIPT type="text/javascript" src="scripts/xow/xow.module.file.js?time=New Date()"></SCRIPT>
   <SCRIPT type="text/javascript" src="scripts/xow/xow.module.archive.js?time=New Date()"></SCRIPT>
+  <!-- endregion Facewhat -->
+
+
   <SCRIPT type="text/javascript" src="scripts/controller/controller.index.js?time=New Date()"></SCRIPT>
 </HEAD>
 <BODY>
 <!--日志打印-->
-<!--<button class="layui-btn"  id="clearLogs" >清空日志</button>-->
-<button class="layui-btn" id="clearCache">清空数据</button>
-<div id="loginPage"></div>
-<div id="logContainer" style></div>
-<div id="mainPage" style="display:none;"/>
+<div id="mainPage"/>
 </BODY>
 </HTML>

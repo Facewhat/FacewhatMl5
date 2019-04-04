@@ -9,7 +9,7 @@
     // region 适配layim
     this.username = ''; // 对端用户名
     this.avatar = ''; // 对端头像,每一条消息都记录一个base64串太耗存储了（layim原本记录的是地址而非值，fw存储值） todo
-    this.type = 'friend'; // xmpp中对应normal广播, chat, groupchat, headline通知,到界面层再转吧
+    this.type = XoW.MessageType.CONTACT_CHAT; // xmpp中对应normal广播, chat, groupchat, headline通知,到界面层再转吧
     this.content = ''; // xmpp中对应body
     this.cid = 0; // 消息id，对应xmpp id
     this.id = ''; // 消息的来源ID（如果是私聊，则是用户id;如果是群聊，则是群组id）
@@ -21,6 +21,7 @@
     this.thread = '';
     this.from = ''; // not bare jid, xxx
     this.to = ''; // Bare Jid
+	  // this.jid 对方jid，临时消息有用，其他场景不用赋值
     this.contentType = ''; // msg, delaymsg, active, inactive, gone, composing, paused
     this.isRead = false;
 

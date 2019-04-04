@@ -4,7 +4,7 @@ html #layuicss-skinlayimexcss{display:none; position: absolute; width:1989px;}
 
 .layui-layim-info .layui-layim-user{cursor: pointer}
 
-.layim_filepicture {background:url(../../images/folder1.png) no-repeat;float:left; width:102px; height:70px; text-align:center}
+.layim_filepicture {background:url(../../skin/images/folder1.png) no-repeat;float:left; width:102px; height:70px; text-align:center}
 .layim_filepicture span{padding: 20px 0 0 10px; position: relative; color: blue; float: left; overflow: hidden; width:70px}
 .layim_filepicture span：hover{overflow: hidden; width:70px; height: 20px}
 .layim_fileinfo {float:left; margin-left: 10px/* border : 2px solid black */}
@@ -13,7 +13,7 @@ html #layuicss-skinlayimexcss{display:none; position: absolute; width:1989px;}
 
 .layui-layim-list li.layim-null-item {height: 20px; line-height: 20px; padding-left: 30px; font-size: 12px; color: #999; text-align: left; cursor: default;}
 .layui-layim-list li.layim-null-item:hover{background: none;}
-.layui-layim-list li.layim-null-redirect{height: 20px; line-height: 20px; padding: 10px 0; font-size: 14px; color: #999; text-align: center; cursor: hand;}
+.layui-layim-list li.layim-null-redirect{height: 20px; line-height: 20px; padding: 10px 0; font-size: 14px; color: #999; text-align: center; cursor: pointer;}
 
 .layim-msgbox{margin: 15px;}
 .layim-msgbox li{position: relative; margin-bottom: 10px; padding: 0 130px 10px 60px; padding-bottom: 10px; line-height: 22px; border-bottom: 1px dotted #e2e2e2;}
@@ -52,3 +52,26 @@ html #layuicss-skinlayimexcss{display:none; position: absolute; width:1989px;}
 .pt15{padding-top: 15px;}
 .pt30{padding-top: 30px;}
 .pd0{padding: 0px;}
+
+/* region 更多工具面板 */
+.layim-tool-card {
+    text-align: center;
+    cursor: pointer;
+}
+.layim-tool-card :hover{background-color: #FFFFFF; opacity: 0.7}
+.layim-tool-card :active{background-color: rgba(0,0,0,0.05);}
+/* endregion 更多工具面板 */
+
+/* region 退出当前账号 */
+.layim-tool-card div[layimex-event="logout"] *{
+    color: #ff0004;
+}
+.layim-tool-card div[layimex-event="logout"] .layui-icon{
+    font-size: 24px;
+    position: relative;
+}
+.layim-tool-card div[layimex-event="logout"] span {
+    position: relative;
+    font-size: 17px;
+}
+/* endregion 退出当前账号 */

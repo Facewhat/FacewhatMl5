@@ -11,7 +11,7 @@
     domain: '120.24.53.76',
     password: '123456',
     userId: 'ican',
-    resource: 'fwh5_desktop'
+    resource: 'fwh5_mobile'
   };
 
   // XoW.logger.init({logLevel:1});

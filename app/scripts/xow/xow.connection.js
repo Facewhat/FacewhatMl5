@@ -138,7 +138,7 @@
     },
     /**public
      * 添加节监听器到Strophe.Connection对象上。这里只是做了一步封装。
-     * @param handler
+     * @param handler should return true to keep handler active
      * @param ns
      * @param name
      * @param type
