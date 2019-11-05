@@ -1,0 +1,25 @@
+﻿<DIV class="login">
+    <DIV class="cartoon">
+        <DIV class="cartoon_head"></DIV>
+        <DIV class="initial_left_hand" id="left_hand"></DIV>
+        <DIV class="initial_right_hand" id="right_hand"></DIV>
+    </DIV>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <input class="layui-input" id="username" placeholder="用户名" value="{{ d.username }}" lay-verify="verify_username" type="text"
+                   autocomplete="off">
+        </div>
+        <div class="layui-form-item">
+            <input class="layui-input" id="password" placeholder="密码" value="{{ d.password }}" lay-verify="verify_password"
+                   type="password" autocomplete="off">
+        </div>
+        <div class="layui-form-item">
+            <input class="layui-input" id="service" placeholder="请输入服务器地址" value="{{ d.serviceUrl }}" lay-verify="required"
+                   autocomplete="off">
+        </div>
+        <div class="layui-input-block">
+            <button class="layui-btn login_btn" lay-submit lay-filter="loginIM">登录</button>
+            <div class="layui-form-mid layui-word-aux" id="loginState">未登录</div>
+        </div>
+    </div>
+</DIV>

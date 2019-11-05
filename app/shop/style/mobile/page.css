@@ -1,0 +1,406 @@
+ html, body {
+        position: relative;
+        height: 100%;
+    }
+    body {
+        background: #eee;
+        font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+        font-size: 14px;
+        color:#000;
+        margin: 0;
+        padding: 0;
+
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+.poster{ width: 100%; height: 56px; background-size: 100%; background-color: hsla(0,0%,19%,1.00); }
+.item{
+   width:100%;
+   background: #fff;
+   margin-top:5px;
+
+}
+.item a{
+    display: block;
+    height: 80%;
+    width: 100%;
+
+    position: absolute;
+    text-align: center;
+    font-size: 14px;
+}
+.item .img{
+    background-repeat: no-repeat;
+        background-position: center;
+        background-size: auto 38px;
+        height: 38px;
+        width: 54px;
+        margin: 31px auto auto;
+}
+.item span{
+    display: inline-block;
+    margin-top: 15px;
+        box-sizing: border-box;
+        color:#333;
+}
+.charset{
+    float: left;
+      width: 25%;
+    height: 80%;
+    min-width: 77px;
+    min-height: 115px;
+  
+     display: table-cell;
+   
+    position: relative;
+    
+
+}
+.t_img{
+    float: left;
+    padding-top: 5px;
+}
+.dd_w{
+    float: left;
+    margin-left:10px;
+}
+.one_text{
+    font-size: 15px;
+    color: #333;
+
+      height:38px;   
+  line-height:38px;   
+  overflow:hidden;   
+}
+.two_text{
+    font-size: 12px;
+}
+.t_post{
+    float: right;
+    margin-top:10px;
+
+}
+.b_wdith{
+   position: relative;
+
+}
+#yours{
+    width: 100%;
+    height: 47px;}
+.img2{
+    width: 26px;
+    height: 26px;
+    background:url(../images/balance.png);
+    background-size: 100%;
+    float: left;
+    margin-top:7px;
+      
+}
+.tbim2{
+    background:url(../images/card.png) 0 0 no-repeat;
+    width: 26px;
+    height: 26px;
+   
+    background-size: 100%;
+    float: left;
+      margin-top:7px;
+}
+.tbim3{
+    background:url(../images/cut.png)0 0 no-repeat;
+    width: 26px;
+    height: 26px;
+   
+    background-size: 100%;
+    float: left;
+      margin-top:9px;
+}
+.tbim4{
+    background:url(../images/transaction.png)0 0 no-repeat;
+    width: 26px;
+    height: 26px;
+   
+    background-size: 100%;
+    float: left;
+      margin-top:7px;
+}
+
+.justt{
+   
+    
+
+    height: 16px;
+ position: absolute;
+ top: 20px;
+    right: 15px;
+    background-image: url(../images/icon.png);
+    background-repeat: no-repeat;
+    background-position: -419px 0;
+    display: block;
+    width: 14px;
+    background-size: 450px auto;
+    transition: 250ms;
+    
+
+}
+#entrance{
+    font-size: 14px;
+    height: 30px;
+    color:#666;
+
+}
+.tisco{
+   color: #3da1f6;
+}
+.banq{
+    color:#ccc;
+    margin-top: 5px;;
+   position: absolute;
+   left: 50%;
+   bottom:0%;
+   margin-left: -50px;
+   margin-top:-50px;
+   
+
+
+}
+.imgban{
+    width: 640px;
+    height: 335px;
+} 
+.imgban img{
+    width: 100%;
+    height: 375px;    
+}
+body{
+  font-family: "Microsoft YaHei" ! important;
+  }.bar-nav{
+    background:#fc9f4a;
+    padding-bottom: 2px;
+}
+.title{
+      background:#fc9f4a;
+     
+}
+.tioimg{
+    float: left;
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    background-image: url(../images/back.png);
+ position: absolute;
+ top:15px;
+ left:5px;
+ width: 30px;
+ height: 30px;
+    background-repeat: no-repeat;
+  
+   }
+   .seek{
+    
+
+    width: 100%;
+    background: #fff;
+
+    height: 60px;
+ 
+   }
+   .dw{
+    float: left;
+    margin-top: 8px;
+   
+    width: 35%;
+    height: 42px;
+    border-radius: 5px;
+    background:#eeeeee;
+   }
+   .p_i{
+    width: 35%;
+    padding-left: 7px;
+    padding-top: 6px;
+    float: left;
+   }
+   .cs{
+    width: 50%;
+    float: left;
+    font-size: 16px;
+    line-height:42px;
+   }
+   .btn{
+    width: 19%;
+    float: left;
+    margin-top: 8px;
+    margin-left: 6px;
+    height: 42px;
+
+   }
+   .rongq{
+    width: 91%;
+  
+    margin:0 auto;
+   
+    height: 60px;
+   }
+   .ch{
+    width: 97%;
+    margin:0 auto;
+
+   }
+   .ipo{
+    min-height: 7.186667rem;
+    height: auto;
+   
+   }
+    .ipo2{
+    min-height: 1039px;
+    height: auto;
+    background: #fff;
+   }
+   /* .lef{
+    float: left;
+    width: 5.0rem;
+    height: 6.253333rem;
+     
+   
+   
+   }
+    .lef img,.lef2 img{
+        width: 100%;
+        height: 100%;
+    }
+      .lef2{
+        float: left;
+        width: 5.0rem;
+        height: 3.12rem;
+    }
+    */
+.leftc{
+  width: 50%;
+  float: left;
+   height: 468px;
+      overflow: hidden;
+}
+.leftc img{
+  width: 100%;
+  min-height: 468px;
+
+
+}
+.rightc{
+  width: 50%;
+  float: left;
+
+
+}
+.rightc p{
+  float: left;
+  margin-bottom: -5px;
+}
+.rightc img{
+  width: 100%;
+  min-height: 234px;
+}
+   
+   .table-view{
+    margin-bottom: 0px;
+   }
+   .rig{
+    float: right;
+   }
+   .maqio{
+    width: 100%;
+   float: left;
+    /*height: 500px;*/
+   }
+   .maqio .rqo{
+    float: left;
+    width: 4.533333rem;
+    /*height: 6.533333rem;*/
+    margin-right: 0.266667rem;
+   
+   }
+   .zhengc div:last-child{
+       margin-right: 0;
+   }
+   .dhh{
+    padding: 0.133333rem;
+    width:4.533333rem;
+    /*height: 4.906667rem;*/ 
+    overflow: hidden;
+    border:1px solid #ededed;
+   }
+    
+   
+   .dhh img{ 
+    width: 4.266667rem;
+    height: 4.266667rem;
+    }
+    .dhh  span{
+        display: block;
+        padding-left:5px;
+        line-height: 0.533333rem;
+    }
+    .dhh .font1{font-size: 0.32rem}
+    .dhh .font2{font-size: 0.266667rem;margin-right: 0.2rem;}
+    .dhh .price{
+      font-size: 0.373333rem;
+    }
+    .zhengc{
+        margin:0 auto;text-align:center;width: 9.333333rem;overflow: hidden;
+    }
+    .xunf img{
+        width: 1.866667rem;
+        height: 0.8rem;
+        position: fixed;
+      top: 85%;
+    right: 0;
+    /*-moz-transform: translate(-50%, -50%);*/
+    /*-ms-transform: translate(-50%, -50%);*/
+    /*-webkit-transform: translate(-50%, -50%);*/
+    /*transform: translate(-50%, -50%);*/
+        z-index: 10000;
+        cursor: pointer;
+
+
+    }
+  /*   @media screen and (max-width:480px){
+     .zhengc {
+    width:92%;
+  } */
+   
+
+@media screen and (max-width:320px){
+ 
+.leftc{
+  width: 100%;
+}
+.rightc{
+  width: 100%;
+}
+}
+.oi_ds{
+  
+}
+.oi_ds img{
+  border-radius: 24px;
+}

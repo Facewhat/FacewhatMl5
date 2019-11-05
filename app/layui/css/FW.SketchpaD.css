@@ -1,0 +1,75 @@
+
+
+
+#drawer{height:50%; width:100%;margin-left: 4px;position: relative}
+#canvasBegin{width:604px;height:404px}
+#Drawcolor{height: 50px; width: 100%;;}
+#seleC{ width: 30px; height: 30px; background:url(../../images/add.png) no-repeat;background-size:cover; float: left; margin-top: 8px; margin-left: 5px}
+.trans-rotate{
+    -webkit-transition: transform .25s linear;
+    -moz-transition: transform .25s linear;
+    -o-transition: transform .25s linear;
+    transition: transform .25s linear;
+}
+.btnbg:hover{transform:rotate(360deg);}
+canvas:hover { cursor:url(../../images/pen.cur),auto}
+
+#showC{
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 10%;
+    float: left;
+    margin-top: 14px; margin-left: 5px
+}
+
+#linewT{width: 45px; height: 32px; float: left; text-align: right;line-height: 32px;margin-top: 8px; margin-left: 5px;padding-top: 2px}
+
+#LineW{ width: 120px; height: 32px; float: left;margin-top: 8px; margin-left: 5px;font-size: x-small}
+
+input[type=range]{
+    margin-top: 8px;
+    outline: none;
+    -webkit-appearance: none;/*清除系统默认样式*/
+    width:100% !important;
+    background: -webkit-linear-gradient(#61bd12, #61bd12) no-repeat, #ddd;
+    background-size: 100% 100%;/*设置左右宽度比例*/
+    height: 3px;/*横条的高度*/
+}
+
+#showN{width: 45px; height: 32px; float: left;  margin-top: 8px; margin-left: 5px ;text-align: center;line-height: 32px}
+#SelectC{
+
+    height:150px;
+    width: 300px;
+    position: absolute;
+    top: 250px;
+    left: 19px;
+    border: 1px solid darkgrey;
+    z-index: 555;
+}
+
+#tab{ width: 300px; height: 150px}
+
+#recLine{width: 26px; height: 26px; float: left;  margin-top: 8px; margin-left: 5px; border: 1px darkgray dashed}
+
+#recTangle{width: 26px; height: 26px; float: left;  margin-top: 8px; margin-left: 5px;border: 1px darkgray dashed}
+
+#roundX{width: 26px; height: 26px; float: left;  margin-top: 8px; margin-left: 5px;border: 1px darkgray dashed;opacity: 0.6}
+
+
+#triangle{
+    position: absolute;
+    top: 412px;
+    left: 308px;
+    width:0px;
+    height:0px;
+    border-width:5px;
+    border-style:solid;
+    border-color:green green transparent  transparent ;
+    transition: 1s all;
+}
+
+#clear{width: 45px; height: 32px; float: left; margin-left: 10px;margin-top: 7px}
+
+#reas{width: 26px; height: 26px; float: left;  margin-top: 8px; margin-left: 5px;border: 1px darkgray dashed;opacity: 0.6}

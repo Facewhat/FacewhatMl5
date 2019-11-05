@@ -1,0 +1,25 @@
+/*移动端css样式*/
+.room-seting-container{width: 100%;margin: 0 auto;padding: 0;font-size: 120%;}
+.room-seting-col12{width: 100%;background-color: white}
+.room-seting-ul{width:100%; list-style-type: none}
+.room-seting-ul-li1{display: inline-block; width: 20%;height: 20%;margin-top: 2px}
+.room-seting-img{width: 100%;height: 100%}
+.room-seting-row1{width: 100%;margin-top: 20px;}
+.room-seting-col121{background-color: white}
+.room-seting-roomhead{height: 50px;line-height: 50px;width: 96%;margin-left:2%;}
+.room-seting-roomhead1{height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid}
+.room-seting-roomspan{text-align: left;width: 45%;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.room-seting-roomspan1{text-align: right;width: 53%;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.room-seting-row2{width: 100%;margin-top: 15px;}
+.room-seting-col122{background-color: white;text-align: center}
+.room-seting-container1{width: 100%;margin: 0 auto;padding: 0;}
+.room-seting-row3{margin-top: 10px}
+.room-seting-col123{border: #d4d4d4 1px solid}
+.room-seting-div{width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left}
+.room-seting-row5{width: 100%;margin-top: 5px;}
+/*#FF9900*/
+.room-seting-adminicon{width: 50px;height: 50px;background-color:white;margin: 0 auto;line-height: 50px;text-align: center;border: 2px #D9B300 solid;border-radius:50%;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.room-seting-vistoricon{width: 50px;height: 50px;background-color:white;margin: 0 auto;line-height: 50px;text-align: center;border: 2px red solid;border-radius:50%;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.room-seting-membericon{width: 50px;height: 50px;background-color:white;margin: 0 auto;line-height: 50px;text-align: center;border: 2px #8CEA00 solid;border-radius:50%;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.room-seting-invtionicon{width: 50px;height: 50px;background-color:white;margin: 0 auto;line-height: 50px;text-align: center;border: 2px #CCFFFF solid;border-radius:50%;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+/*#CCFFFF*/

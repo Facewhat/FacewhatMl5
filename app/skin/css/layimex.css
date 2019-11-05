@@ -1,0 +1,77 @@
+
+/* 加载就绪标志 */
+html #layuicss-skinlayimexcss{display:none; position: absolute; width:1989px;}
+
+.layui-layim-info .layui-layim-user{cursor: pointer}
+
+.layim_filepicture {background:url(../../skin/images/folder1.png) no-repeat;float:left; width:102px; height:70px; text-align:center}
+.layim_filepicture span{padding: 20px 0 0 10px; position: relative; color: blue; float: left; overflow: hidden; width:70px}
+.layim_filepicture span：hover{overflow: hidden; width:70px; height: 20px}
+.layim_fileinfo {float:left; margin-left: 10px/* border : 2px solid black */}
+.layim_filestate {margin-left: 10px; padding-left: 102px}
+.layim_fileinfo img{width : 128px; height:128px;}
+
+.layui-layim-list li.layim-null-item {height: 20px; line-height: 20px; padding-left: 30px; font-size: 12px; color: #999; text-align: left; cursor: default;}
+.layui-layim-list li.layim-null-item:hover{background: none;}
+.layui-layim-list li.layim-null-redirect{height: 20px; line-height: 20px; padding: 10px 0; font-size: 14px; color: #999; text-align: center; cursor: pointer;}
+
+.layim-msgbox{margin: 15px;}
+.layim-msgbox li{position: relative; margin-bottom: 10px; padding: 0 130px 10px 60px; padding-bottom: 10px; line-height: 22px; border-bottom: 1px dotted #e2e2e2;}
+.layim-msgbox .layim-msgbox-tips{margin: 0; padding: 10px 0; border: none; text-align: center; color: #999;}
+.layim-msgbox .layim-msgbox-system{padding: 0 10px 10px 10px;}
+.layim-msgbox li p span{padding-left: 5px; color: #999;}
+.layim-msgbox li p em{font-style: normal; color: #FF5722;}
+
+.layim-msgbox-avatar{position: absolute; left: 0; top: 0; width: 50px; height: 50px;}
+.layim-msgbox-user{padding-top: 5px;}
+.layim-msgbox-content{margin-top: 3px;}
+.layim-msgbox .layui-btn-small{padding: 0 15px; margin-left: 5px;}
+.layim-msgbox-btn{position: absolute; right: 0; top: 12px; color: #999;}
+
+.layui-layim-goodinfo {margin-top: 10px; cursor:pointer}
+.layui-search-field {margin-right: 10px; max-width: 120px}
+
+.layim-status-offline{color: #E8E8E8;}
+
+.layim-vcard {}
+.layim-vcard li{position: relative; margin-bottom: 10px;  line-height: 22px; border-bottom: 1px dotted #e2e2e2;}
+.layim-vcard div{max-width: 70%}
+.layim-vcard-avatar{position: absolute; right: 30px; top: 10px; width: 100px; height: 100px;}
+.layim-vcard-item { }
+.layim-vcard-item span {float: left; display: block; padding: 9px 5px 9px 5px; width: 40px; font-weight: 400; text-align: right;color: #999;}
+.layim-vcard-item .label {float: left; display: block; padding: 9px 5px 9px 20px; width: 40px; font-weight: 400; text-align: right;}
+.layim-vcard-item .label_key{float: left; display: block; padding: 9px 5px; font-weight: 400;}
+.layim-vcard-item .block {margin-left: 55px; min-height: 36px;}
+.layim-vcard-chat {float: right; margin-top: -45px; margin-right: -110px; z-index: 999999; }
+.layim-vcard-item input {display: block; width: 90%; padding-left: 10px;}
+.layim-vcard-item textarea {display: block; width: 90%; padding-left: 10px;}
+.layim-vcard-item select {display: block; width: 80%; padding-left: 10px;}
+
+.pt5{padding-top: 5px;}
+.pt10{padding-top: 10px;}
+.pt15{padding-top: 15px;}
+.pt30{padding-top: 30px;}
+.pd0{padding: 0px;}
+
+/* region 更多工具面板 */
+.layim-tool-card {
+    text-align: center;
+    cursor: pointer;
+}
+.layim-tool-card :hover{background-color: #FFFFFF; opacity: 0.7}
+.layim-tool-card :active{background-color: rgba(0,0,0,0.05);}
+/* endregion 更多工具面板 */
+
+/* region 退出当前账号 */
+.layim-tool-card div[layimex-event="logout"] *{
+    color: #ff0004;
+}
+.layim-tool-card div[layimex-event="logout"] .layui-icon{
+    font-size: 24px;
+    position: relative;
+}
+.layim-tool-card div[layimex-event="logout"] span {
+    position: relative;
+    font-size: 17px;
+}
+/* endregion 退出当前账号 */

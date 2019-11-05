@@ -1,0 +1,16 @@
+{
+  "code": 0,
+  "msg": "获得会议室成功啦",
+  "data": {
+    "group": [{
+      "groupname": "515未来实验室就是牛",
+      "id": "515",
+      "jid": "515@conference.120.24.53.76",
+      "avatar": "../skin/images/avatar_room.png"
+    }, {
+      "groupname": "前端群",
+      "id": "101",
+      "avatar": "http://tp2.sinaimg.cn/2211874245/180/40050524279/0"
+    }]
+  }
+}

@@ -1,0 +1,381 @@
+/* 加载就绪标志 */
+html #skinlayimex-mobilecss{display: none; position: absolute; width: 1989px;}
+
+/*消息列表 暂时还是pc版的*/
+.layim_invitename {font-size: 25px; top: 0px;position: relative}
+.layim_subscribegroupnames {
+    position : absolute;
+    left : 7px;
+    float : left;
+    margin-top : -35px;
+}
+.layim_subscribegroupnames select{
+    width : 84px;
+    position :relative;
+    float : left;
+    left : 71px;
+    height: 30px;
+    top: 3px;
+}
+.layim_subscribegroupnames input {
+    position : relative;
+    float : left;
+    width : 100px;
+}
+.layim_subscribegroupnames span {
+    position : relative;
+    float : left;
+    left : 64px;
+    margin-top:5px;
+}
+.layim_btns {position: relative; float: right; top: 3px}
+
+/* region 主界面 */
+.layui-layim-tool{position: absolute; right: 13px; top: 0px; font-size: 0; border-radius:0 0 2px 2px;}
+.layui-layim-tool li{position: relative; margin-left:22px; text-align: center; cursor: pointer;}
+.layui-layim-tool *{font-size: 22px;}
+.layui-layim-tool li:active{background-color: #FFFFFF; opacity: 0.2}
+/* endregion 主界面 */
+
+/* region 搜索栏 */
+
+
+.layui-layim-search {
+    display: none;
+}
+.layui-layim-search *{
+    font-size:20px;
+}
+.layui-layim-search li{
+    background-color: #fff;
+    position: relative;
+    border-bottom: 1px solid #f2f2f2;
+    padding: 5px 12px 5px 12px;
+    height:40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+.layui-layim-search i{
+}
+.layui-layim-search input{
+    border:none;
+    background:none;
+    font-size: 14px;
+    width:80%;
+    padding-bottom: 4px;
+}
+.layui-layim-search label{
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: rgba(0,0,0,.6);
+    font-weight: 400;
+}
+
+.layui-layim-list li.layim-null-item {height: 20px; line-height: 20px; padding-left: 30px; font-size: 14px; color: #999; text-align: left; cursor: default; border: 0px}
+.layui-layim-list li.layim-null-item:hover{background: none;}
+.layui-layim-list li.layim-null-redirect{height: 20px; line-height: 20px; padding: 10px 0; font-size: 14px; color: #999; text-align: center; cursor: hand;}
+
+/* endregion 搜索栏 */
+
+/* region 个人信息 */
+.layim-vcard {}
+.layim-vcard-edit {
+    position: absolute;
+    float:right;
+    right:15px;
+    height: 15px;
+}
+.layim-vcard-input {
+    border: 0;
+    float:right;
+    margin-right:35px;
+    text-align: right;
+    height: auto;
+}
+.layim-vcard li[layimex-event="set_mine_avatar"]{
+    position: relative;
+    padding: 5px 15px 0px 69px;
+    height: 59px;
+    font-size: 0;
+    cursor: pointer;
+    margin-right:35px;
+}
+.layim-vcard li[layimex-event="set_mine_avatar"] img {
+    position: absolute;
+    left: 0px;
+    top: 2px;
+    width: 55px;
+    height: 55px;
+}
+.layim-vcard li[layimex-event="set_mine_avatar"] span {
+    max-width: 155px;
+    font-size: 18px;
+    color: black;
+}
+.layim-vcard li[layimex-event="set_mine_avatar"] p {
+    display: block;
+    font-size: 17px;
+    color: #999;
+    padding-top: 2px;
+    font-family: italic;
+}
+.layim-vcard input{position: absolute; font-size: 0; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.01; filter: Alpha(opacity=1); cursor: pointer;}
+.layim-vcard-edit-mine  {
+    top: 30px;
+}
+.selfInfoIcon{
+    float:right;
+    margin-right:35px;
+    width: 50px;
+    height: 50px;
+}
+.selfInfoBarcode{
+    float:right;
+    margin-right:35px;
+    width: 100px;
+    height: 100px;
+}
+.layim-vcard-title {
+    /*font-weight:bold;*/
+    font-size: 17px;
+}
+.layim-vcard-value {
+    float:right;
+    margin-right:35px;
+}
+.layim-vcard-field-panel {
+    text-align: center;
+}
+.layim-vcard-field-submit {
+    margin-top: 5px;
+}
+.layim-vcard li[name="friend_brief_info"]{
+    position: relative;
+    padding: 5px 15px 0px 69px;
+    height: 59px;
+    font-size: 0;
+    cursor: pointer;
+    margin-right:35px;
+}
+.layim-vcard li[name="friend_brief_info"] img {
+    position: absolute;
+    left: 0px;
+    top: 2px;
+    width: 55px;
+    height: 55px;
+}
+.layim-vcard li[name="friend_brief_info"] span {
+    max-width: 155px;
+    font-size: 18px;
+    color: black;
+}
+.layim-vcard li[name="friend_brief_info"] p {
+    display: block;
+    font-size: 13px;
+    color: #999;
+    padding-top: 2px;
+}
+/* 警告域 */.layui-form-danger:focus
+
+/* 个人信息li*/
+.layim-list-top li[layimex-event="open_mine_info"]  {
+             position: relative;
+             height: 69px;
+             border-bottom: 1px solid #f2f2f2;
+             padding: 5px 15px 5px 60px;
+             font-size: 0;
+             cursor: pointer;
+         }
+.layim-list-top li[layimex-event="open_mine_info"] * {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 17px;
+}
+.layim-list-top li[layimex-event="open_mine_info"] img {
+    position: absolute;
+    left: 12px;
+    top: 2px;
+    width: 54px;
+    height: 54px;
+}
+.layim-list-top li[layimex-event="open_mine_info"] span {
+    margin-left: 19px;
+    max-width: 155px;
+    font-size: 17px;
+    margin-top: 0px;
+}
+.layim-list-top li[layimex-event="open_mine_info"] p {
+    display: block;
+    padding-right: 20px;
+    line-height: 18px;
+    font-size: 17px;
+    margin-left: 19px;
+    margin-top: -5px;
+    color: #999;
+}
+/* endregion 个人信息 */
+
+/* region 菜单*/
+body .layui-m-layer .layui-m-layer-menu{width: auto; max-width: 80%; background: none; color: #fff;}
+.layui-m-layer-menu .layui-m-layercont{padding: 10px 20px; text-align: left; background-color:rgba(0,0,0, .3);}
+.layui-m-layer-menu .layui-m-layercont li{padding: 6px; font-size: 16px}
+.layui-m-layer-menu-gray {background-color: #DD691D; opacity: 0.3;}
+
+body .layui-m-layer .layui-m-layer-menu_ex{
+    position: absolute;
+    width: auto;
+    max-width: 80%;
+    background: none;
+    color: #fff;
+    top: 60px; /*title高50px*/
+    right: 16px;
+}
+.layui-m-layer-menu_ex .layui-m-layercont{
+    padding: 10px 20px;
+    text-align: left;
+    background-color:rgba(0,0,0, .3);
+    border-radius: 4px;
+}
+.layui-m-layer-menu_ex .layui-m-layercont li{padding: 6px; font-size: 16px}
+.layui-m-layer-menu_ex-gray {background-color: #DD691D; opacity: 0.3;}
+
+.layui-m-layer-menu_ex:after{
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: -12px;
+    width: 0;
+    height: 0;
+    border-style: dashed;
+    border-color: transparent;
+    overflow: hidden;
+    border-width: 6px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(0,0,0, .3);
+}
+/* endregion 菜单*/
+
+/* region 退出当前账号 */
+.layim-list-top li[layimex-event="logout"] {
+    text-align: center;
+    padding: 5px 15px 5px 15px;
+}
+.layim-list-top li[layimex-event="logout"] * {
+    color: #ff0004;
+}
+.layim-list-top li[layimex-event="logout"] .layui-icon{
+    font-size: 25px;
+    position: relative;
+}
+.layim-list-top li[layimex-event="logout"] span {
+    position: relative;
+    vertical-align: top;
+    left: initial;
+    margin-left: 10px;
+    font-size: 17px;
+}
+/* endregion 退出当前账号 */
+
+/* region 消息中心/新的朋友 */
+.layim-msgbox-system{
+    display: flex;
+    align-items: center;
+}
+.layui-layim-list li .layim-msgbox-notify {
+    font-size: 14px;
+    overflow : hidden;
+    word-break: break-all;/*在任何地方换行*/
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;/*规定超过两行的部分截断*/
+    -webkit-box-orient: vertical;
+}
+.layim-msgbox-notify * {
+
+}
+.layim-msgbox-btn * {
+    font-size: 14px;
+    right: 6px;
+}
+.layim-msgbox-btn{
+    position: absolute;
+    right: 6px;
+    bottom: 8px;
+    color: #999;
+    padding-right: 2px;
+}
+.layim-msgbox-btn .layui-btn-small{
+    padding: 0 6px;
+    margin-left: 2px;
+}
+/* endregion 消息中心/新的朋友 */
+
+/* region 添加朋友 */
+.layim-add-box{margin: 15px; font-size: 0;}
+.layim-add-img{
+}
+.layim-add-img img{
+    left: 0px;
+    top: 2px;
+    width: 55px;
+    height: 55px;}
+.layim-add-img span{
+    max-width: 155px;
+    font-size: 20px;
+    padding-left: 10px;
+}
+.layim-add-img p {
+    display: block;
+    padding-right: 30px;
+    line-height: 18px;
+    font-size: 13px;
+    color: #999;
+}
+
+.layim-add-remark{width: 260px;}
+.layim-add-remark p{
+    margin-bottom: 10px;
+    font-size: 14px;
+    padding-top: 10px;
+    color: #999;}
+.layim-add-remark .layui-select{
+    width: 80%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    -webkit-appearance: menulist-button;
+}
+.layim-add-remark .layui-textarea{height: 80px; min-height: 80px; resize: none;}
+/* endregion 添加朋友 */
+
+/* region 电商 */
+.layui-layim-goodinfo {
+    margin-top: 10px;
+    padding-left: 60px;
+}
+.layui-layim-goodinfo img {
+    position: absolute;
+    height: 55px;
+    width: 55px;
+    margin-top: 2px;
+    left: 10px;
+}
+/* endregion 电商 */
+
+/*region 文件传输*/
+.layim_filepicture {
+    background: url(../../skin/images/folder1.png) no-repeat;
+    background-size: contain;
+    width: 50px;
+    height: 30px;
+    position: absolute;
+    text-align: center;
+    margin-top: 6px;
+}
+.layim_filepicture span{padding: 20px 0 0 10px; position: relative; color: blue; float: left; overflow: hidden; width:70px}
+.layim_filepicture span：hover{overflow: hidden; width:70px; height: 20px}
+.layim_fileinfo {float:left; margin-left: 55px/* border : 2px solid black */}
+.layim_filestate {float:left; margin-left: 10px;}
+.layim_fileinfo img{width : 128px; height:128px;}
+/*endregion 文件传输*/
+
