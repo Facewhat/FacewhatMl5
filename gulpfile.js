@@ -9,7 +9,6 @@ var gulp = require('gulp');
 // 引入组件
 var jshint = require('gulp-jshint'); // 代码检查
 //var sass = require('gulp-sass');     // sass编译
-<<<<<<< HEAD
 var less = require('gulp-less');     // less编译
 var concat = require('gulp-concat'); // 代码合并
 var uglify = require('gulp-uglify'); // 代码压缩
@@ -23,7 +22,6 @@ var babel = require('gulp-babel'); // 兼容es6,es5
 var jsSrc = './app/**/*.js',    //原 app/js/*.js
     jsDist = 'dist/js',
     cssSrc = 'app/**/*.css',  //原 app/css/*.css
-=======
 //var less = require('gulp-less');     // less编译
 var concat = require('gulp-concat'); // 代码合并
 var uglify = require('gulp-uglify'); // 代码压缩
@@ -39,19 +37,14 @@ var gutil = require('gulp-util');
 var jsSrc = 'app/scripts/*/*.js',
     jsDist = './dist/js',
     cssSrc = 'app/css/*.css',
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     lessSrc = 'less/*.less',
     sassSrc = './scss/*.scss',
     cssDist = './dist/css',
     imgMinSrc = 'dist/images/*.{png,jpg,gif,ico}',
-<<<<<<< HEAD
     htmlSrc = '*.html',
     cache = require('gulp-cache'),
     imagemin = require('gulp-imagemin');
-=======
     htmlSrc = '*.html';
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 // 检查脚本，在命令行使用 gulp script 启动此任务（script为task名）
 gulp.task('lint', function(){
    gulp.src(jsSrc)
@@ -61,20 +54,16 @@ gulp.task('lint', function(){
 // 压缩 js 文件
 gulp.task('scripts', function() {
    // 1\. 找到文件
-<<<<<<< HEAD
    gulp.src('app/layui/*.js')
        .pipe(babel({   ///
           //presets: ['es2015'] // es5检查机制///
           presets: ['@babel/env']
        })) ///
-=======
    gulp.src(jsSrc)
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
        .pipe(concat('all.js'))
        .pipe(gulp.dest(jsDist))
        .pipe(rename('all.min.js'))
        .pipe(uglify()) //  压缩文件
-<<<<<<< HEAD
        .pipe(gulp.dest(jsDist))
 });
 
@@ -94,8 +83,6 @@ gulp.task('htmlmin', function(){
  //      })))
  //      .pipe(gulp.dest(imgMinSrc))
  //  });
-
-=======
        .on('error', function(err) {
           gutil.log(gutil.colors.red('[Error]'),err.toString());
        })
@@ -115,8 +102,6 @@ gulp.task('just_layim_script', function() {
        })) //  压缩文件
        .pipe(gulp.dest(jsImDist))
 });
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 // 编译Sass
 //gulp.task('sass', function() {
 //   gulp.src(sassSrc)
@@ -125,7 +110,6 @@ gulp.task('just_layim_script', function() {
 //});
 
 // 编译less
-<<<<<<< HEAD
 gulp.task('less', function(){
    return gulp.src(lessSrc)
        .pipe(less()) // 参数为空，编译为css
@@ -138,7 +122,6 @@ gulp.task('less', function(){
 gulp.task('watchLess', function () {
     gulp.watch(lessSrc, ['less']);
 });
-=======
 // gulp.task('less', function(){
 //    return gulp.src(lessSrc)
 //        .pipe(less()) // 参数为空，编译为css
@@ -151,8 +134,6 @@ gulp.task('watchLess', function () {
 // gulp.task('watchLess', function () {
 //    gulp.watch(lessSrc, ['less']);
 // });
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
 // 压缩css文件
 gulp.task('minCss', function(){
    gulp.src(cssSrc)
@@ -204,15 +185,12 @@ gulp.task('watcher',function(){
 gulp.task('startServer',function(){
    connect.server({
       root:'app',
-<<<<<<< HEAD
       port:8888,
       livereload:true,
        host:'0.0.0.0',
-=======
       host:'0.0.0.0',
       port:8888,
       livereload:true
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
    });
 });
 
@@ -222,11 +200,8 @@ gulp.task('stopServer',function(){
 
 gulp.task('loadfiles', function(){
    gulp.src('./app/**/*.*')
-<<<<<<< HEAD
         .pipe(connect.reload());
-=======
        .pipe(connect.reload());
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 });
 
 gulp.task('default',['startServer','watcher'])
