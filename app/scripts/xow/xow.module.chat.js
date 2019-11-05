@@ -7,17 +7,17 @@
   return factory(XoW);
 }(function (XoW) {
   'use strict';
-  XoW.ChatManager =function(globalManager) {//此处无法改成es6的函数形式，改之后无法识别为构造函数
+  XoW.ChatManager = function (globalManager) {
     // region Fields
-    let _this = this;
-      let _gblMgr = null; // 私有变量
-      let _jidChats = [];
-      let _RoomMsg = [];
+    var _this = this;
+    var _gblMgr = null; // 私有变量
+    var _jidChats = [];
+    var _RoomMsg = [];
     this.classInfo = 'ChatManager';
     // endregion Fields
 
     // region Private methods
-    let _init = ()=> {
+    var _init = function () {
       XoW.logger.ms(_this.classInfo, '_init()');
       _gblMgr = globalManager;
       // 监听消息节
@@ -43,27 +43,22 @@
     //  }
     //  XoW.logger.me(_this.classInfo, '_addJidChat');
     //};
-    let _onMessage = (stanza)=> {
+    var _onMessage = function (stanza) {
       XoW.logger.ms(_this.classInfo, '_onMessage()');
       var fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
       var myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
       let isType = stanza.getAttribute('type');
 
       if(_filterComponentMessage(stanza)){ return true;}
-//       let fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
-//       let myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
-      // 以这种方式来区分是会议室的消息/会议室的私聊 还是个人消息
-      // 如果两个doamin相同，则说明是个人消息
       XoW.logger.d(_this.classInfo, 'fromDomain：{0} toDomain: {1}'.f(fromDomain, myDomain));
       if (fromDomain == myDomain) {
-        // 到时候这边看看要不要把type=errror的消息拦截下来。在外面进行统一的处理。
-        let theMsg = new XoW.Message();
+        var theMsg = new XoW.Message();
         theMsg.cid = stanza.getAttribute('id');
         theMsg.to = stanza.getAttribute('to'); // 非纯jid，是全jid
         theMsg.from = stanza.getAttribute('from');
         theMsg.thread = stanza.getElementsByTagName('thread').length > 0 ?
           stanza.getElementsByTagName('thread')[0].textContent : '';
-        let type = stanza.getAttribute('type');
+        var type = stanza.getAttribute('type');
         if (!type) {
           // 如果没有type，则认为是normal
           XoW.logger.w(_this.classInfo + '刚到的消息没有类型！');
@@ -86,6 +81,11 @@
             case 'chat' :
               // 一对一聊天，或者是在聊天室中的私聊
               XoW.logger.i(_this.classInfo + '刚到的消息是一个chat！');
+
+              // if(stanza.getElementsByTagName('data').length>0){
+              //   _sendFileToUi(stanza);
+              //      return true;
+              // }
               theMsg.type = XoW.MessageType.CONTACT_CHAT;
               if (stanza.getElementsByTagName('active').length > 0) {
                 theMsg.contentType = 'active';
@@ -132,15 +132,6 @@
                 }
                 if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "您被禁言,发送失败");
-                  _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "权限不够，发送失败");
-                  return true;
-                }
-                if(stanza.getElementsByTagName('reason')[0]&&stanza.getElementsByTagName('error')[0].getAttribute('code')=="403"){
-                  _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.NO_POWER_INVITION,"你没有邀请权限");
-                  return true
-                }
-                if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
-                  _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "您被禁言,发送失败");
                   return true;
                 }
               }
@@ -165,19 +156,6 @@
                 }
                 if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "您被禁言,发送失败");
-                _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.DISAGREE_INVITATION,{from:stanza.getElementsByTagName('decline')[0].getAttribute('from'),reason:stanza.getElementsByTagName('reason')[0].textContent,roomjid:stanza.getAttribute('from')});
-              }
-              if(stanza.getAttribute('type') == 'error'){
-                if((stanza.getElementsByTagName('subject').textContent)){
-                  _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "权限不够，发送失败");
-                  return true;
-                }
-                if(stanza.getElementsByTagName('reason')[0]&&stanza.getElementsByTagName('error')[0].getAttribute('code')=="403"){
-                  _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.NO_POWER_INVITION,"你没有邀请权限");
-                  return true
-                }
-                if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
-                  _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "您被禁言,发送失败");
                   return true;
                 }
               }
@@ -241,9 +219,9 @@
           XoW.MessageType.HEADLINE == theMsg.type ||
           XoW.MessageType.NORMAL == theMsg.type) {
           // 放行
-          let theChat = _this.getOrCreateChatByJid(stanza.getAttribute('from'));
+          var theChat = _this.getOrCreateChatByJid(stanza.getAttribute('from'));
           theChat.addMessage(theMsg);
-          let param = { chat: theChat, msg: theMsg};
+          var param = { chat: theChat, msg: theMsg};
           _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.CHAT_MSG_RCV, param);
         } else if (type == 'error') {
           // 错误节
@@ -268,51 +246,36 @@
           return true;
         }else{
         //todo g关于群组消息设置
-        if(stanza.getAttribute('type')==undefined && XoW.utils.getNodeFromJid(stanza.getAttribute('to'))==XoW.utils.getNodeFromJid(_gblMgr.getCurrentUser().jid)&&stanza.getElementsByTagName('decline')[0]){
+        if (stanza.getAttribute('type') == undefined && XoW.utils.getNodeFromJid(stanza.getAttribute('to')) == XoW.utils.getNodeFromJid(_gblMgr.getCurrentUser().jid) && stanza.getElementsByTagName('decline')[0]) {
           _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_DISAGREE_INVITE, {
             from: stanza.getElementsByTagName('decline')[0].getAttribute('from'),
             reason: stanza.getElementsByTagName('reason')[0].textContent,
             roomjid: stanza.getAttribute('from')
           });
         }
-        if(stanza.getAttribute('type') == 'error'){
-          if((stanza.getElementsByTagName('subject').textContent)){
+        if (stanza.getAttribute('type') == 'error') {
+          if ((stanza.getElementsByTagName('subject').textContent)) {
             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "权限不够，发送失败");
             return true;
           }
-          if(stanza.getElementsByTagName('reason')[0]&&stanza.getElementsByTagName('error')[0].getAttribute('code')=="403"){
-            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_NO_INVITATION_PERMISSION,"你没有邀请权限");
+          if (stanza.getElementsByTagName('reason')[0] && stanza.getElementsByTagName('error')[0].getAttribute('code') == "403") {
+            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_NO_INVITATION_PERMISSION, "你没有邀请权限");
             return true
           }
-          if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
+          if (stanza.getElementsByTagName('error')[0].getAttribute('code') == "403") {
             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "您被禁言,发送失败");
-        //todo g关于群组消息设置
-        if(stanza.getAttribute('type')==undefined && XoW.utils.getNodeFromJid(stanza.getAttribute('to'))==XoW.utils.getNodeFromJid(_gblMgr.getCurrentUser().jid)&&stanza.getElementsByTagName('decline')[0]){
-          _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.DISAGREE_INVITATION,{from:stanza.getElementsByTagName('decline')[0].getAttribute('from'),reason:stanza.getElementsByTagName('reason')[0].textContent,roomjid:stanza.getAttribute('from')});
-        }
-        if(stanza.getAttribute('type') == 'error'){
-          if((stanza.getElementsByTagName('subject').textContent)){
-            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "权限不够，发送失败");
-            return true;
-          }
-          if(stanza.getElementsByTagName('reason')[0]&&stanza.getElementsByTagName('error')[0].getAttribute('code')=="403"){
-            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.NO_POWER_INVITION,"你没有邀请权限");
-            return true
-          }
-          if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
-            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "您被禁言,发送失败");
             return true;
           }
         }
-        if(_gblMgr.getRoomMgr().isNew_room_title(stanza)){
+        if (_gblMgr.getRoomMgr().isNew_room_title(stanza)) {
           return true;
         }
-        let pureJid = XoW.utils.getBareJidFromJid(stanza.getAttribute('from'));
-        let theMsg1 = new XoW.Message();
+        var pureJid = XoW.utils.getBareJidFromJid(stanza.getAttribute('from'));
+        var theMsg1 = new XoW.Message();
         theMsg1.cid = stanza.getAttribute('id');
         theMsg1.to = stanza.getAttribute('to');
         theMsg1.from = stanza.getAttribute('from');
-        if(_GetmineRoomMsg(theMsg1.cid)==false) {
+        if (_GetmineRoomMsg(theMsg1.cid) == false) {
           _RoomMsg.push(theMsg1.cid);
           theMsg1.type = 'group';
           theMsg1.contentType = 'msg';
@@ -324,8 +287,8 @@
             theMsg1.timestamp = stanza.getElementsByTagName('delay')[0].getAttribute('stamp');
             theMsg1.contentType = 'delaymsg';
           }
+
           if (theMsg1.content == "" || theMsg1.content == undefined || theMsg1.content == null || (theMsg1.content.length > 0 && theMsg1.content.trim().length == 0)) {
-          if(theMsg1.content  == "" || theMsg1.content  == undefined || theMsg1.content  == null || (theMsg1.content.length>0 && theMsg1.content .trim().length == 0)){
             return true;
           }
           _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_MSG_RCV, theMsg1);
@@ -340,9 +303,9 @@
      * 创建chat
      * @param to to表示是好友，from表示是我
      */
-    let _createChatByJid = (to)=> {
+    var _createChatByJid = function (to) {
       XoW.logger.ms(_this.classInfo, '_createChatByJid({0})'.f(to));
-      let chat = new XoW.Chat(to);
+      var chat = new XoW.Chat(to);
       _jidChats.push(chat);
       XoW.logger.me(_this.classInfo, '_createChatByJid({0})'.f(to));
       return chat;
@@ -358,10 +321,10 @@
      * 根据好友的jid得到chat
      * @param pJid bare jid or full jid of remote peer.
      */
-    this.getChatByJid = (pJid)=> {
+    this.getChatByJid = function (pJid) {
       XoW.logger.ms(_this.classInfo, 'getChatByJid({0})'.f(pJid));
       pJid = XoW.utils.getBareJidFromJid(pJid);
-      return _jidChats.find((x)=> {
+      return _jidChats.find(function (x) {
         return x.to === pJid;
       });
     };
@@ -369,20 +332,20 @@
      * 根据好友的jid去获得chat，如果chat不存在，则创建
      * @param jid 要求纯的jid或全jid
      */
-    this.getOrCreateChatByJid = (jid)=> {
+    this.getOrCreateChatByJid = function (jid) {
       XoW.logger.ms(_this.classInfo, 'getOrCreateChatByJid({0})'.f(jid));
       jid = XoW.utils.getBareJidFromJid(jid);
-      let chat = _this.getChatByJid(jid);
+      var chat = _this.getChatByJid(jid);
       if (null == chat) {
         chat = _createChatByJid(jid);
       }
       XoW.logger.me(_this.classInfo, 'getOrCreateChatByJid({0})'.f(jid));
       return chat;
     };
-    this.sendMessage = (content, toJid, fromJid)=> {
+    this.sendMessage = function (content, toJid, fromJid) {
       XoW.logger.ms(_this.classInfo, 'sendMessage({0})'.f(toJid));
-      let chat = this.getOrCreateChatByJid(toJid);
-      let msg = new XoW.Message();
+      var chat = this.getOrCreateChatByJid(toJid);
+      var msg = new XoW.Message();
       msg.cid = XoW.utils.getUniqueId('msg');
       msg.to = toJid;
       msg.fromid = fromJid;
@@ -393,7 +356,7 @@
       chat.addMessage(msg);
 
       // $msg strophe定义
-      let xmppmsg = $msg({
+      var xmppmsg = $msg({
         id: msg.cid,
         from: msg.fromid,
         to: msg.to,
@@ -403,10 +366,10 @@
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));
     };
 
-    this.groupsendMessage = (content, toJid, fromJid)=>{   //群组发送消息
+    this.groupsendMessage = function (content, toJid, fromJid) {   //群组发送消息
       XoW.logger.ms(_this.classInfo, 'sendMessage({0})'.f(toJid));
-      let chat = this.getOrCreateChatByJid(toJid);
-      let msg = new XoW.Message();
+      var chat = this.getOrCreateChatByJid(toJid);
+      var msg = new XoW.Message();
       msg.cid = XoW.utils.getUniqueId('msg');
       msg.to = toJid;
       msg.fromid = fromJid;
@@ -417,7 +380,7 @@
       chat.addMessage(msg);
       _RoomMsg.push(msg.cid);
       // $msg strophe定义
-      let xmppmsg = $msg({
+      var xmppmsg = $msg({
         id: msg.cid,
         from: msg.fromid,
         to: msg.to,
@@ -426,9 +389,9 @@
       _gblMgr.getConnMgr().send(xmppmsg);
       XoW.logger.me(_this.classInfo, 'sendMessage({0})'.f(toJid));
     };
-    let _GetmineRoomMsg =(sid)=>{
+    var _GetmineRoomMsg = function (sid) {
 
-      for(let i = 0;i<_RoomMsg.length;i++){
+      for(var i = 0;i<_RoomMsg.length;i++){
         if(_RoomMsg[i] ==sid) {
 
           return true;
@@ -436,6 +399,7 @@
       }
       return false;
     }
+
     var _filterComponentMessage = function(stanza){   //过滤组件的消息
         if(stanza.getAttribute('from') == "filetransfer."+ XoW.config.domain){
             return true;
@@ -452,6 +416,7 @@
         }
         return false;
       }
+
     // endregion Public Methods
 
     // construct
