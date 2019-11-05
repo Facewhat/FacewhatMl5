@@ -5165,53 +5165,53 @@ var  _makeChatingRoom = function () {
 		});
 		XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
 	};
-    var _rebindToolFileButton = function () {
-        XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
-        var thatChat = _getThisChat();
-        if (!thatChat) {
-            return;
-        }
-        // the tool box class name is 'layim-tool-image'
-        var $fileToolboxs = thatChat.elem.find('.layim-chat-footer').find('.layim-chat-tool .layim-tool-image');
-        $.each($fileToolboxs, function () {
-            // 屏蔽掉layim.js中的操作，阻止上传文件
-            var $fileInput = $(this);
-            this.removeAttribute('layim-event');
-            var type = this.getAttribute('data-type') || 'images';
-            if (type === 'images') {
-                $fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
-            }
-            // 离线状态屏蔽click操作
-            $fileInput.click(function (e) {
-                XoW.logger.ms(_this.classInfo, 'fileInput.click()');
-                // 小小依赖了下XoW.UserState by cy
-                if (thatChat.data.status === XoW.UserState.OFFLINE) {
-                    // 如果对方离线，则阻止打开文件窗口事件
-                    e.preventDefault();
-                    _layer.msg('对方已离线，无法发送文件');
-                }
-            });
-            // 文件选定
-            $fileInput.change(function (e) {
-                XoW.logger.ms(_this.classInfo, 'fileInput.change({0})'.f($fileInput[0].children[0].value));
-                var $file = e.target.files[0]; // $file.size is base64 size?
-                var reader = new FileReader();
-                // 得到文件的信息
-                reader.onload = function (e) {
-                    XoW.logger.ms('FileReader.onload() ' + $file.filename)
-                    layui.each(call.sendFile, function (index, item) {
-                        item && item(thatChat, $file, e.target.result);
-                    });
-                };
-                if ($file) {
-                    reader.readAsDataURL($file);
-                    $fileInput[0].children[0].value = ''; // reset input value
-                }
-                delete reader;
-            });
-        });
-        XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
-    };
+//     var _rebindToolFileButton = function () {
+//         XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
+//         var thatChat = _getThisChat();
+//         if (!thatChat) {
+//             return;
+//         }
+//         // the tool box class name is 'layim-tool-image'
+//         var $fileToolboxs = thatChat.elem.find('.layim-chat-footer').find('.layim-chat-tool .layim-tool-image');
+//         $.each($fileToolboxs, function () {
+//             // 屏蔽掉layim.js中的操作，阻止上传文件
+//             var $fileInput = $(this);
+//             this.removeAttribute('layim-event');
+//             var type = this.getAttribute('data-type') || 'images';
+//             if (type === 'images') {
+//                 $fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
+//             }
+//             // 离线状态屏蔽click操作
+//             $fileInput.click(function (e) {
+//                 XoW.logger.ms(_this.classInfo, 'fileInput.click()');
+//                 // 小小依赖了下XoW.UserState by cy
+//                 if (thatChat.data.status === XoW.UserState.OFFLINE) {
+//                     // 如果对方离线，则阻止打开文件窗口事件
+//                     e.preventDefault();
+//                     _layer.msg('对方已离线，无法发送文件');
+//                 }
+//             });
+//             // 文件选定
+//             $fileInput.change(function (e) {
+//                 XoW.logger.ms(_this.classInfo, 'fileInput.change({0})'.f($fileInput[0].children[0].value));
+//                 var $file = e.target.files[0]; // $file.size is base64 size?
+//                 var reader = new FileReader();
+//                 // 得到文件的信息
+//                 reader.onload = function (e) {
+//                     XoW.logger.ms('FileReader.onload() ' + $file.filename)
+//                     layui.each(call.sendFile, function (index, item) {
+//                         item && item(thatChat, $file, e.target.result);
+//                     });
+//                 };
+//                 if ($file) {
+//                     reader.readAsDataURL($file);
+//                     $fileInput[0].children[0].value = ''; // reset input value
+//                 }
+//                 delete reader;
+//             });
+//         });
+//         XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
+//     };
     var _changeMineStatus = function (pStatus) {
         XoW.logger.ms(_this.classInfo, '_changeMineStatus()');
         // $('.layui-layim-status').find('ul li:last-child')等价于 $('.layui-layim-status').find('li').eq(-1)
