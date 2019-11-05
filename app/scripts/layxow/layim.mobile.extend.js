@@ -6,12 +6,7 @@
  * 3.接口名mobile和pc版保持一致
  * 4.do not depends on jquery but zepto，have not implemented yet
  */
-
-<<<<<<< HEAD
 layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client','form','skechpad-mobile','element'], function (exports) {
-=======
-layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client','form','skechpad-mobile'], function (exports) {
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   // region Fields
   this.classInfo = 'layImEx';
   var _layTpl = layui.laytpl;
@@ -21,11 +16,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   var _client = layui.client;
   var _layForm = layui.form;
   var $ = layui.zepto;
-    var _sketchpad = layui['skechpad-mobile'];
-<<<<<<< HEAD
-     var _element = layui.element;
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
+  var _sketchpad = layui['skechpad-mobile'];
+  var _element = layui.element;
   // var _layPage = layui.laypage;
   var _layDate = layui.laydate;
 	var _layFlow = layui['flow-mobile'];
@@ -93,7 +85,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'<li layImEx-event="menu_help"><i class="layui-icon">&#xe607;</i>  帮助与反馈</li>'
     ,'</ul>'
   ].join('');
-<<<<<<< HEAD
   var _eleRoomToolMoreMenu =  [
     '<ul >'
     ,'<li layImEx-event="createChatRoom"><i class="layui-icon" >&#xe611;</i>创建聊天室</li>'
@@ -101,8 +92,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'<li layImEx-event="roomRefresh"><i class="layui-icon">&#xe666;</i> 刷新</li>'
     ,'</ul>'
   ].join('');
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   // endregion mark mobile
 
   //聊天内容列表模版
@@ -143,7 +132,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'</div>'
   ].join('');
 
-<<<<<<< HEAD
 
   var _eleHttpImage = [
     ,'<div class="layui-container" style="margin: 0;padding: 0;width: 213px;height: 144px;background-color: white">'
@@ -263,11 +251,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'</div>'
     ,'</div>'
   ].join('');
-
-
-
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   var _eleFileThumbnail = [
     '<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_filepicture" ></div>'
@@ -333,7 +316,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'        <div id="search_user_remote_res"></div>'
     ,'     </div>'
     ,'     <div class="layui-tab-item {{# if(\'room\' === d.tab){ }}layui-show{{# } }}">'
-<<<<<<< HEAD
     ,'        <div class="layui-row layui-col-space15">'
     ,'          <div class="layui-col-xs8">'
     ,'            <input class="layui-input" name="qry_room_keyword" id="qry_room_keyword" placeholder="请输入房间昵称/JID" autocomplete="off"/>'
@@ -343,9 +325,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'          </div>'
     ,'        </div>'
     ,'        <div id="search_room_remote_res"></div>'
-=======
     ,'      搜索聊天室，聊天室功能模块添加了嘛'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     ,'     </div>'
     ,'     <div class="layui-tab-item {{# if(\'chatLog\' === d.tab){ }}layui-show{{# } }}">'
     ,'        <div><form class="layui-form" id="frmQryChatLog" action="">'
@@ -388,7 +368,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'     </div>'
     ,'  </div>'
     ,'</div>'].join('');
-<<<<<<< HEAD
     var _getEleRemoteSearchRoomRes = function (data) {
         let  _eleRemoteSearchRoomRes = '<div style="padding: 10px 0px 0px 0px; background-color: #F2F2F2;" class="layui-container">';
         _eleRemoteSearchRoomRes +=  '<div class="layui-row layui-col-space15">'
@@ -408,9 +387,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         _eleRemoteSearchRoomRes +='</div>'
         return _eleRemoteSearchRoomRes;
     }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
   var _eleRemoteSearchUserRes = [
     '{{# if(d.length > 0){ }}'
     ,'  <div style="padding: 10px 0px 0px 0px; background-color: #F2F2F2;" class="layui-container">'
@@ -633,11 +609,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '<div class="layui-bg-gray layui-container room-seting-container" >',
                '<div class="layui-row"">',
                   '<div class="layui-col-md12 room-seting-col12">',
-<<<<<<< HEAD
                        '<ul class = "room-seting-ul" id="roomMembers">',
-=======
                        '<ul class = "room-seting-ul">',
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                            '{{#  if(d.data.meaffiliation == "owner"){   }}',
                                '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-adminicon">{{d.data.menick}}</div></li>',
                            ,'{{# } else if(d.data.role == "visitor"){   }}',
@@ -648,19 +621,16 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
                            '{{# layui.each(d.data.memList, function(index, item){ }}',
                               '{{#  if(item.affiliation == "owner"){   }}',
-<<<<<<< HEAD
                               '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
                               ,'{{# } else if(item.role == "visitor"){   }}',
                               '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
                               ,'{{# }else{ }}',
                               '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
-=======
                               '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
                               ,'{{# } else if(item.role == "visitor"){   }}',
                               '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
                               ,'{{# }else{ }}',
                               '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                               ,'{{# }}}',
                               // '<li  class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><img src="..//images/Admin.png" class="room-seting-img"></li>',
                               '{{# }) }}', // for-each
@@ -696,7 +666,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       '</div>',
     '</div>'
   ].join('');
-<<<<<<< HEAD
   var _eleRoomCreate = [
     '<div class="layui-container" style="width: 100%;margin: 0px;padding: 0px">',
     '<form class="layui-form" action="">',
@@ -753,8 +722,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '</form>',
     '</div>',
   ].join('')
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 
   var _eleRoomMeetSetingHtml = [
     '<div class="layui-bg-gray layui-container room-seting-container" >',
@@ -771,19 +738,18 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
     '{{# layui.each(d.data.memList, function(index, item){ }}',
     '{{#  if(item.affiliation == "owner"){   }}',
-<<<<<<< HEAD
+
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
     ,'{{# } else if(item.role == "visitor"){   }}',
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
     ,'{{# }else{ }}',
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
-=======
+
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
     ,'{{# } else if(item.role == "visitor"){   }}',
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
     ,'{{# }else{ }}',
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     ,'{{# }}}',
     // '<li  class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><img src="..//images/Admin.png" class="room-seting-img"></li>',
     '{{# }) }}', // for-each
@@ -820,7 +786,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '</div>'
   ].join('');
 
-<<<<<<< HEAD
   var _eleTemparatureFriend = [
       '<div class="layui-container set-room-temparature-container">',
             '<div class="layui-row set-room-temparature-row">',
@@ -857,8 +822,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
             '</div>',
       '</div>'
   ].join('')
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
+
   var _eleRoomAdmin = [    //_eleRoomAdmin <label class="layui-icon" layimex-event="close_search">ဇ</label>
     '<ul class="layui-layim-search" style="display:inline">',
     '  <li>',
@@ -871,11 +835,11 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
             '<div class="layui-row room-seting-row3">',
                 '<div class="layui-col-xs12 room-seting-col123"  id="searchRoomAdmin">',
                       '{{# layui.each(d.data.roomdata, function(index, item){ }}',
-<<<<<<< HEAD
+
                       '<div class="room-seting-div" layimEx-event="changeAdminToOther" data-nick = "{{item.nick}}" data-jid = "{{d.data.roomjid}}">{{item.jid}}</div>',
-=======
+
                       '<div class="room-seting-div" layimEx-event="changeAdminToOther" data-jid = "{{d.data.roomjid}}">{{item.jid}}</div>',
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
+
                       '{{# }) }}', // for-each
                 '</div>',
             '</div>',
@@ -1183,7 +1147,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   //   _layIM.getMessage(params);
   // };
 
-<<<<<<< HEAD
   LAYIMEX.prototype.changeHttpFileStatus = function(data){
     if(data.status === XoW.FileHttpFileState.CANCEL || data.status === XoW.FileHttpFileState.ERROR || data.status === XoW.FileHttpFileState.CLOSE ) {
       $('#http' + data.cid).remove();
@@ -1389,9 +1352,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     });
     XoW.logger.me(_this.classInfo, 'completeHttpFile()');
   }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
   LAYIMEX.prototype.roomOutSide = function(params){
     XoW.logger.ms(_this.classInfo, "roomOutSide()");
     // layer.open({
@@ -1402,13 +1362,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     let  thisChat = _getThisChat();
     let elem = thisChat.elem;
     _roomBack(elem)
-<<<<<<< HEAD
     if( _layerIndex["ROOMSETING"]!=-1){
       _layer.close(_layerIndex["ROOMSETING"]);
       _layerIndex["ROOMSETING"] = -1;
     }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     _layer.open({
       content: params
       ,skin: 'msg'
@@ -1485,13 +1442,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     if(thischat) {
         _roomBack(thischat.elem);
     }
-<<<<<<< HEAD
     if(_layerIndex["ROOMSETING"]!=-1){
       _layer.close(_layerIndex["ROOMSETING"]);
       _layerIndex["ROOMSETING"] = -1;
     }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     _layer.open({
       content: params.Msg
       ,skin: 'msg'
@@ -1805,7 +1759,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   _layIM.on('sendMessage', function(data) {
     XoW.logger.ms(_this.classInfo, 'sendMessage()');
 	  // 模擬客服自动回复
-<<<<<<< HEAD
 	  // if(data.to.id === '#demohelp') {
 		//   // var To = data.to;
 		//   // setTimeout(function() {
@@ -1825,7 +1778,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       //    }).c('body').t("11111");
       //   _client.getConnMgr().send(msg);
 	  // }
-=======
 	  if(data.to.id === 'demohelp') {
 		  var To = data.to;
 		  setTimeout(function() {
@@ -1839,7 +1791,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 			  _layIM.getMessage(obj);
 		  }, 3000);
 	  }
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   });
   _layIM.on('newFriend', function(){
     XoW.logger.ms(_this.classInfo, 'newFriend()');
@@ -1974,7 +1925,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     todoCreateMeetRoom:function(oThis, e){
       _makeMeetingRoom(oThis);
     },
-<<<<<<< HEAD
     sendMessageToRoomOneMember:function(oThis, e){
         let onejid = $(oThis).attr('data-jid');
         let oneNick = $(oThis).attr('data-nick');
@@ -2081,8 +2031,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       });
       e.stopImmediatePropagation();
     },
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     removeRoomSeachKeyDownText:function(oThis, e){
         _roomBack(oThis)
     },
@@ -2092,7 +2040,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     backdealWRoomSpeak:function(oThis, e){
       _roomBack(oThis)
     },
-<<<<<<< HEAD
     createChatRoom:function(oThis, e){
       _layer.close(_layerIndex['ROOMCREATEICONLIST']);
       let content = _layTpl(_eleRoomCreate).render(" ")
@@ -2122,8 +2069,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     }
     _client.getRoomMgr().getAllRFServer();
     },
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     exitThisRoom:function(oThis, e){
        let roomjid = $(e.target).attr('roomjid');
        let roomuindex =  $(e.target).attr('roomuindex');
@@ -2267,11 +2212,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           ,time: 2
         });
       });
-<<<<<<< HEAD
        _roomBack(oThis);
-=======
       // _roomBack(oThis);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       _layer.close(_layerIndex["ROOMSETING"]);
         _layerIndex["ROOMSETING"] = -1;
       let thisRoom = _client.getRoomMgr().getRoomByJid(roomjid);
@@ -2332,11 +2274,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         _client.getConnMgr().send(msg);
 
       _roomBack(oThis)
-<<<<<<< HEAD
       _layer.close(_layerIndex['ROOMSUBJECT']);
       _layerIndex['ROOMSUBJECT'] = -1;
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       $("#layerSubject").text(context)
     },
     modify_room_name:function(oThis, e){
@@ -2365,19 +2304,15 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           roomDesc:roomDesc
         }
       });
-
-<<<<<<< HEAD
       let roomDescindex = _layIM.panelExs({
         title: '群聊描述'
         ,tpl: content
       },"saveRoomDesc",'完成');
       _layerIndex['ROOMDESC'] = roomDescindex;
-=======
       _layIM.panelExs({
         title: '群聊描述'
         ,tpl: content
       },"saveRoomDesc");
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     },
 
     saveRoomDesc:function(oThis, e){
@@ -2386,14 +2321,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       var user = _client.getCurrentUser().jid;
       _todoSaveRoomDesc(context,roomjid,user)
       _roomBack(oThis);
-<<<<<<< HEAD
       _layer.close(_layerIndex['ROOMDESC']);
       _layerIndex['ROOMDESC'] = -1;
-=======
       $('#layerRoomDesc').text(context)
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
     },
     sendRoomSubjet:function(oThis, e){
       let roomjid = $("#roomSubjectSt").attr('roomjid');
@@ -2404,20 +2334,15 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
             valuesubject:subject
           }
         });
-
-<<<<<<< HEAD
         let roomSubjectindex = _layIM.panelExs({
           title: '房间主题'
           ,tpl: content
         },'sendingSubject','完成');
       _layerIndex['ROOMSUBJECT'] = roomSubjectindex;
-=======
         _layIM.panelEx({
           title: '房间主题'
           ,tpl: content
         });
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         _layForm.render();
     },
     todoInviting:function(oThis, e){
@@ -2428,20 +2353,17 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     changeAdminToOther:function(oThis, e){
       let roomjid = $(e.target).attr('data-jid');
       let oneJid = XoW.utils.getBareJidFromJid($(e.target).text());
-<<<<<<< HEAD
       let oneNick = $(e.target).attr('data-nick');
       _changeAdminToOtherSr(roomjid,oneJid,oneNick,oThis);
     },
     changeMeetAdminToOther:function(oThis, e){
       let roomjid = $(e.target).attr('data-jid');
       let oenNick = $(e.target).attr('data-nick');
-=======
       // alert(roomjid + "   " + oneJid)
       _changeAdminToOtherSr(roomjid,oneJid,oThis);
     },
     changeMeetAdminToOther:function(oThis, e){
       let roomjid = $(e.target).attr('data-jid');
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       let oneJid = XoW.utils.getBareJidFromJid($(e.target).text());
       // alert(roomjid + "   " + oneJid)
       _changemeetAdminToOtherSr(roomjid,oneJid,oThis);
@@ -2490,18 +2412,12 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           let reg = new RegExp(choice)
           layui.each(data,function (index,item) {
             if(item.nick.match(reg)){
-<<<<<<< HEAD
               html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeAdminToOther" data-nick = "'+item.nick+'" data-jid = "'+roomjid+'">'+item.jid+'</div>'
-=======
               html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeAdminToOther" data-jid = "'+roomjid+'">'+item.jid+'</div>'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             }
           })
           $('#searchRoomAdmin').html(html);
-
         });
-
-
       });
     },//denyMemberSetingSr
     roomMeetAdimSetingSr:function(oThis, e){
@@ -2542,11 +2458,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           let reg = new RegExp(choice)
           layui.each(data,function (index,item) {
             if(item.nick.match(reg)){
-<<<<<<< HEAD
               html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeMeetAdminToOther" data-nick = "'+item.nick+'" data-jid = "'+roomjid+'">'+item.jid+'</div>'
-=======
               html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeMeetAdminToOther" data-jid = "'+roomjid+'">'+item.jid+'</div>'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             }
           })
           $('#searchRoomAdmin').html(html);
@@ -2651,7 +2564,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
       });
     },
-<<<<<<< HEAD
     stop_http_file:function(oThis, e){
       let fileid = $(e.target).attr('data-cid');
       sessionStorage.setItem(fileid, false);
@@ -2669,8 +2581,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       });
 
     },
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     detail:function(oThis, e){
        let roomId = $.trim(oThis.parent().text());
       if($('.layim-chat-status').text().length>0){
@@ -2797,24 +2707,18 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       XoW.logger.ms(_this.classInfo, 'menu_help()');
       // todo 打开聊天客服界面
       _layer.close(_layerIndex[LAYER_MENU_MORE_TOOL]);
-<<<<<<< HEAD
       var toId = '#demohelp';
       _layIM.chat({
         name: '智能客服',
-=======
       var toId = 'demohelp';
       _layIM.chat({
         name: '进口小妹妹',
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         username: toId,
         type: 'friend', //聊天类型不能用 kefu
         avatar: XoW.DefaultImage.AVATAR_KEFU,
         id: toId,
-<<<<<<< HEAD
         jid: "#demohelp@intelligentcusservice.127.0.0.1",
-=======
         jid: toId + '@' + XoW.config.domain,
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         temporary: true
       });
     },
@@ -3276,11 +3180,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       stranger.submit = function (pGroupName, pRemark, pIndex) {
         XoW.logger.ms(_this.classInfo, 'add_friend_submit()');
         var cont = $(window.event.currentTarget).parent().parent();
-<<<<<<< HEAD
         this.groupid = pGroupName||'Friend';
-=======
         this.groupid = pGroupName;
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         this.remark = pRemark;
         this.username = /*'人工NICK_' + */this.username;
         layui.each(call.subContact, function(index, item){
@@ -3457,14 +3358,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     $('.layim-list-friend .layui-layim-list li').each(function(idx ,element) {
       var oThis = $(element);
       var id = oThis.data('id');
-<<<<<<< HEAD
       let type = $(oThis).attr('data-type');
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       if(oThis.hasClass('layim-null')) {
         return;
       }
-
       element.addEventListener('touchend', function(e) {
         XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchend()');
         if(timers.has(id)) {
@@ -3495,13 +3392,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
             clearTimeout(timers.get(id));
             timers.delete(id);
             e.preventDefault();
-<<<<<<< HEAD
            // console.log("type:" + type);
             if(type == 'history'){
               return;
             }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             longPressFriendList(id, element);
           }, 1*3000));
         }
@@ -3525,18 +3419,14 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 			this.removeAttribute('layim-event');
 			var type = this.getAttribute('data-type') || 'images';
 			if(type === 'images') {
-<<<<<<< HEAD
 			//	$fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
-=======
 				$fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 			}
 			// 离线状态屏蔽click操作
 			$fileInput.click(function(e) {
 				XoW.logger.ms(_this.classInfo, 'fileInput.click()');
 				// 小小依赖了下XoW.UserState by cy
 				if(thatChat.data.status === XoW.UserState.OFFLINE) {
-<<<<<<< HEAD
                   var $file = e.target.files[0];
                   if($file != null&&typeof($file)!="undefined") {
                     let thatchat = _getThisChat();
@@ -3545,18 +3435,15 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
                     });
                   }
                   e.stopImmediatePropagation();
-=======
 					// 如果对方离线，则阻止打开文件窗口事件
 					e.preventDefault();
 					_layer.msg('对方已离线，无法发送文件');
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 				}
 			});
 			// 文件选定
 			$fileInput.change(function(e) {
 				XoW.logger.ms(_this.classInfo, 'fileInput.change({0})'.f($fileInput[0].children[0].value));
 				var $file = e.target.files[0]; // $file.size is base64 size?
-<<<<<<< HEAD
               if($file != null&&typeof($file)!="undefined") {
                 if ($file.size <= 10240 && XoW.utils.getDomainFromJid(thatChat.data.jid) != ('conference.' + XoW.config.domain)) {
 				var reader = new FileReader();
@@ -3579,7 +3466,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
                   e.stopImmediatePropagation();
                 }
               }
-=======
 				var reader = new FileReader();
 				// 得到文件的信息
 				reader.onload = function(e) {
@@ -3592,7 +3478,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 					$fileInput[0].children[0].value = ''; // reset input value
 				}
 				delete reader;
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 			});
 		});
 		XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
@@ -3995,11 +3880,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 	        setTimeout(function() {
 		        layero.find('#qry_user_keyword').focus();
 	        }, 150);
-<<<<<<< HEAD
           let $layimSearchBtn = layero.find('#btn_search_user_remote');
-=======
           var $layimSearchBtn = layero.find('#btn_search_user_remote');
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
           if($layimSearchBtn) {
             var event = document.createEvent('Events');
             event.initEvent('touchend', true, true);
@@ -4010,12 +3892,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           $search.hide();
           _layIM.events().tab(_layIM.events().tab.index|0);
         } else if('chatLog' === pParam.tab) {
-<<<<<<< HEAD
           pParam = pParam || {tab: 'chatLog'};
           let $layimSearchBtn = layero.find('#btn_search_chat_log_remote');
-=======
           var $layimSearchBtn = layero.find('#btn_search_chat_log_remote');
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
           if($layimSearchBtn) {
             $layimSearchBtn.click();
           }
@@ -4531,11 +4410,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       }.bind(this));
     }
 
-<<<<<<< HEAD
   var  _changeAdminToOtherSr = function (roomjid,oneJId,oneNick,oThis) {
-=======
-  var  _changeAdminToOtherSr = function (roomjid,oneJId,oThis) {
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     _getRoomConfig(roomjid, function (params) {
       var fields = params.fields;
       _layer.open({
@@ -4681,10 +4556,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           ,skin: 'msg'
           ,time: 2
         });
-<<<<<<< HEAD
         $('#layerRoomDesc').text(text)
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       }, function () {
         _layer.open({
           content: '操作失败'
@@ -4700,8 +4572,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         });
      });
   }
-<<<<<<< HEAD
-
   var _getEleRemoteSearchRoomResnofind = function (text) {
     var _eleRemoteSearchRoomResnofind = "";
     if(text == "") {
@@ -4720,8 +4590,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     }
     return _eleRemoteSearchRoomResnofind;
   }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   var _destroying = function (roomjid,handle_cb,error_cb) {
     var user = _client.getCurrentUser().jid;
     var iq = $iq({
@@ -4762,7 +4630,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     }).c('query',{xmlns:'http://jabber.org/protocol/muc#admin'}).c('item',{nick:nick,role:'visitor'});
     _client.getConnMgr().sendIQ(iq,handle_cb,error_cb);
   }
-<<<<<<< HEAD
   var _getAllroomINFPO = function(handle_cb,error_cb){
     var user = _client.getCurrentUser().jid;
     var iq = $iq({
@@ -4772,9 +4639,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     }).c("query",{xmlns :'http://jabber.org/protocol/disco#items'});
     _client.getConnMgr().sendIQ(iq,handle_cb,error_cb);
   }
-=======
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   var _giveMemberToP = function (roomjid,onejid,handle_cb,error_cb) {
     var user = _client.getCurrentUser().jid;
     var iq = $iq({
@@ -4997,8 +4861,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       _layForm.render();
     });
   }
-
-<<<<<<< HEAD
   var _temparatureFriend = function(onejid,onenick){
     let _friend =  _client.getRosterMgr().getFriendGroups();
     let btnType = false;
@@ -5024,8 +4886,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     _layerIndex['TEMPFREINED'] = tempIndex
 
   }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     _layForm.on('checkbox(layimwritePaasword)', function(obj){
         if(obj.elem.checked == true){
             let html ='<input type="text" name="roomPassword"  id="toGetRoomPassword"  lay-verify="required" placeholder="房间密码" autocomplete="off" class="layui-input">'
@@ -5096,13 +4956,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         if (!roomServerAbility) {
             _layer.msg("没有房间服务器！");
             _roomBack(oThis)
-<<<<<<< HEAD
              if(_layerIndex['CREATEROOM']!=-1){
                  _layer.close(_layerIndex['CREATEROOM'])
                _layerIndex['CREATEROOM'] = -1;
              }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             return;
         }
         var roomJid = roomName.toLocaleLowerCase() + "@" + roomServerAbility.jid;
@@ -5179,37 +5036,28 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
                         _client.getRoomMgr().SaveoutAllRoom(roomlist);
                         _roomRefresh()
                         _roomBack(oThis)
-<<<<<<< HEAD
                         if(_layerIndex['CREATEROOM']!=-1){
                           _layer.close(_layerIndex['CREATEROOM'])
                           _layerIndex['CREATEROOM'] = -1;
                         }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         _layIM.chat(roomlist);
                     }.bind(this), function () {
                         // 创建失败
                         _layer.msg('创建失败');
                         _roomBack(oThis)
-<<<<<<< HEAD
                         if(_layerIndex['CREATEROOM']!=-1){
                           _layer.close(_layerIndex['CREATEROOM'])
                           _layerIndex['CREATEROOM'] = -1;
                         }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         XoW.logger.d('创建失败');
                     });
 
             } else {
                 _roomBack(oThis)
-<<<<<<< HEAD
                 if(_layerIndex['CREATEROOM']!=-1){
                   _layer.close(_layerIndex['CREATEROOM'])
                   _layerIndex['CREATEROOM'] = -1;
                 }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                 _layer.msg('未知错误，错误代码：' + errorCode);
             }
         }.bind(this));
@@ -5235,13 +5083,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       var roomServerAbility = _client.getServerMgr().getAbilityByCategroy('conference', 'text');
       if (!roomServerAbility) {
         _roomBack(oThis);
-<<<<<<< HEAD
         if( _layerIndex['MEETINGEROOM']!=-1){
           _layer.close( _layerIndex['MEETINGEROOM']);
           _layerIndex['MEETINGEROOM'] = -1;
         }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         _layer.msg("没有房间服务器！");
         return;
       }
@@ -5291,7 +5136,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
                 _client.getRoomMgr().SaveoutAllRoom(roomlist);
                 _roomRefresh()
                 _roomBack(oThis);
-<<<<<<< HEAD
                 if( _layerIndex['MEETINGEROOM']!=-1){
                   _layer.close( _layerIndex['MEETINGEROOM']);
                   _layerIndex['MEETINGEROOM'] = -1;
@@ -5303,22 +5147,17 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
                   _layer.close( _layerIndex['MEETINGEROOM']);
                   _layerIndex['MEETINGEROOM'] = -1;
                 }
-=======
                 _layIM.chat(roomlist);
               }.bind(this), function () {
                 _roomBack(oThis);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                 _layer.msg('创建失败');
               });
         } else {
           _roomBack(oThis);
-<<<<<<< HEAD
           if( _layerIndex['MEETINGEROOM']!=-1){
             _layer.close( _layerIndex['MEETINGEROOM']);
             _layerIndex['MEETINGEROOM'] = -1;
           }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
           _layer.msg('未知错误，错误代码：' + errorCode);
         }
       }.bind(this));
@@ -5400,7 +5239,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         if(!href) return str;
         return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
       })
-<<<<<<< HEAD
       .replace(/hpFile\[[\s\S]*?\]/g, function(img){
           let text = img.replace(/(^hpFile\[)|(\]$)/g, '').replace(/&quot;/g, '"');
           let theThumbnail = $.parseJSON(text);
@@ -5446,9 +5284,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           thatFile = null;
           return html;
        })
-=======
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       //.replace(/linkEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){
       .replace(/linkEx\[[\s\S]*?\]/g, function(str){
         var text = (str.match(/\[([\s\S]*?)\]/)||[])[1];
