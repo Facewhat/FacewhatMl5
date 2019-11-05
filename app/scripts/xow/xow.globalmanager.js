@@ -41,10 +41,7 @@
     var _currentUserJid  = null;
     var _serverMgr = null;
     var _roomMgr = null;
-<<<<<<< HEAD
     var _httpMsg = null;
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     // endregion Fields
 
     // region Private Methods
@@ -92,7 +89,6 @@
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.USER_SEARCH_RSP_RCV, _onUserSearchRspRcv.bind(_this));
 
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_ROOMLIST_ADDED, _cbRoomListadded.bind(_this));
-<<<<<<< HEAD
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MSG_RCV, _cbRoomMsgRcv.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_DISAGREE_INVITE,_cbDisagreeInvited.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK,_cbForbitMemberSpeake.bind(_this));
@@ -120,7 +116,6 @@
       // _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_SERVERERROR,_cbHttpFileServerError.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_OVERDUE,_cbHttpFileOverdue.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.KEFUMSGREV,_cbKEefuMsgRev.bind(_this));
-=======
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MSG_RCV, _cbRoomMsg.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.DISAGREE_INVITATION,_cbDisagreeInvitationRcv.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED,_cbBandSpeaked.bind(_this));
@@ -135,7 +130,6 @@
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_INVITE_RCV,_cbInvitemeRoom.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_TITLE_RCV,_cbGetRoomTile.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ERROR,_cbError.bind(_this));
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       _connMgr = new XoW.ConnectionManager(_handlerMgr);
 
       // 设置状态为在线。1是在线，因为刚开始登录的时候，有收不到自己出席的节的时候。
@@ -152,10 +146,7 @@
       _archiveMgr = new XoW.ArchiveManager(_this);
       _serverMgr = new XoW.ServerMananger(_this);
       _roomMgr = new XoW.RoomManager(_this);
-<<<<<<< HEAD
       _httpMsg = new XoW.HttpFileManager(_this);
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       XoW.logger.me(_this.classInfo, '_initMgrsAfterConnected()');
     };
     var _actionsAfterConnected = function () {
@@ -163,10 +154,7 @@
       _rosterMgr.getRoster();
       _presMgr.sendOnline();
       _roomMgr.getAllRoomFromSer();
-<<<<<<< HEAD
       _httpMsg.getHttpFileMsgFromSevice();
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       XoW.logger.me(_this.classInfo, '_actionsAfterConnected()');
     };
     var _onConnect = function (params) {
@@ -377,7 +365,6 @@
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_CHAT_IMAGE_RCV, pFile);
       XoW.logger.me(_this.classInfo, '_onImageRcv()');
     };
-<<<<<<< HEAD
     var _onHttpFileTransfer = function (pFile) {
       XoW.logger.ms(_this.classInfo, '_onHttpFileTransfer()');
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_HTTP_FILETRANSFER_CLOSE, pFile);
@@ -441,10 +428,6 @@
       return true;
       XoW.logger.me(_this.classInfo, '_cbKEefuMsgRev()');
     }
-    
-    
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     // endregion file transfer
 
     // region contact subscription
@@ -502,17 +485,11 @@
         return true;
         XoW.logger.me(_this.classInfo, '_cbRoomListadded()');
     };
-
-<<<<<<< HEAD
     var _cbRoomMsgRcv= function (params) {
-=======
-    var _cbRoomMsg = function (params) {
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       XoW.logger.ms(_this.classInfo, '_cbRoomMsg()');
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_ROOM_MSG_RCV, params);
       XoW.logger.me(_this.classInfo, '_cbRoomMsg()');
     };
-<<<<<<< HEAD
     var _cbDisagreeInvited = (data)=>{
       XoW.logger.ms(_this.classInfo + "_cbDisagreeInvited");
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_ROOM_DISAGREE_INVITE, data);
@@ -592,7 +569,6 @@
       XoW.logger.ms(_this.classInfo, '_cbError');
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.ERROR,data);
       return true;
-=======
     var _cbDisagreeInvitationRcv = (data)=>{
       XoW.logger.ms(_this.classInfo + "_cbDisagreeInvitationRcv");
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_DISAGREE_INVITATION, data);
@@ -660,7 +636,6 @@
       XoW.logger.ms(_this.classInfo + "_cbError");
       _handlerMgr.triggerHandler(XoW.VIEW_EVENT.V_ERROR,data);
       return true
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       XoW.logger.me(_this.classInfo, '_cbError()');
     }
     // endregion contact subscription
@@ -691,12 +666,9 @@
     this.getPresMgrr = function () {
       return _presMgr;
     };
-<<<<<<< HEAD
     this.getHttpMsg = function () {
       return _httpMsg;
     }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     // endregion Public Methods Properties
 
     // region Public Methods -- API
@@ -766,7 +738,6 @@
       // presence update vCard todo
       XoW.logger.me(_this.classInfo, 'getMineInfo()');
     };
-<<<<<<< HEAD
     this.continueHttpFileStransfer = function (data,pSucCb) {
       XoW.logger.ms(_this.classInfo, 'continueHttpFileStransfer()');
        _httpMsg.continueHttpFileStransfer(data,pSucCb);
@@ -778,8 +749,6 @@
     //   _httpMsg.isExitsFileSevice(pSucCb);
     //   XoW.logger.me(_this.classInfo, 'getHttpSeviceMsg()');
     // };
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     this.setMineInfo = function(pVCard, pSucCb, pTimeout) {
       XoW.logger.ms(_this.classInfo, 'setMineInfo()');
       _vCardMgr.setVCard(_this.getCurrentUser().jid, pVCard, pSucCb, pTimeout);
@@ -897,15 +866,11 @@
       _fileMgr.sendFile(filename, filesize, filetype, pFulljid, data);
       XoW.logger.me(_this.classInfo, 'sendFile');
     };
-<<<<<<< HEAD
     this.sendoffFile = function($file,thatchat){
       XoW.logger.ms(_this.classInfo, 'sendoffFile');
          _httpMsg.sendOffFile($file,thatchat);
       XoW.logger.me(_this.classInfo, 'sendoffFile');
     }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
     this.acceptFile = function (pSid, pRemoteJid) {
       XoW.logger.ms(_this.classInfo, 'acceptFile({0}, {1})'.f(pSid, pRemoteJid));
       _fileMgr.dealSiReq(true, pSid, pRemoteJid);
