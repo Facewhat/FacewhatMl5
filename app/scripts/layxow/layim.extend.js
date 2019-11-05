@@ -219,7 +219,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'</div>'
   ].join('');
 
-  var _eleHttpAudio = [
+ var _eleHttpAudio = [
     ,'<div class="layui-container" style="margin: 0;padding: 0;width: 66px;height: 62px;">'
        ,'<div class="layim_file" sid="{{ d.cid }}">'
                 ,'<div class="layui-row" style="width: 100%;height: 56px">'
@@ -250,6 +250,8 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                       ,'{{# } }}'
                   ,'{{# } }}'
        ,'</div>'
+    ,'</div>'
+  ].join('');
     var _eleImage = [
         '<div class="layim_file" sid="{{ d.sid }}">'
         , '  <div class="layim_fileinfo">'
@@ -2062,8 +2064,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         }
         _layForm.render();
     });
-
-  var  _makeChatingRoom = function () {
+var  _makeChatingRoom = function () {
     let roomName = $('#createRoomnname').val();
     let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
     if(regex.test(roomName)==false){
@@ -2125,174 +2126,75 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
               var name = XoW.utils.getNodeFromJid(roomJid);
               var peopleNumber = 0;
               var nick = params.nick;
-    var _makeChatingRoom = function () {
-        let roomName = $('#createRoomnname').val();
-        let regex = /^[A-Za-z0-9_\-]+$/ig;
-        if (regex.test(roomName) == false) {
-            _layer.msg("房间名称只能包含字母、数字、-、_");
-            return;
-        }
-        let roomDesc = $('#roomDesc').val();
-        let roomPeopleNums = $('input[name="roomPeoleNum"]:checked ').val();
-        let isPasswordRoom = $('input[name="isRoomPassword"]:checked ').val();
-        let isMemberRoom = $('input[name="isMemberRoom"]:checked ').val();
-        let isSecretRoom = $('input[name="isSecretRoom"]:checked ').val();
-        let MemberRoomSwitch = 0;
-        let isSecretRoomSwitch = 1;
-        if (isMemberRoom) {
-            MemberRoomSwitch = 1;
-        }
-        if (isSecretRoom) {
-            isSecretRoomSwitch = 0;
-        }
-        let roomPassword = " ";
-        let passwordSwitch = 0;
-        if (isPasswordRoom) {
-            if ($('#roomPassword').val().length > 0) {
-                passwordSwitch = 1;
-                roomPassword = $.trim($('#roomPassword').val());
-            }
-            else {
-                _layer.msg("密码不能为空！");
-                return;
-            }
-        }
-        var user ;
-        //add by zjy for 消除Client依赖 [20190801]
-        layui.each(call.getCurrentUser, function (index, item) {
-            item && item( function (params) {
-                user=params;
-            });
-        });
-        if (!roomName) {
-            _layer.msg("请输入有效的房间地址！");
-            return;
-        }
-        var roomServerAbility ;
-        //add by zjy for 消除Client依赖 [20190801]
-        layui.each(call.getAbilityByCategroy,function(index,item){
-            item&&item('conference', 'text', function(param){
-                roomServerAbility=param;
-            });
-        });
-        if (!roomServerAbility) {
-            _layer.msg("没有房间服务器！");
-            return;
-        }
-        var roomJid = roomName.toLocaleLowerCase() + "@" + roomServerAbility.jid;
-        //add by zjy for 消除Client依赖 [20190801]
-        layui.each(call.getRoomByJidFromServer,function(index,item){
-            item&&item(roomJid, function (params) {
-                var isRoom ;
-                //add by zjy for 消除Client依赖 [20190801]
-                layui.each(call.getRoomByJid,function(index,item){
-                    item&&item(roomJid,function(param){
-                        isRoom=param;
-                    });
-                });
-                if (isRoom != null) {
-                    _layer.msg("你创建的房间地址已被使用，该房间存在");
-                }
-                _layer.close(layer.index)
-            }.bind(this), function (errorStanza) {
-                var errorCode = $('error', $(errorStanza)).attr('code');
-                if (404 == errorCode) {
-                    XoW.logger.d(this.classInfo + "房间不存在，可以创建该房间");
-                    _layer.close(layer.index);
-                    //add by zjy for 消除Client依赖 [20190801]
-                    layui.each(call.createRoom,function(index,item){
-                        item&&item(roomJid,
-                            XoW.utils.getNodeFromJid(user.getFullJid()),
-                            XoW.utils.getNodeFromJid(user.getFullJid()), function (params) {
-                                //创建成功
-                                var roomJid = params.roomJid;
-                                var name = XoW.utils.getNodeFromJid(roomJid);
-                                var peopleNumber = 0;
-                                var nick = params.nick;
-                                var room = new XoW.Room();
-                                room.jid = roomJid;
-                                room.name = name;
-                                room.id = room.name
-                                //add by zjy for 消除Client依赖 [20190801]
-                                layui.each(call.pushRoom,function(index,item){
-                                    item&&item(room);
-                                });
-                                XoW.logger.d('创建成功！' + roomJid + " " + name);
-                                var roomlist = {
-                                    type: 'group',
-                                    groupname: name,
-                                    username: name,
-                                    jid: roomJid,  //这个需要添加
-                                    id: name,
-                                    isPersistent: true,
-                                    avatar: "http://tp2.sinaimg.cn/2211874245/180/40050524279/0",
-                                    isUnsecured: true
-                                };
-                                _getRoomConfig(roomJid, function (params) {
-                                    var fields = params.fields;
-                                    fields['muc#roomconfig_roomdesc'].value = roomDesc;
-                                    fields['muc#roomconfig_changesubject'].value = 1;
-                                    fields['muc#roomconfig_publicroom'].value = isSecretRoomSwitch;
-                                    fields['muc#roomconfig_membersonly'].value = MemberRoomSwitch;
-                                    fields['muc#roomconfig_allowinvites'].value = 1;
-                                    fields['muc#roomconfig_passwordprotectedroom'].value = passwordSwitch;
-                                    fields['muc#roomconfig_roomsecret'].value = roomPassword;
-                                    fields['muc#roomconfig_enablelogging'].value = 0;
-                                    fields['x-muc#roomconfig_reservednick'].value = 0;
-                                    fields['x-muc#roomconfig_canchangenick'].value = 1;
-                                    fields['x-muc#roomconfig_registration'].value = 1;
-                                    fields['muc#roomconfig_persistentroom'].value = 1;
-                                    fields['muc#roomconfig_moderatedroom'].value = 1;
-                                    fields['muc#roomconfig_maxusers'].value = roomPeopleNums;
-                                    fields['muc#roomconfig_whois'].value = 'anyone';
-                                    var presValues = [];
-                                    presValues.push('moderator');
-                                    presValues.push('participant');
-                                    presValues.push('visitor');
-                                    fields['muc#roomconfig_presencebroadcast'].value = presValues;
-                                    fields['muc#roomconfig_roomadmins'].value = '';
-                                    var ismiii ;
-                                    //add by zjy for 消除Client依赖 [20190801]
-                                    layui.each(call.getCurrentUser1, function (index, item) {
-                                        item && item( function (params) {
-                                            ismiii=params.jid;
-                                        });
-                                    });
-                                    var rrd = XoW.utils.getNodeFromJid(ismiii);
-                                    var sendme = rrd + "@" + XoW.config.domain;
-                                    var ownValues = [];
-                                    ownValues.push(sendme);
-                                    fields['muc#roomconfig_roomowners'].value = ownValues;
-                                    //add by zjy for 消除Client依赖 [20190801]
-                                    layui.each(call.saveRoomConfig,function(index,item){
-                                        item&&item(roomJid, fields, function () {
-                                            _layer.msg('初始化成功！');
-                                        }, function () {
-                                            _layer.msg('初始化失败');
-                                        });
-                                    });
 
-                                }.bind(this));
-                                _layIM.addList(roomlist);
-                                //add by zjy for 消除Client依赖 [20190801]
-                                layui.each(call.saveOutAllRoom,function(index,item){
-                                    item&&item(roomlist);
-                                });
-                                _roomRefresh()
-                                _layIM.chat(roomlist);
-                            }.bind(this), function () {
-                                // 创建失败
-                                _layer.close(layer.index)
-                                _layer.msg('创建失败');
-                                XoW.logger.d('创建失败');
-                            });
-                    });
-                } else {
-                    _layer.msg('未知错误，错误代码：' + errorCode);
-                }
-            }.bind(this));
-        });
-    }
+              var room = new XoW.Room();
+              room.jid = roomJid;
+              room.name = name;
+              room.id = room.name
+              _client.getRoomMgr().PushRoom(room);
+              XoW.logger.d('创建成功！' + roomJid + " " + name);
+              var roomlist = {
+                type : 'group',
+                groupname:name,
+                username:name,
+                jid:roomJid,  //这个需要添加
+                id: name,
+                isPersistent:true,
+                avatar:"http://tp2.sinaimg.cn/2211874245/180/40050524279/0",
+                isUnsecured:true
+              };
+              _getRoomConfig(roomJid, function (params) {
+                var fields = params.fields;
+                fields['muc#roomconfig_roomdesc'].value = roomDesc;
+                fields['muc#roomconfig_changesubject'].value = 1;
+                fields['muc#roomconfig_publicroom'].value = isSecretRoomSwitch;
+                fields['muc#roomconfig_membersonly'].value = MemberRoomSwitch;
+                fields['muc#roomconfig_allowinvites'].value = 1;
+                fields['muc#roomconfig_passwordprotectedroom'].value = passwordSwitch;
+                fields['muc#roomconfig_roomsecret'].value=roomPassword;
+                fields['muc#roomconfig_enablelogging'].value = 0;
+                fields['x-muc#roomconfig_reservednick'].value = 0;
+                fields['x-muc#roomconfig_canchangenick'].value = 1;
+                fields['x-muc#roomconfig_registration'].value = 1;
+                fields['muc#roomconfig_persistentroom'].value = 1;
+                fields['muc#roomconfig_moderatedroom'].value = 1;
+                fields['muc#roomconfig_maxusers'].value = roomPeopleNums;
+                fields['muc#roomconfig_whois'].value = 'anyone';
+                var presValues = [];
+                presValues.push('moderator');
+                presValues.push('participant');
+                presValues.push('visitor');
+                fields['muc#roomconfig_presencebroadcast'].value = presValues;
+                fields['muc#roomconfig_roomadmins'].value ='';
+                var ismiii = _client.getCurrentUser1().jid;
+                var rrd = XoW.utils.getNodeFromJid(ismiii);
+                var sendme = rrd+"@"+XoW.config.domain;
+                var ownValues = [];
+                ownValues.push(sendme);
+                fields['muc#roomconfig_roomowners'].value = ownValues;
+                _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+                  _layer.msg('初始化成功！');
+                }, function () {
+                  _layer.msg('初始化失败');
+                });
+              }.bind(this));
+              _layIM.addList(roomlist);
+              _client.getRoomMgr().SaveoutAllRoom(roomlist);
+              _roomRefresh()
+              _layIM.chat(roomlist);
+              // _client.getPresMgrr().sendOnlineToRoom(roomJid);
+            }.bind(this), function () {
+              // 创建失败
+              _layer.close(layer.index)
+              _layer.msg('创建失败');
+              XoW.logger.d('创建失败');
+            });
+
+      } else {
+        _layer.msg('未知错误，错误代码：' + errorCode);
+      }
+    }.bind(this));
+  }
     var _createMeetingRoom = function () {
         XoW.logger.ms(_this.classInfo + "创建房间");
         let data = {
@@ -2951,11 +2853,25 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
 		}
 		XoW.logger.me(_this.classInfo, 'setFriendStatus()');
 	};
-  LAYIMEX.prototype.notifyToChatBoxes = function(pMsg) {
+   LAYIMEX.prototype.notifyToChatBoxes = function(pMsg) {
     XoW.logger.ms(_this.classInfo, 'notifyToChatBoxes()');
     var layimChat = $('.layui-layim-chat'); // 详见layim.js
     var layimMin = $('.layui-layim-min');
     if(!layimChat) return;
+
+    //如果是最小化，则还原窗口
+    if (layimChat.css('display') === 'none') {
+      layimChat.show();
+    }
+    if(layimMin){
+      _layer.close(layimMin.attr('times'));
+    }
+    var conts = layimChat.find('.layim-chat');
+    layui.each(conts, function(index, item){
+      var ul = $(item).find('.layim-chat-main ul');
+      ul.append('<li class="layim-chat-system"><span>{0} &nbsp&nbsp {1}</span></li>'.f(layui.data.date(pMsg.timestamp), pMsg.content));
+    });
+  };
     LAYIMEX.prototype.getMessage = function (params) {
         _layIM.searchMessage(params);
     };
@@ -4412,23 +4328,14 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             XoW.logger.ms(_this.classInfo, 'menu_help()');
             // todo 打开聊天客服界面
             _layer.close(events.find.index);
-      var toId = '#demohelp';
-      _layIM.chat({
-        name: '智能客服',
-        username: toId,
-        type: 'friend', //聊天类型不能用 kefu
-        avatar: XoW.DefaultImage.AVATAR_KEFU,
-        id: toId,
-        jid: "#demohelp@intelligentcusservice." + XoW.config.domain,
-        temporary: true
-            var toId = 'demohelp';
+            var toId = '#demohelp';
             _layIM.chat({
-                name: '进口小妹妹',
+                name: '智能客服',
                 username: toId,
                 type: 'friend', //聊天类型不能用 kefu
                 avatar: XoW.DefaultImage.AVATAR_KEFU,
                 id: toId,
-                jid: toId + '@' + XoW.config.domain,
+                jid: "#demohelp@intelligentcusservice." + XoW.config.domain,
                 temporary: true
             });
         },
@@ -5709,10 +5616,10 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 return html;
                 // return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
             })
-            .replace(/imgEx\[[\s\S]*?\]/g, function (img) {  //转义图片
+              .replace(/imgEx\[[\s\S]*?\]/g, function(img){  //转义图片
                 var text = img.replace(/(^imgEx\[)|(\]$)/g, '').replace(/&quot;/g, '"');
                 var theThumbnail = $.parseJSON(text); // 存在
-                if (!theThumbnail) return img;
+                if(!theThumbnail) return img;
                 var thatFile = new XoW.File(theThumbnail.to);
                 thatFile.filename = theThumbnail.filename;
                 thatFile.size = theThumbnail.size;
@@ -5721,58 +5628,56 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 thatFile.sid = theThumbnail.sid;
                 thatFile.status = theThumbnail.status;
                 thatFile.errorMsg = theThumbnail.errorMsg;
-        if(theThumbnail.url!='*'){
-          thatFile.url = theThumbnail.url;
-        }
+                if(theThumbnail.url!='*'){
+                    thatFile.url = theThumbnail.url;
+                }
                 thatFile.base64 = theThumbnail.base64;
                 var html = _layTpl(_eleImage).render(thatFile);
-        thatFile = null;
-        return html;
-      })
-      .replace(/hpFile\[[\s\S]*?\]/g, function(img){
-          let text = img.replace(/(^hpFile\[)|(\]$)/g, '').replace(/&quot;/g, '"');
-          let theThumbnail = $.parseJSON(text);
-          if(!theThumbnail) return img;
-          let thatFile = new XoW.httpFile();
-          thatFile.cid = theThumbnail.cid;
-          thatFile.mime = theThumbnail.mime;
-          thatFile.mine = theThumbnail.mine;
-          thatFile.seq = theThumbnail.seq;
-          thatFile.percent = theThumbnail.percent;
-          thatFile.url = theThumbnail.url;
-          thatFile.size = theThumbnail.size;
-          thatFile.status =theThumbnail.status;
-          thatFile.filename = theThumbnail.filename;
-          thatFile.errorMsg = theThumbnail.errorMsg;
-          if(thatFile.status === XoW.FileHttpFileState.SENDING){
-            let  keyCode = sessionStorage.getItem(thatFile.cid);
-            if(keyCode == null){
-              thatFile.status = XoW.FileHttpFileState.OVERDUE;
-            }
-          }
-          let html = '';
-          switch ( thatFile.mime) {
-            case 'jpg':
-            case 'bmp':
-            case 'gif':
-            case 'jpeg':
-            case 'png':
-               if( thatFile.url === '#'){
-                 thatFile.url == '../images/httpdefault.jpeg'
-               }
-               html = _layTpl(_eleHttpImage).render(thatFile);
-               break;
-            case 'mp4':
-               html = _layTpl(_eleHttpVideo).render(thatFile);
-               break;
-            case 'mp3':
-               html = _layTpl(_eleHttpAudio).render(thatFile);
-               break;
-            default:
-               html = _layTpl(_eleHttpFile).render(thatFile);
-          }
-                thatFile.base64 = theThumbnail.base64;
-                var html = _layTpl(_eleImage).render(thatFile);
+                thatFile = null;
+                return html;
+            })
+            .replace(/hpFile\[[\s\S]*?\]/g, function(img){
+                let text = img.replace(/(^hpFile\[)|(\]$)/g, '').replace(/&quot;/g, '"');
+                let theThumbnail = $.parseJSON(text);
+                if(!theThumbnail) return img;
+                let thatFile = new XoW.httpFile();
+                thatFile.cid = theThumbnail.cid;
+                thatFile.mime = theThumbnail.mime;
+                thatFile.mine = theThumbnail.mine;
+                thatFile.seq = theThumbnail.seq;
+                thatFile.percent = theThumbnail.percent;
+                thatFile.url = theThumbnail.url;
+                thatFile.size = theThumbnail.size;
+                thatFile.status =theThumbnail.status;
+                thatFile.filename = theThumbnail.filename;
+                thatFile.errorMsg = theThumbnail.errorMsg;
+                if(thatFile.status === XoW.FileHttpFileState.SENDING){
+                    let  keyCode = sessionStorage.getItem(thatFile.cid);
+                    if(keyCode == null){
+                        thatFile.status = XoW.FileHttpFileState.OVERDUE;
+                    }
+                }
+                let html = '';
+                switch ( thatFile.mime) {
+                    case 'jpg':
+                    case 'bmp':
+                    case 'gif':
+                    case 'jpeg':
+                    case 'png':
+                        if( thatFile.url === '#'){
+                            thatFile.url == '../images/httpdefault.jpeg'
+                        }
+                        html = _layTpl(_eleHttpImage).render(thatFile);
+                        break;
+                    case 'mp4':
+                        html = _layTpl(_eleHttpVideo).render(thatFile);
+                        break;
+                    case 'mp3':
+                        html = _layTpl(_eleHttpAudio).render(thatFile);
+                        break;
+                    default:
+                        html = _layTpl(_eleHttpFile).render(thatFile);
+                }
                 thatFile = null;
                 return html;
             })
