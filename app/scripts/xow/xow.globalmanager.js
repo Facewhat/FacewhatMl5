@@ -90,46 +90,32 @@
 
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_ROOMLIST_ADDED, _cbRoomListadded.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MSG_RCV, _cbRoomMsgRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_DISAGREE_INVITE, _cbDisagreeInvited.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, _cbForbitMemberSpeake.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_NO_INVITATION_PERMISSION, _cbNoInvitePermission.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_WRONG_PASSWORD, _cbWwrongPassword.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MEMBER_ONLY, _cbMemberOnly.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MAXNUM_PEOPLE, _cbMaximumPeopleRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_IN, _cbForBitIn.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_DISAGREE_INVITE,_cbDisagreeInvited.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK,_cbForbitMemberSpeake.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_NO_INVITATION_PERMISSION,_cbNoInvitePermission.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_WRONG_PASSWORD,_cbWwrongPassword.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MEMBER_ONLY,_cbMemberOnly.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MAXNUM_PEOPLE,_cbMaximumPeopleRcv.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_IN,_cbForBitIn.bind(_this));
       _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_SELF_MOVEOUT, _cbRomSelfMoveOut.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_ROOM, _cbDestroyRoom.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_ONE_EXITROOM, _cbOnePersonExitRoom.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_INVITE_RCV, _cbRoomInvitRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_TITLE_RCV, _cbSetRoomTile.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_OJROOMCHAT, _cbOjRoomChat.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_ERROR_SHOW, _cbRoomErrorShow.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_ROOM,_cbDestroyRoom.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_ONE_EXITROOM,_cbOnePersonExitRoom.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_INVITE_RCV,_cbRoomInvitRcv.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_TITLE_RCV,_cbSetRoomTile.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_OJROOMCHAT,_cbOjRoomChat.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_ERROR_SHOW,_cbRoomErrorShow.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ERROR,_cbError.bind(_this));
 
-
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILETRANSFER_CLOSE, _onHttpFileTransfer.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_SEND_FILE_TO_USER_FROM_MINE, _onSendFileToUserFromMine.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_CHANGE_FILE_STATUS, _onHttpChangeFileStatus.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_ERROR, _cbFileStransferError.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_SUCCESS, _cbFileStransferSuccess.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILETRANSFER_CLOSE,_onHttpFileTransfer.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_SEND_FILE_TO_USER_FROM_MINE,_onSendFileToUserFromMine.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_CHANGE_FILE_STATUS,_onHttpChangeFileStatus.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_ERROR,_cbFileStransferError.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_SUCCESS,_cbFileStransferSuccess.bind(_this));
       // _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_CANCEL,_cbFileStransferCancel.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_BEGIN, _cbHttpFileBegin.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_BEGIN,_cbHttpFileBegin.bind(_this));
       // _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_SERVERERROR,_cbHttpFileServerError.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_OVERDUE, _cbHttpFileOverdue.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.KEFUMSGREV, _cbKEefuMsgRev.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_MSG_RCV, _cbRoomMsg.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.DISAGREE_INVITATION, _cbDisagreeInvitationRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, _cbBandSpeaked.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.NO_POWER_INVITION, _cbNotInvitionPowerRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.WRONG_PASSWORD, _cbWwrongPasswordRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.NON_MEMBERS, _cbNotMemberRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.MAXIMUM_PEOPLE, _cbMaximumPeopleRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_BANIN_RCV, _cbBandIn_Rcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_KICKED_OUR_RCV, _cbRoomKickOutRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_RCV, _cbDestroyRoomRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ONEPERSON_EXIT_ROOM, _cbOnePersonExitRoomRcv.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_INVITE_RCV, _cbInvitemeRoom.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ROOM_TITLE_RCV, _cbGetRoomTile.bind(_this));
-      _handlerMgr.addHandler(XoW.SERVICE_EVENT.ERROR, _cbError.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.HTTP_FILE_STRANSFER_OVERDUE,_cbHttpFileOverdue.bind(_this));
+      _handlerMgr.addHandler(XoW.SERVICE_EVENT.KEFUMSGREV,_cbKEefuMsgRev.bind(_this));
       _connMgr = new XoW.ConnectionManager(_handlerMgr);
 
       // 设置状态为在线。1是在线，因为刚开始登录的时候，有收不到自己出席的节的时候。
