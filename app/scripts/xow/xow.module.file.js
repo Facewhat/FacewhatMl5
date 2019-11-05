@@ -35,11 +35,7 @@
       file.to = toFullJid;
       file.isRead = false;
       file.type = XoW.MessageType.CONTACT_CHAT;// 临时
-<<<<<<< HEAD
       file.url  = "*"
-=======
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       file.sid = XoW.utils.getUniqueId('jsi');
       //file.sid = XoW.utils.getUniqueId('file');
       file.status = XoW.FileReceiveState.UNACCEPTED;
