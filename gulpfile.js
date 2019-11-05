@@ -22,21 +22,6 @@ var babel = require('gulp-babel'); // 兼容es6,es5
 var jsSrc = './app/**/*.js',    //原 app/js/*.js
     jsDist = 'dist/js',
     cssSrc = 'app/**/*.css',  //原 app/css/*.css
-//var less = require('gulp-less');     // less编译
-var concat = require('gulp-concat'); // 代码合并
-var uglify = require('gulp-uglify'); // 代码压缩
-
-
-var rename = require('gulp-rename'); // 文件重命名
-var cssmin = require('gulp-minify-css'); //css压缩
-var clean = require('gulp-clean');    // 清理
-var connect = require('gulp-connect'); // web服务器
-var gutil = require('gulp-util');
-
-//定义css、js源文件路径
-var jsSrc = 'app/scripts/*/*.js',
-    jsDist = './dist/js',
-    cssSrc = 'app/css/*.css',
     lessSrc = 'less/*.less',
     sassSrc = './scss/*.scss',
     cssDist = './dist/css',
@@ -44,7 +29,6 @@ var jsSrc = 'app/scripts/*/*.js',
     htmlSrc = '*.html',
     cache = require('gulp-cache'),
     imagemin = require('gulp-imagemin');
-    htmlSrc = '*.html';
 // 检查脚本，在命令行使用 gulp script 启动此任务（script为task名）
 gulp.task('lint', function(){
    gulp.src(jsSrc)
@@ -59,7 +43,6 @@ gulp.task('scripts', function() {
           //presets: ['es2015'] // es5检查机制///
           presets: ['@babel/env']
        })) ///
-   gulp.src(jsSrc)
        .pipe(concat('all.js'))
        .pipe(gulp.dest(jsDist))
        .pipe(rename('all.min.js'))
@@ -83,25 +66,7 @@ gulp.task('htmlmin', function(){
  //      })))
  //      .pipe(gulp.dest(imgMinSrc))
  //  });
-       .on('error', function(err) {
-          gutil.log(gutil.colors.red('[Error]'),err.toString());
-       })
-       .pipe(gulp.dest(jsDist))
-});
 
-var jsImSrc = 'app/layui/lay/modules/layim.js',
-    jsImDist = './dist/js';
-// 压缩 js 文件
-gulp.task('just_layim_script', function() {
-   // 1\. 找到文件
-   gulp.src(jsImSrc)
-       .pipe(rename('layim.min.js'))
-       .pipe(uglify({
-          mangle:true,
-          compress: true
-       })) //  压缩文件
-       .pipe(gulp.dest(jsImDist))
-});
 // 编译Sass
 //gulp.task('sass', function() {
 //   gulp.src(sassSrc)
@@ -122,18 +87,7 @@ gulp.task('less', function(){
 gulp.task('watchLess', function () {
     gulp.watch(lessSrc, ['less']);
 });
-// gulp.task('less', function(){
-//    return gulp.src(lessSrc)
-//        .pipe(less()) // 参数为空，编译为css
-//        .pipe(gulp.dest(cssDist)) // 另存为文件
-//        .pipe(cssmin()) // 压缩css
-//        .pipe(gulp.dest(cssDist));
-// });
 
-//当所有less文件发生改变时，调用testLess任务
-// gulp.task('watchLess', function () {
-//    gulp.watch(lessSrc, ['less']);
-// });
 // 压缩css文件
 gulp.task('minCss', function(){
    gulp.src(cssSrc)
@@ -188,9 +142,6 @@ gulp.task('startServer',function(){
       port:8888,
       livereload:true,
        host:'0.0.0.0',
-      host:'0.0.0.0',
-      port:8888,
-      livereload:true
    });
 });
 
@@ -201,7 +152,6 @@ gulp.task('stopServer',function(){
 gulp.task('loadfiles', function(){
    gulp.src('./app/**/*.*')
         .pipe(connect.reload());
-       .pipe(connect.reload());
 });
 
 gulp.task('default',['startServer','watcher'])
