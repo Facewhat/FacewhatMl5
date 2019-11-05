@@ -6,7 +6,7 @@
  * 3.接口名mobile和pc版保持一致
  * 4.do not depends on jquery but zepto，have not implemented yet
  */
-layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client','form','skechpad-mobile','element'], function (exports) {
+layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client','form','element'], function (exports) {  //element added by wshengt res;如果不添加element tabs 不滑动
   // region Fields
   this.classInfo = 'layImEx';
   var _layTpl = layui.laytpl;
@@ -16,11 +16,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   var _client = layui.client;
   var _layForm = layui.form;
   var $ = layui.zepto;
-  var _sketchpad = layui['skechpad-mobile'];
   var _element = layui.element;
   // var _layPage = layui.laypage;
   var _layDate = layui.laydate;
-	var _layFlow = layui['flow-mobile'];
+  var _layFlow = layui['flow-mobile'];
 
   var THIS = 'layim-this', MAX_ITEM = 20;
   var _this = this;
@@ -32,7 +31,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   //>cache.local.chatLog:上一次（登录前）聊天记录，不会实时刷新
   var _$sysInfoBox, _device, _cache, _reConnLoadTipIndex, _layerIndex = {};
   const LAYER_MENU_FRIEND = 'LAYER_MENU_FRIEND',
-	  LAYER_MENU_MORE_TOOL = 'LAYER_MENU_MORE_TOOL';
+      LAYER_MENU_MORE_TOOL = 'LAYER_MENU_MORE_TOOL';
   const DEMO_AUTO_REPLAY = [
     '感谢您给提了这么惊天动地的好建议 face[阴险]',
     '您没发错吧？face[微笑] ',
@@ -251,6 +250,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'</div>'
     ,'</div>'
   ].join('');
+
+
+
   var _eleFileThumbnail = [
     '<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_filepicture" ></div>'
@@ -325,7 +327,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'          </div>'
     ,'        </div>'
     ,'        <div id="search_room_remote_res"></div>'
-    ,'      搜索聊天室，聊天室功能模块添加了嘛'
     ,'     </div>'
     ,'     <div class="layui-tab-item {{# if(\'chatLog\' === d.tab){ }}layui-show{{# } }}">'
     ,'        <div><form class="layui-form" id="frmQryChatLog" action="">'
@@ -368,25 +369,26 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'     </div>'
     ,'  </div>'
     ,'</div>'].join('');
-    var _getEleRemoteSearchRoomRes = function (data) {
-        let  _eleRemoteSearchRoomRes = '<div style="padding: 10px 0px 0px 0px; background-color: #F2F2F2;" class="layui-container">';
-        _eleRemoteSearchRoomRes +=  '<div class="layui-row layui-col-space15">'
-        $.each(data,function(index,value){
-           _eleRemoteSearchRoomRes += '<div>'
-           _eleRemoteSearchRoomRes += '<div class="layui-card">'
-           _eleRemoteSearchRoomRes +='<div class="layui-card-header set-name-to-short">JID：'+value.jid+'</div>'
-           _eleRemoteSearchRoomRes += '<div class="layui-card-body">'
-           _eleRemoteSearchRoomRes += '昵称：'+value.name+''
-           _eleRemoteSearchRoomRes +=' <button class="layui-btn layui-btn-xs set-name-to-short" layImEx-event="add_Room" roomname = "'+value.name+'" data-jid="'+value.jid+'">'
-           _eleRemoteSearchRoomRes +='<i class="layui-icon">&#xe608;</i>加为群组</button>'
-           _eleRemoteSearchRoomRes += '</div>'
-           _eleRemoteSearchRoomRes += '</div>'
-           _eleRemoteSearchRoomRes +='</div>'
-        });
-        _eleRemoteSearchRoomRes +='</div>'
-        _eleRemoteSearchRoomRes +='</div>'
-        return _eleRemoteSearchRoomRes;
-    }
+  var _getEleRemoteSearchRoomRes = function (data) {
+    let  _eleRemoteSearchRoomRes = '<div style="padding: 10px 0px 0px 0px; background-color: #F2F2F2;" class="layui-container">';
+    _eleRemoteSearchRoomRes +=  '<div class="layui-row layui-col-space15">'
+    $.each(data,function(index,value){
+      _eleRemoteSearchRoomRes += '<div>'
+      _eleRemoteSearchRoomRes += '<div class="layui-card">'
+      _eleRemoteSearchRoomRes +='<div class="layui-card-header set-name-to-short">JID：'+value.jid+'</div>'
+      _eleRemoteSearchRoomRes += '<div class="layui-card-body">'
+      _eleRemoteSearchRoomRes += '昵称：'+value.name+''
+      _eleRemoteSearchRoomRes +=' <button class="layui-btn layui-btn-xs set-name-to-short" layImEx-event="add_Room" roomname = "'+value.name+'" data-jid="'+value.jid+'">'
+      _eleRemoteSearchRoomRes +='<i class="layui-icon">&#xe608;</i>加为群组</button>'
+      _eleRemoteSearchRoomRes += '</div>'
+      _eleRemoteSearchRoomRes += '</div>'
+      _eleRemoteSearchRoomRes +='</div>'
+    });
+    _eleRemoteSearchRoomRes +='</div>'
+    _eleRemoteSearchRoomRes +='</div>'
+    return _eleRemoteSearchRoomRes;
+  }
+
   var _eleRemoteSearchUserRes = [
     '{{# if(d.length > 0){ }}'
     ,'  <div style="padding: 10px 0px 0px 0px; background-color: #F2F2F2;" class="layui-container">'
@@ -434,7 +436,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'    <label class="layui-icon" layImEx-event="close_search_input">&#x1007;</label>'
     ,'  </li>'
     ,'</ul>'
-	  ,'<ul class="layui-layim-list" id="flow_msgbox_cont"></ul>'
+    ,'<ul class="layui-layim-list" id="flow_msgbox_cont"></ul>'
   ].join('');
 
   var _eleSysInfoContent = [
@@ -465,11 +467,11 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'    </li>'
     ,'  {{# } else { }}'
     ,'    <li class="layim-msgbox-system">'
-	  ,'      <div>'
-	  ,'        <img src="{{ XoW.DefaultImage.SYSINFO_NOTIFY }}" class="layui-circle layim-msgbox-avatar">'
-	  ,'        <div class="layim-msgbox-notify">{{ item.content }}</div>'
-	  ,'      </div>'
-   // ,'      <div class="layim-msgbox-btn"><em>系统：</em>{{ item.content }}</div>'
+    ,'      <div>'
+    ,'        <img src="{{ XoW.DefaultImage.SYSINFO_NOTIFY }}" class="layui-circle layim-msgbox-avatar">'
+    ,'        <div class="layim-msgbox-notify">{{ item.content }}</div>'
+    ,'      </div>'
+    // ,'      <div class="layim-msgbox-btn"><em>系统：</em>{{ item.content }}</div>'
     ,'    </li>'
     ,'  {{# } }); }}'
   ].join('');
@@ -496,7 +498,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '      </tr>',
     '      <tr class="layui-elem-field layui-field-title">',
     '        <td class="layim-vcard-title">昵称</td>',
-   // '        <td><span class="layim-vcard-value">{{ d.name || d.username }}</span></td>',
+    // '        <td><span class="layim-vcard-value">{{ d.name || d.username }}</span></td>',
     '        <td>',
     '          <input type="text" class="layui-input layim-vcard-input" name="nickname" value="{{ d.name || []}}" placeholder="点击输入" lay-verify="required">',
     '          <i class="layim-vcard-edit layui-icon layui-icon-right">',
@@ -607,63 +609,57 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
   var _eleRoomSetingHtml = [
     '<div class="layui-bg-gray layui-container room-seting-container" >',
-               '<div class="layui-row"">',
-                  '<div class="layui-col-md12 room-seting-col12">',
-                       '<ul class = "room-seting-ul" id="roomMembers">',
-                       '<ul class = "room-seting-ul">',
-                           '{{#  if(d.data.meaffiliation == "owner"){   }}',
-                               '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-adminicon">{{d.data.menick}}</div></li>',
-                           ,'{{# } else if(d.data.role == "visitor"){   }}',
-                               '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-vistoricon">{{d.data.menick}}</div></li>',
-                           ,'{{# }else{ }}',
-                                '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-membericon">{{d.data.menick}}</div></li>',
-                           ,'{{# }}}',
+    '<div class="layui-row"">',
+    '<div class="layui-col-md12 room-seting-col12">',
+    '<ul class = "room-seting-ul" id="roomMembers">',
+    '{{#  if(d.data.meaffiliation == "owner"){   }}',
+    '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-adminicon">{{d.data.menick}}</div></li>',
+    ,'{{# } else if(d.data.role == "visitor"){   }}',
+    '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-vistoricon">{{d.data.menick}}</div></li>',
+    ,'{{# }else{ }}',
+    '<li class = "room-seting-ul-li1" data-jid = "{{d.data.me}}"><div class = "room-seting-membericon">{{d.data.menick}}</div></li>',
+    ,'{{# }}}',
 
-                           '{{# layui.each(d.data.memList, function(index, item){ }}',
-                              '{{#  if(item.affiliation == "owner"){   }}',
-                              '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
-                              ,'{{# } else if(item.role == "visitor"){   }}',
-                              '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
-                              ,'{{# }else{ }}',
-                              '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
-                              '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
-                              ,'{{# } else if(item.role == "visitor"){   }}',
-                              '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
-                              ,'{{# }else{ }}',
-                              '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
-                              ,'{{# }}}',
-                              // '<li  class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><img src="..//images/Admin.png" class="room-seting-img"></li>',
-                              '{{# }) }}', // for-each
-                              '<li roomjid="{{d.data.room.jid}}"  class = "room-seting-ul-li1" layimex-event="invitMember" id="toInvite" ><div class="room-seting-invtionicon">邀请</div></li>',
-                       '</ul>',
-              '</div>',
-              '<div class="layui-row room-seting-row1">',
-                      '<div class="layui-col-md12 room-seting-col121">',
-                           '<ul class="room-seting-ul">',
-                                '<li class = "room-seting-roomhead1" layImEx-event="modify_room_name" roomjid="{{d.data.room.jid}}" id="modifyRoomRoomName"><span class = "room-seting-roomspan">&nbsp;群聊名称</span><span class = "room-seting-roomspan1" id="layerRoomName">{{d.data.room.name}}</span></li>',
-                                '<li class = "room-seting-roomhead1" layImEx-event="modify_room_desc" roomjid="{{d.data.room.jid}}" id="modifyRoomRoomDes"><span class = "room-seting-roomspan">&nbsp;群聊描述</span><span class = "room-seting-roomspan1" id="layerRoomDesc">{{d.data.room.getDescription()}}</span></li>',
-                                // '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;"><span style="align: left;width: 45%;display: inline-block">&nbsp;群聊主题</span><span style="text-align: right;width: 53%;display: inline-block">{{d.data.room.getSubject()}}</span></li>',
-                               '<li class = "room-seting-roomhead" layimex-event="sendRoomSubjet" roomjid="{{d.data.room.jid}}" id="roomSubjectSt"><span class = "room-seting-roomspan">&nbsp;群聊主题</span><span class = "room-seting-roomspan1" id="layerSubject">{{d.data.room.getSubject()}}</span></li>',
-                                // '<li style="height: 50px;line-height: 50px;width: 100%;"><span style="align: left;width: 45%;display: inline-block">&nbsp;群聊人数</span><span style="text-align: right;width: 53%;display: inline-block">{{d.data.room.getOccupants()}}</span></li>',
-                          '</ul>',
-                      '</div>',
-              '</div>',
-              '<div class="layui-row room-seting-row5">',
-                      '<div class="layui-col-md12 room-seting-col121">',
-                      //  '<form class="layui-form" action="" style="margin:0;padding: 0" id="getRoomConfigSeting">{{d.data.getRoomHtml}}</form>',
-                          '<form class="layui-form" action="" style="margin:0;padding: 0" id="getRoomConfigSeting"></form>',
-                      '</div>',
-              '</div>',
-              '<div class="layui-row room-seting-row5">',
-                 // '<div class="layui-col-md12"  style="background-color: white;text-align: center" id="getDestroyR">{{d.data.getDestroyRoomHtml}}</div>',
-                     '<div class="layui-col-md12 room-seting-col122" id="getDestroyR"></div>',
-              '</div>',
-            '<div class="layui-row room-seting-row5">',
-                '<div class="layui-col-md12 room-seting-col122"id="todoExitRoom">',
+    '{{# layui.each(d.data.memList, function(index, item){ }}',
+    '{{#  if(item.affiliation == "owner"){   }}',
+    '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
+    ,'{{# } else if(item.role == "visitor"){   }}',
+    '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
+    ,'{{# }else{ }}',
+    '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
+    ,'{{# }}}',
+    // '<li  class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><img src="..//images/Admin.png" class="room-seting-img"></li>',
+    '{{# }) }}', // for-each
+    '<li roomjid="{{d.data.room.jid}}"  class = "room-seting-ul-li1" layimex-event="invitMember" id="toInvite" ><div class="room-seting-invtionicon">邀请</div></li>',
+    '</ul>',
+    '</div>',
+    '<div class="layui-row room-seting-row1">',
+    '<div class="layui-col-md12 room-seting-col121">',
+    '<ul class="room-seting-ul">',
+    '<li class = "room-seting-roomhead1" layImEx-event="modify_room_name" roomjid="{{d.data.room.jid}}" id="modifyRoomRoomName"><span class = "room-seting-roomspan">&nbsp;群聊名称</span><span class = "room-seting-roomspan1" id="layerRoomName">{{d.data.room.name}}</span></li>',
+    '<li class = "room-seting-roomhead1" layImEx-event="modify_room_desc" roomjid="{{d.data.room.jid}}" id="modifyRoomRoomDes"><span class = "room-seting-roomspan">&nbsp;群聊描述</span><span class = "room-seting-roomspan1" id="layerRoomDesc">{{d.data.room.getDescription()}}</span></li>',
+    // '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;"><span style="align: left;width: 45%;display: inline-block">&nbsp;群聊主题</span><span style="text-align: right;width: 53%;display: inline-block">{{d.data.room.getSubject()}}</span></li>',
+    '<li class = "room-seting-roomhead" layimex-event="sendRoomSubjet" roomjid="{{d.data.room.jid}}" id="roomSubjectSt"><span class = "room-seting-roomspan">&nbsp;群聊主题</span><span class = "room-seting-roomspan1" id="layerSubject">{{d.data.room.getSubject()}}</span></li>',
+    // '<li style="height: 50px;line-height: 50px;width: 100%;"><span style="align: left;width: 45%;display: inline-block">&nbsp;群聊人数</span><span style="text-align: right;width: 53%;display: inline-block">{{d.data.room.getOccupants()}}</span></li>',
+    '</ul>',
+    '</div>',
+    '</div>',
+    '<div class="layui-row room-seting-row5">',
+    '<div class="layui-col-md12 room-seting-col121">',
+    //  '<form class="layui-form" action="" style="margin:0;padding: 0" id="getRoomConfigSeting">{{d.data.getRoomHtml}}</form>',
+    '<form class="layui-form" action="" style="margin:0;padding: 0" id="getRoomConfigSeting"></form>',
+    '</div>',
+    '</div>',
+    '<div class="layui-row room-seting-row5">',
+    // '<div class="layui-col-md12"  style="background-color: white;text-align: center" id="getDestroyR">{{d.data.getDestroyRoomHtml}}</div>',
+    '<div class="layui-col-md12 room-seting-col122" id="getDestroyR"></div>',
+    '</div>',
+    '<div class="layui-row room-seting-row5">',
+    '<div class="layui-col-md12 room-seting-col122"id="todoExitRoom">',
 
-                '</div>',
-            '</div>',
-      '</div>',
+    '</div>',
+    '</div>',
+    '</div>',
     '</div>'
   ].join('');
   var _eleRoomCreate = [
@@ -701,7 +697,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '</div>',
   ].join('')
 
- var _eleRoomMeetCreate = [
+  var _eleRoomMeetCreate = [
     '<div class="layui-container" style="width: 100%;margin: 0px;padding: 0px">',
     '<form class="layui-form" action="">',
     '<div class="layui-row">',
@@ -738,18 +734,11 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
     '{{# layui.each(d.data.memList, function(index, item){ }}',
     '{{#  if(item.affiliation == "owner"){   }}',
-
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
     ,'{{# } else if(item.role == "visitor"){   }}',
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
     ,'{{# }else{ }}',
     '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}" data-nick = "{{item.nick}}" layimex-event="temparatureFriend"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
-
-    '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-adminicon">{{item.nick}}</div></li>',
-    ,'{{# } else if(item.role == "visitor"){   }}',
-    '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-vistoricon">{{item.nick}}</div></li>',
-    ,'{{# }else{ }}',
-    '<li class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><div class = "room-seting-membericon">{{item.nick}}</div></li>',
     ,'{{# }}}',
     // '<li  class = "room-seting-ul-li1" data-jid = "{{item.jid}}"><img src="..//images/Admin.png" class="room-seting-img"></li>',
     '{{# }) }}', // for-each
@@ -787,42 +776,41 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   ].join('');
 
   var _eleTemparatureFriend = [
-      '<div class="layui-container set-room-temparature-container">',
-            '<div class="layui-row set-room-temparature-row">',
-                  '<div class="layui-col-xs12">',
-                       '<div class = "set-room-temparature-headicon">',
-                       '</div>',
-                  '</div>',
-                  '<div class="layui-col-xs12 set-room-temparature-membernick" >',
-                        '<h1>{{d.data.onenick}}</h1>',
-                  '</div>',
-                  '<div class="layui-col-xs12 set-name-to-short" style="text-align: center;">',
-                        '<h3>{{d.data.onejid}}</h3>',
-                  '</div>',
-                  '<div class="layui-col-xs12 set-room-temparature-btn">',
-                       '<div class="layui-row set-room-temparature-row">',
-                           '{{#  if(d.data.btnType == false) {     }}',
-                            '<div class="layui-col-xs6 set-room-temparature-btnmp">',
-                              //  '<div style="width: 94px;margin: 0 auto">',
-                                    '<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid set-room-temparature-btnmp" data-jid = "{{d.data.onejid}}" data-nick = "{{d.data.onenick}}" layimEx-event="addFreindInRoom"  >加为好友</button>',
-                         //       '</div>',
-                            '</div>',
-                            '<div class="layui-col-xs6 set-room-temparature-btnmp">',
-                             //  '<div style="width: 94px;margin: 0 auto">',
-                                  '<button type="button"  class="layui-btn  layui-btn-normal layui-btn-fluid set-room-temparature-btnmp" data-jid = "{{d.data.onejid}}" data-nick = "{{d.data.onenick}}" layimEx-event="sendMessageToRoomOneMember">发送消息</button>',
-                            //  '</div>',
-                            '</div>',
-                           '{{# }else{   }}',
-                                 '<div class="layui-col-xs12 set-room-temparature-btnmp">',
-                                       '<button type="button"  class="layui-btn  layui-btn-normal layui-btn-fluid set-room-temparature-btnmp" data-jid = "{{d.data.onejid}}" data-nick = "{{d.data.onenick}}" layimEx-event="sendMessageToRoomOneMember">发送消息</button>',
-                                 '</div>',
-                           '{{#  } }}',
-                       '</div>',
-                  '</div>',
-            '</div>',
-      '</div>'
+    '<div class="layui-container set-room-temparature-container">',
+    '<div class="layui-row set-room-temparature-row">',
+    '<div class="layui-col-xs12">',
+    '<div class = "set-room-temparature-headicon">',
+    '</div>',
+    '</div>',
+    '<div class="layui-col-xs12 set-room-temparature-membernick" >',
+    '<h1>{{d.data.onenick}}</h1>',
+    '</div>',
+    '<div class="layui-col-xs12 set-name-to-short" style="text-align: center;">',
+    '<h3>{{d.data.onejid}}</h3>',
+    '</div>',
+    '<div class="layui-col-xs12 set-room-temparature-btn">',
+    '<div class="layui-row set-room-temparature-row">',
+    '{{#  if(d.data.btnType == false) {     }}',
+    '<div class="layui-col-xs6 set-room-temparature-btnmp">',
+    //  '<div style="width: 94px;margin: 0 auto">',
+    '<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid set-room-temparature-btnmp" data-jid = "{{d.data.onejid}}" data-nick = "{{d.data.onenick}}" layimEx-event="addFreindInRoom"  >加为好友</button>',
+    //       '</div>',
+    '</div>',
+    '<div class="layui-col-xs6 set-room-temparature-btnmp">',
+    //  '<div style="width: 94px;margin: 0 auto">',
+    '<button type="button"  class="layui-btn  layui-btn-normal layui-btn-fluid set-room-temparature-btnmp" data-jid = "{{d.data.onejid}}" data-nick = "{{d.data.onenick}}" layimEx-event="sendMessageToRoomOneMember">发送消息</button>',
+    //  '</div>',
+    '</div>',
+    '{{# }else{   }}',
+    '<div class="layui-col-xs12 set-room-temparature-btnmp">',
+    '<button type="button"  class="layui-btn  layui-btn-normal layui-btn-fluid set-room-temparature-btnmp" data-jid = "{{d.data.onejid}}" data-nick = "{{d.data.onenick}}" layimEx-event="sendMessageToRoomOneMember">发送消息</button>',
+    '</div>',
+    '{{#  } }}',
+    '</div>',
+    '</div>',
+    '</div>',
+    '</div>'
   ].join('')
-
   var _eleRoomAdmin = [    //_eleRoomAdmin <label class="layui-icon" layimex-event="close_search">ဇ</label>
     '<ul class="layui-layim-search" style="display:inline">',
     '  <li>',
@@ -831,19 +819,15 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '    <label class="layui-icon" layImEx-event="backRoomSearh">&#x1007;</label>',
     '  </li>',
     '</ul>',
-      '<div class="layui-container room-seting-container1">',
-            '<div class="layui-row room-seting-row3">',
-                '<div class="layui-col-xs12 room-seting-col123"  id="searchRoomAdmin">',
-                      '{{# layui.each(d.data.roomdata, function(index, item){ }}',
-
-                      '<div class="room-seting-div" layimEx-event="changeAdminToOther" data-nick = "{{item.nick}}" data-jid = "{{d.data.roomjid}}">{{item.jid}}</div>',
-
-                      '<div class="room-seting-div" layimEx-event="changeAdminToOther" data-jid = "{{d.data.roomjid}}">{{item.jid}}</div>',
-
-                      '{{# }) }}', // for-each
-                '</div>',
-            '</div>',
-      '</div>'
+    '<div class="layui-container room-seting-container1">',
+    '<div class="layui-row room-seting-row3">',
+    '<div class="layui-col-xs12 room-seting-col123"  id="searchRoomAdmin">',
+    '{{# layui.each(d.data.roomdata, function(index, item){ }}',
+    '<div class="room-seting-div" layimEx-event="changeAdminToOther" data-nick = "{{item.nick}}" data-jid = "{{d.data.roomjid}}">{{item.jid}}</div>',
+    '{{# }) }}', // for-each
+    '</div>',
+    '</div>',
+    '</div>'
   ].join('')
   var _eleDenyRoomMember = [ //2222222222222222222222
     '<ul class="layui-layim-search" style="display:inline">',
@@ -873,17 +857,17 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '  </li>',
     '</ul>',
     '<div class="layui-container room-seting-container1">',
-         '<div class="layui-row room-seting-row3">',
-             '<div class="layui-col-xs12 room-seting-col123" id="showMemeberSpeakePower">',
-                 '{{# layui.each(d.data.roomdata, function(index, item){ }}',
-                      '{{# if(item.role === "visitor"){ }}',
-                           '<div class="room-seting-div" style="color: red" layimEx-event="choiceSpeakMember" roomjid = "{{d.data.roomjid}}" data-jid = "{{item.jid}}" roomState = "{{item.role}}">{{item.nick}}</div>',
-                      ,'{{# } else { }}',
-                           '<div class="room-seting-div" layimEx-event="choiceSpeakMember" roomjid = "{{d.data.roomjid}}" data-jid = "{{item.jid}}" roomState = "{{item.role}}">{{item.nick}}</div>',
-                      ,'{{# } }}',
-                 '{{# }) }}', // for-each
-             '</div>',
-         '</div>',
+    '<div class="layui-row room-seting-row3">',
+    '<div class="layui-col-xs12 room-seting-col123" id="showMemeberSpeakePower">',
+    '{{# layui.each(d.data.roomdata, function(index, item){ }}',
+    '{{# if(item.role === "visitor"){ }}',
+    '<div class="room-seting-div" style="color: red" layimEx-event="choiceSpeakMember" roomjid = "{{d.data.roomjid}}" data-jid = "{{item.jid}}" roomState = "{{item.role}}">{{item.nick}}</div>',
+    ,'{{# } else { }}',
+    '<div class="room-seting-div" layimEx-event="choiceSpeakMember" roomjid = "{{d.data.roomjid}}" data-jid = "{{item.jid}}" roomState = "{{item.role}}">{{item.nick}}</div>',
+    ,'{{# } }}',
+    '{{# }) }}', // for-each
+    '</div>',
+    '</div>',
     '</div>'
   ].join('')
 
@@ -906,15 +890,15 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '</div>'
   ].join('')
 
-    var _eleSubject = [
-        '<div class="layui-container room-seting-container">',
-             '<div class="layui-row room-seting-row3">',
-                    '<div class="layui-col-md12">',
-                          '<textarea name="writeSubject" placeholder="填写主题，1-200字" class="layui-textarea" rows="5" maxlength="200" id="isReadySendSubject" data-jid = "{{d.data.roomjid}}">{{d.data.valuesubject}}</textarea>',
-                    '</div>',
-             '</div>',
-        '</div>'
-    ].join('');
+  var _eleSubject = [
+    '<div class="layui-container room-seting-container">',
+    '<div class="layui-row room-seting-row3">',
+    '<div class="layui-col-md12">',
+    '<textarea name="writeSubject" placeholder="填写主题，1-200字" class="layui-textarea" rows="5" maxlength="200" id="isReadySendSubject" data-jid = "{{d.data.roomjid}}">{{d.data.valuesubject}}</textarea>',
+    '</div>',
+    '</div>',
+    '</div>'
+  ].join('');
 
   var _eleWriteRoomName = [
     '<div class="layui-container room-seting-container">',
@@ -935,6 +919,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     '</div>',
     '</div>'
   ].join('')
+
+
   var _elemMineVcardField = [
     '<div class="layim-vcard-field-panel">',
     //'  <input type="text" class="layui-input">',
@@ -1004,9 +990,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   //添加好友群组模版， copy from layim.js
   var _elemAddTpl = ['<div class="layim-add-box">'
     ,'<div class="layim-add-img">'
-	  ,'  <img class="layui-circle" src="{{ d.data.avatar }}">'
-	  ,'  <span>{{ d.data.name||"" }}</span>'
-	  ,'</div>'
+    ,'  <img class="layui-circle" src="{{ d.data.avatar }}">'
+    ,'  <span>{{ d.data.name||"" }}</span>'
+    ,'</div>'
     ,'<div class="layim-add-remark">'
     ,'{{# if(d.data.type === "friend" && d.type === "setGroup"){ }}'
     ,'<p>选择分组</p>'
@@ -1026,22 +1012,22 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ,'</div>'].join('');
 
 
-    // var roomSubjectComTpl = function(tpl, anim, back){
-    //     return ['<div class="layim-panel'+ (anim ? ' layui-m-anim-left' : '') +'">'
-    //         ,'<div class="layim-title" style="background-color: {{d.base.chatTitleColor}};">'
-    //         ,'<p>'
-    //         ,(back ? '<i class="layui-icon layim-chat-back" layim-event="back">&#xe603;</i>' : '')
-    //         ,'{{ d.title || d.base.title }}<span class="layim-chat-status"></span>'
-    //         ,'<i class="layui-icon layim-chat-detail" layImEx-event="detail">&#xe613;</i>'  //layImEx
-    //         ,'</p>'
-    //         ,'</div>'
-    //         ,'<div class="layui-unselect layim-content">'
-    //
-    //         ,'</div>'
-    //         ,'</div>'].join('');
-    // };
+  // var roomSubjectComTpl = function(tpl, anim, back){
+  //     return ['<div class="layim-panel'+ (anim ? ' layui-m-anim-left' : '') +'">'
+  //         ,'<div class="layim-title" style="background-color: {{d.base.chatTitleColor}};">'
+  //         ,'<p>'
+  //         ,(back ? '<i class="layui-icon layim-chat-back" layim-event="back">&#xe603;</i>' : '')
+  //         ,'{{ d.title || d.base.title }}<span class="layim-chat-status"></span>'
+  //         ,'<i class="layui-icon layim-chat-detail" layImEx-event="detail">&#xe613;</i>'  //layImEx
+  //         ,'</p>'
+  //         ,'</div>'
+  //         ,'<div class="layui-unselect layim-content">'
+  //
+  //         ,'</div>'
+  //         ,'</div>'].join('');
+  // };
 
-	// endregion mark mobile
+  // endregion mark mobile
   // endregion UI templates
 
   // region APIs
@@ -1115,32 +1101,32 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     _bindFriendListMenu();
     XoW.logger.me(_this.classInfo, 'bindFriendListMenu()');
   };
-    LAYIMEX.prototype.layimExIndex = function(indexname,index) {
-        _layerIndex[indexname] = index;
-    };
-	LAYIMEX.prototype.setFriendStatus = function(pFriend){
-		XoW.logger.ms(_this.classInfo, 'setFriendStatus({0})'.f(pFriend.status));
-		_layIM.setFriendStatus(pFriend.id, pFriend.status);
-		if (pFriend && pFriend.status === XoW.UserState.OFFLINE) {
-			_layIM.setChatStatus('离线');
-		} else if (pFriend && pFriend.status === XoW.UserState.ONLINE) {
-			_layIM.setChatStatus('在线');
-		} else {
-			_layIM.setChatStatus('');
-		}
-		XoW.logger.me(_this.classInfo, 'setFriendStatus()');
-	};
+  LAYIMEX.prototype.layimExIndex = function(indexname,index) {
+    _layerIndex[indexname] = index;
+  };
+  LAYIMEX.prototype.setFriendStatus = function(pFriend){
+    XoW.logger.ms(_this.classInfo, 'setFriendStatus({0})'.f(pFriend.status));
+    _layIM.setFriendStatus(pFriend.id, pFriend.status);
+    if (pFriend && pFriend.status === XoW.UserState.OFFLINE) {
+      _layIM.setChatStatus('离线');
+    } else if (pFriend && pFriend.status === XoW.UserState.ONLINE) {
+      _layIM.setChatStatus('在线');
+    } else {
+      _layIM.setChatStatus('');
+    }
+    XoW.logger.me(_this.classInfo, 'setFriendStatus()');
+  };
   // endregion mobile
 
   LAYIMEX.prototype.setMineStatus = function(pStatus){
     XoW.logger.ms(_this.classInfo, 'setMineStatus({0})'.f(pStatus));
     _changeMineStatus(pStatus);
   };
-    LAYIMEX.prototype.roomRefesh = function(){
-        _roomRefresh();
-    }
+  LAYIMEX.prototype.roomRefesh = function(){
+    _roomRefresh();
+  }
   LAYIMEX.prototype.roomBack = function(Othis){
-      _roomBack(Othis)
+    _roomBack(Othis)
   }
 
   // LAYIMEX.prototype.getMesseage = function(params){
@@ -1352,6 +1338,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     });
     XoW.logger.me(_this.classInfo, 'completeHttpFile()');
   }
+
+
   LAYIMEX.prototype.roomOutSide = function(params){
     XoW.logger.ms(_this.classInfo, "roomOutSide()");
     // layer.open({
@@ -1381,8 +1369,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
   LAYIMEX.prototype.OnlyMemberIntoRoom= function(Msg){
     XoW.logger.ms(_this.classInfo, "OnlyMemberIntoRoom()");
-     let thischat = _getThisChat();
-     _roomBack(thischat.elem);
+    let thischat = _getThisChat();
+    _roomBack(thischat.elem);
     _layer.open({
       content: Msg
       ,skin: 'msg'
@@ -1394,22 +1382,22 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     XoW.logger.ms(_this.classInfo, "someBodyIntoMeIntoRoom()");
     let  info = params.info;
     let pSubMsg = {
-       cid:info.id,
-       classInfo:"SubMsg",
-       content:XoW.utils.getNodeFromJid(info.params.inviteFrom) + "邀请你加入" + info.from + "房间",
-       from:info.from,
-       type:XoW.SERVICE_EVENT.SUB_ME_REQ_RCV,
-       status:info.status,
-       to:info.to,
-       item:{
-         avatar:"http://tp2.sinaimg.cn/2211874245/180/40050524279/0",
-         classInfo: "group",
-         id:XoW.utils.getNodeFromJid(info.params.inviteFrom),
-         jid:info.params.inviteFrom,
-         type:'group',
-         username:XoW.utils.getNodeFromJid(info.params.inviteFrom),
-         password:info.params.password||''
-       }
+      cid:info.id,
+      classInfo:"SubMsg",
+      content:XoW.utils.getNodeFromJid(info.params.inviteFrom) + "邀请你加入" + info.from + "房间",
+      from:info.from,
+      type:XoW.SERVICE_EVENT.SUB_ME_REQ_RCV,
+      status:info.status,
+      to:info.to,
+      item:{
+        avatar:"http://tp2.sinaimg.cn/2211874245/180/40050524279/0",
+        classInfo: "group",
+        id:XoW.utils.getNodeFromJid(info.params.inviteFrom),
+        jid:info.params.inviteFrom,
+        type:'group',
+        username:XoW.utils.getNodeFromJid(info.params.inviteFrom),
+        password:info.params.password||''
+      }
     }
     this.pushSysInfo(pSubMsg);
     XoW.logger.me(_this.classInfo, "someBodyIntoMeIntoRoom()");
@@ -1440,7 +1428,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     XoW.logger.ms(_this.classInfo,"RoomMastarDestroyThisRoom()");
     let thischat = _getThisChat();
     if(thischat) {
-        _roomBack(thischat.elem);
+      _roomBack(thischat.elem);
     }
     if(_layerIndex["ROOMSETING"]!=-1){
       _layer.close(_layerIndex["ROOMSETING"]);
@@ -1453,10 +1441,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     });
     let roomList = $('.layim-list-group li');
     for(let i = 0;i < roomList.length;i++){
-         if(roomList.eq(i).attr("data-id")==params.id){
-           roomList.eq(i).remove();
-           break;
-         }
+      if(roomList.eq(i).attr("data-id")==params.id){
+        roomList.eq(i).remove();
+        break;
+      }
     }
     XoW.logger.me(_this.classInfo,"RoomMastarDestroyThisRoom()");
   }
@@ -1505,7 +1493,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   };
   LAYIMEX.prototype.openReConnLoadTip = function() {
     XoW.logger.ms(_this.classInfo, 'openReConnLoadTip()');
-      _reConnLoadTipIndex = _layer.load(0, {
+    _reConnLoadTipIndex = _layer.load(0, {
       shade: [0.5, 'gray'], //0.5透明度的灰色背景
       content: '正在重连服务器...',
       success: function (layero) {
@@ -1571,7 +1559,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     }
     XoW.logger.me(_this.classInfo, 'changeFriendSign({0})'.f(pFriend.id));
   };
-		// endregion mobile remark
+  // endregion mobile remark
   LAYIMEX.prototype.changeFileStatus = function(pFileThumbnail) {
     XoW.logger.ms(_this.classInfo, 'changeFileStatus()');
     var thatChat = _getThisChat();
@@ -1637,7 +1625,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   LAYIMEX.prototype.getMessage = function(data) {
     XoW.logger.ms(_this.classInfo, 'getMessage()');
     _layIM.getMessage(data);
-	  XoW.logger.me(_this.classInfo, 'getMessage()');
+    XoW.logger.me(_this.classInfo, 'getMessage()');
   };
   LAYIMEX.prototype.setUserSearchResult = function(data) {
     XoW.logger.ms(_this.classInfo, 'setUserSearchResult()');
@@ -1678,8 +1666,8 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     local['hasUnreadSysInfo'] = true;
     layui.each(local.sysInfo, function (idx, itm) {
       if (itm.cid === pMsg.cid ||
-        (itm.from === pMsg.from &&
-        itm.status === pMsg.status && itm.type === pMsg.type)) {
+          (itm.from === pMsg.from &&
+              itm.status === pMsg.status && itm.type === pMsg.type)) {
         XoW.logger.w('Duplicate data {0} received, break.'.f(itm.cid));
         has = true;
         itm.timestamp = pMsg.timestamp;
@@ -1697,7 +1685,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     if(pIsBlink) {
       // _blinkSysInfoIcon();
       _layIM.showNew('Friend', true); // 新的朋友
-	    _layIM.showNew('List', true);
+      _layIM.showNew('List', true);
     }
     XoW.logger.me(_this.classInfo, 'pushSysInfo()');
   };
@@ -1758,39 +1746,26 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     }});
   _layIM.on('sendMessage', function(data) {
     XoW.logger.ms(_this.classInfo, 'sendMessage()');
-	  // 模擬客服自动回复
-	  // if(data.to.id === '#demohelp') {
-		//   // var To = data.to;
-		//   // setTimeout(function() {
-		// 	//   var obj = {
-		// 	// 	  username: To.name
-		// 	// 	  , avatar: To.avatar
-		// 	// 	  , id: To.id
-		// 	// 	  , type: To.type
-		// 	// 	  , content: DEMO_AUTO_REPLAY[Math.random() * 9 | 0]
-		// 	//   }
-		// 	//   _layIM.getMessage(obj);
-		//   // }, 3000);
-      //    let msg = $msg({
-      //       type:'chat',
-      //       from:_client.getCurrentUser().jid,
-      //       to:'#demohelp@intelligentcusservice.127.0.0.1'
-      //    }).c('body').t("11111");
-      //   _client.getConnMgr().send(msg);
-	  // }
-	  if(data.to.id === 'demohelp') {
-		  var To = data.to;
-		  setTimeout(function() {
-			  var obj = {
-				  username: To.name
-				  , avatar: To.avatar
-				  , id: To.id
-				  , type: To.type
-				  , content: DEMO_AUTO_REPLAY[Math.random() * 9 | 0]
-			  }
-			  _layIM.getMessage(obj);
-		  }, 3000);
-	  }
+    // 模擬客服自动回复
+    // if(data.to.id === '#demohelp') {
+    //   // var To = data.to;
+    //   // setTimeout(function() {
+    // 	//   var obj = {
+    // 	// 	  username: To.name
+    // 	// 	  , avatar: To.avatar
+    // 	// 	  , id: To.id
+    // 	// 	  , type: To.type
+    // 	// 	  , content: DEMO_AUTO_REPLAY[Math.random() * 9 | 0]
+    // 	//   }
+    // 	//   _layIM.getMessage(obj);
+    //   // }, 3000);
+    //    let msg = $msg({
+    //       type:'chat',
+    //       from:_client.getCurrentUser().jid,
+    //       to:'#demohelp@intelligentcusservice.127.0.0.1'
+    //    }).c('body').t("11111");
+    //   _client.getConnMgr().send(msg);
+    // }
   });
   _layIM.on('newFriend', function(){
     XoW.logger.ms(_this.classInfo, 'newFriend()');
@@ -1799,7 +1774,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   });
   _layIM.on('tool(code)', function(pInsert, pSendMessage){
     XoW.logger.ms(_this.classInfo, 'tool(code)()');
-	  // 移动版暂不支持prompt函数
+    // 移动版暂不支持prompt函数
     _layer.prompt({
       title: '插入代码'
       ,formType: 2
@@ -1812,10 +1787,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     XoW.logger.me(_classInfo, 'tool(code)()');
   });
   _layIM.on('tool(link)', function(pInsert, pSendMessage){
-	  XoW.logger.ms(_this.classInfo, 'tool(link)()');
+    XoW.logger.ms(_this.classInfo, 'tool(link)()');
     var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
     // 移动版暂不支持prompt函数
-	  _layer.prompt({
+    _layer.prompt({
       title: '请输入网页地址'
       ,shade: false
       ,offset: [
@@ -1857,56 +1832,49 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       //  }
       //});
     });
-	  XoW.logger.me(_this.classInfo, 'tool(link)()');
+    XoW.logger.me(_this.classInfo, 'tool(link)()');
   });
-	_layIM.on('chatChange', function (res) {
-		XoW.logger.ms(_this.classInfo, 'chatChange({0},{1})'.f(res.data.type, res.data.id));
-		var type = res.data.type;
-		let jid = res.data.jid;
-		if (!res.data.jid) {
-				//_layer.msg('No Jid of that chat，请联系管理员')
-				_layer.open({
-				  content: 'JID不存在，无法与该用户聊天.'
-				  ,btn: '我知道了'
-				});
-			return;
-		}
+  _layIM.on('chatChange', function (res) {
+    XoW.logger.ms(_this.classInfo, 'chatChange({0},{1})'.f(res.data.type, res.data.id));
+    var type = res.data.type;
+    let jid = res.data.jid;
+    if (!res.data.jid) {
+      //_layer.msg('No Jid of that chat，请联系管理员')
+      _layer.open({
+        content: 'JID不存在，无法与该用户聊天.'
+        ,btn: '我知道了'
+      });
+      return;
+    }
 
-		if (type === XoW.MessageType.CONTACT_CHAT) {
-			var friend = _getFriendById(res.data.id);
-			if (friend && friend.status === XoW.UserState.OFFLINE) {
-				_layIM.setChatStatus('离线');
-			} else if (friend && friend.status === XoW.UserState.ONLINE) {
-				_layIM.setChatStatus('在线');
-			} else {
-				_layIM.setChatStatus('');
-			}
-            $(".layim-tool-drawing").click(function () {//add by zjy for 绘图板
-               _sketchpad.drawing(sendFileForSkechpadCb);
-            });
-			_rebindToolFileButton();
-		} else if (type === XoW.MessageType.GROUP_CHAT) {
-			//模拟系统消息
-            if(!_client.getRoomMgr().isCurrentUserAlreadyInRoom(jid)) {
-                _client.getRoomMgr().me_into_a_room(type, jid);
-                _layIM.getMessage({
-                    system: true
-                    , id: res.data.id
-                    , type: "group"
-                    , content: '自己加入房间'
-                });
-            }
-		}
-		XoW.logger.me(_this.classInfo, 'chatChange({0})'.f(res.data.id));
-	});
-	// add by zjy for 删除绘画板client依赖设置的回调 [20190814]
-	function sendFileForSkechpadCb(pThatChat,pFileInfo,pData) {
-        XoW.logger.ms(_this.classInfo, 'sendFileForSkechpadCb');
-        layui.each(call.sendFile, function(index, item){
-            item && item(pThatChat, pFileInfo, pData);});
-        XoW.logger.me(_this.classInfo, 'sendFileForSkechpadCb');
-	}
+    if (type === XoW.MessageType.CONTACT_CHAT) {
+      var friend = _getFriendById(res.data.id);
+      if (friend && friend.status === XoW.UserState.OFFLINE) {
+        _layIM.setChatStatus('离线');
+      } else if (friend && friend.status === XoW.UserState.ONLINE) {
+        _layIM.setChatStatus('在线');
+      } else {
+        _layIM.setChatStatus('');
+      }
+      _rebindToolFileButton();
+    } else if (type === XoW.MessageType.GROUP_CHAT) {
+      //模拟系统消息
+      _rebindToolFileButton();
+      if(!_client.getRoomMgr().isCurrentUserAlreadyInRoom(jid)) {
+        _client.getRoomMgr().me_into_a_room(type, jid);
+        _layIM.getMessage({
+          system: true
+          , id: res.data.id
+          , type: "group"
+          , content: '自己加入房间'
+        });
+      }
+    }
+    XoW.logger.me(_this.classInfo, 'chatChange({0})'.f(res.data.id));
+  });
+
   // endregion  UI CAllBack By LayIM
+
   // region LayImEx-event handlers
   var events = {
     // region mark mobile
@@ -1918,26 +1886,26 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       var data = _getDataFromFriendListItem(id);
       _layIM.chat(data);
     },
-      todoCreateChatRoom:function(oThis, e){
-           // _roomBack(oThis);
-          _makeChatingRoom(oThis);
-      },
+    todoCreateChatRoom:function(oThis, e){
+      // _roomBack(oThis);
+      _makeChatingRoom(oThis);
+    },
     todoCreateMeetRoom:function(oThis, e){
       _makeMeetingRoom(oThis);
     },
     sendMessageToRoomOneMember:function(oThis, e){
-        let onejid = $(oThis).attr('data-jid');
-        let oneNick = $(oThis).attr('data-nick');
-        let barejid = XoW.utils.getBareJidFromJid(onejid);
-        _layIM.chat({
-          name:oneNick,
-          username: oneNick,
-          type: 'friend',
-          avatar: XoW.DefaultImage.AVATAR_KEFU,
-          id: oneNick,
-          jid: barejid,
-          temporary: true
-        });
+      let onejid = $(oThis).attr('data-jid');
+      let oneNick = $(oThis).attr('data-nick');
+      let barejid = XoW.utils.getBareJidFromJid(onejid);
+      _layIM.chat({
+        name:oneNick,
+        username: oneNick,
+        type: 'friend',
+        avatar: XoW.DefaultImage.AVATAR_KEFU,
+        id: oneNick,
+        jid: barejid,
+        temporary: true
+      });
     },
     addFreindInRoom:function(oThis, e){
       let onejid = $(oThis).attr('data-jid');
@@ -1974,7 +1942,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       var allroom = _client.getRoomMgr().getSaveoutAllRoom();
       for(var i= 0 ;i<allroom.length;i++){
         if(allroom[i].jid ==roomjjdi){
-            allroom[i].name = roomname;
+          allroom[i].name = roomname;
           _layIM.chat(allroom[i]);
           break;
         }
@@ -1982,13 +1950,13 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       e.stopImmediatePropagation();
     },
     temparatureFriend:function(oThis, e){
-         let onejid = $(oThis).attr('data-jid');
-         let oneNick = $(oThis).attr('data-nick');
-         _temparatureFriend(onejid,oneNick);
-         e.stopImmediatePropagation()
+      let onejid = $(oThis).attr('data-jid');
+      let oneNick = $(oThis).attr('data-nick');
+      _temparatureFriend(onejid,oneNick);
+      e.stopImmediatePropagation()
     },
     roomCreateIcon:function(oThis, e){
-       _layer.open({
+      _layer.open({
         content: _eleRoomToolMoreMenu,
         skin: 'menu_ex',
         shade: 'background-color:rgba(0,0,0, .3);',
@@ -2032,7 +2000,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       e.stopImmediatePropagation();
     },
     removeRoomSeachKeyDownText:function(oThis, e){
-        _roomBack(oThis)
+      _roomBack(oThis)
     },
     backRoomSearh:function(oThis, e){
       _roomBack(oThis)
@@ -2059,54 +2027,54 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       },'todoCreateMeetRoom','完成')
       _layerIndex['MEETINGEROOM'] = index;
       _layForm.render();
-   }
-   ,roomRefresh:function (othis,e) {
-    _layer.close(_layerIndex['ROOMCREATEICONLIST']);
-    let getallroom = _client.getRoomMgr().getSaveoutAllRoom();
-    for(let i = 0;i<getallroom.length;i++){
-      let r = getallroom[i];
-      _layIM.removeList(r);
     }
-    _client.getRoomMgr().getAllRFServer();
+    ,roomRefresh:function (othis,e) {
+      _layer.close(_layerIndex['ROOMCREATEICONLIST']);
+      let getallroom = _client.getRoomMgr().getSaveoutAllRoom();
+      for(let i = 0;i<getallroom.length;i++){
+        let r = getallroom[i];
+        _layIM.removeList(r);
+      }
+      _client.getRoomMgr().getAllRFServer();
     },
     exitThisRoom:function(oThis, e){
-       let roomjid = $(e.target).attr('roomjid');
-       let roomuindex =  $(e.target).attr('roomuindex');
-        _layer.open({
-            content: '你要退出该房间吗'
-            ,btn: ['没错', '不要']
-            ,yes: function(index){
-                _exitRoom(roomjid);
-               _layer.close(index);
-               let thischat = _getThisChat();
-               _roomBack(thischat.elem);
-               _client.getRoomMgr().closeOneThisRoom(roomjid);
-               _layer.close(roomuindex);
-                let getallroom = _client.getRoomMgr().getSaveoutAllRoom(); // todo wshengt modify
-                for(var i = 0;i<getallroom.length;i++){
-                  var r = getallroom[i];
-                    _layIM.removeList(r);
-                }
-               // _client.getRoomMgr().getRoomByJidFromServer(roomjid);
-            _client.getRoomMgr().getAllRFServer();
-            },
-            btn1:function (index) {
-                _layer.close(index);
-            }
-        });
-        e.stopImmediatePropagation();
+      let roomjid = $(e.target).attr('roomjid');
+      let roomuindex =  $(e.target).attr('roomuindex');
+      _layer.open({
+        content: '你要退出该房间吗'
+        ,btn: ['没错', '不要']
+        ,yes: function(index){
+          _exitRoom(roomjid);
+          _layer.close(index);
+          let thischat = _getThisChat();
+          _roomBack(thischat.elem);
+          _client.getRoomMgr().closeOneThisRoom(roomjid);
+          _layer.close(roomuindex);
+          let getallroom = _client.getRoomMgr().getSaveoutAllRoom(); // todo wshengt modify
+          for(var i = 0;i<getallroom.length;i++){
+            var r = getallroom[i];
+            _layIM.removeList(r);
+          }
+          // _client.getRoomMgr().getRoomByJidFromServer(roomjid);
+          _client.getRoomMgr().getAllRFServer();
+        },
+        btn1:function (index) {
+          _layer.close(index);
+        }
+      });
+      e.stopImmediatePropagation();
     },
     approve_roommember_sub:function(oThis, e){
-        let jid = $(e.target).attr("data-jid");
-        let roomPassword = $(e.target).attr("roompassword");
-        // alert(jid + "*********************" + roomPassword)
-        let room = new XoW.Room();
-        room.jid = jid;
-        room.name = XoW.utils.getNodeFromJid(jid);
-        room.id= room.name;
-        _client.getRoomMgr().joinInviteRoom(room,roomPassword);
-       let $grPar = oThis.parent().parent(); // li
-       $grPar.find('.layim-msgbox-btn').html('已接受');
+      let jid = $(e.target).attr("data-jid");
+      let roomPassword = $(e.target).attr("roompassword");
+      // alert(jid + "*********************" + roomPassword)
+      let room = new XoW.Room();
+      room.jid = jid;
+      room.name = XoW.utils.getNodeFromJid(jid);
+      room.id= room.name;
+      _client.getRoomMgr().joinInviteRoom(room,roomPassword);
+      let $grPar = oThis.parent().parent(); // li
+      $grPar.find('.layim-msgbox-btn').html('已接受');
     },
     deny_roommember_sub:function(oThis, e){
       let jid = $(e.target).attr("data-jid");
@@ -2191,7 +2159,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       }
     },
     destroyThisRoom:function(oThis, e){
-       let roomjid = $(e.target).attr("roomjid");
+      let roomjid = $(e.target).attr("roomjid");
       _destroying(roomjid, function () {
         _layer.open({
           content: '操作成功'
@@ -2212,10 +2180,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           ,time: 2
         });
       });
-       _roomBack(oThis);
-      // _roomBack(oThis);
+      _roomBack(oThis);
       _layer.close(_layerIndex["ROOMSETING"]);
-        _layerIndex["ROOMSETING"] = -1;
+      _layerIndex["ROOMSETING"] = -1;
       let thisRoom = _client.getRoomMgr().getRoomByJid(roomjid);
       thisRoom.type = 'group';
       _layIM.removeList(thisRoom)
@@ -2237,42 +2204,41 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         });
       }
 
-        let content = _layTpl(_eleRoomInviting).render({
-          data:{
-            roomdata: roomdata,
-            roomjid:roomjid,
+      let content = _layTpl(_eleRoomInviting).render({
+        data:{
+          roomdata: roomdata,
+          roomjid:roomjid,
 
+        }
+      });
+      _layIM.panel({
+        title: '邀请好友'
+        ,tpl: content
+      });
+      _layForm.render();
+      $('#todoRoomInvition').keyup(function(event){
+        let html = ''
+        let choice = $('#todoRoomInvition').val();
+        let reg = new RegExp(choice)
+        layui.each(roomdata,function (index,item) {
+          if(item.jid.match(reg)){
+            html+=  '<div class="room-seting-div" layimEx-event="todoInviting" data-jid = "'+roomjid+'">'+item.jid+'</div>'
           }
-        });
-        _layIM.panel({
-          title: '邀请好友'
-          ,tpl: content
-        });
-        _layForm.render();
-        $('#todoRoomInvition').keyup(function(event){
-            let html = ''
-            let choice = $('#todoRoomInvition').val();
-            let reg = new RegExp(choice)
-            layui.each(roomdata,function (index,item) {
-                if(item.jid.match(reg)){
-                    html+=  '<div class="room-seting-div" layimEx-event="todoInviting" data-jid = "'+roomjid+'">'+item.jid+'</div>'
-                }
-            })
-            $('#getRoomInvtionPe').html(html);
-        });
+        })
+        $('#getRoomInvtionPe').html(html);
+      });
 
     },
     sendingSubject:function(oThis, e){
-        let context = $('#isReadySendSubject').val();
-        let roomjid = $('#isReadySendSubject').attr('data-jid')
-        var user = _client.getCurrentUser().jid;
-        var msg = $msg({
-            from:user,
-            to:roomjid,
-            type:'groupchat'
-        }).c('subject',context)
-        _client.getConnMgr().send(msg);
-
+      let context = $('#isReadySendSubject').val();
+      let roomjid = $('#isReadySendSubject').attr('data-jid')
+      var user = _client.getCurrentUser().jid;
+      var msg = $msg({
+        from:user,
+        to:roomjid,
+        type:'groupchat'
+      }).c('subject',context)
+      _client.getConnMgr().send(msg);
       _roomBack(oThis)
       _layer.close(_layerIndex['ROOMSUBJECT']);
       _layerIndex['ROOMSUBJECT'] = -1;
@@ -2304,15 +2270,12 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           roomDesc:roomDesc
         }
       });
+
       let roomDescindex = _layIM.panelExs({
         title: '群聊描述'
         ,tpl: content
       },"saveRoomDesc",'完成');
       _layerIndex['ROOMDESC'] = roomDescindex;
-      _layIM.panelExs({
-        title: '群聊描述'
-        ,tpl: content
-      },"saveRoomDesc");
     },
 
     saveRoomDesc:function(oThis, e){
@@ -2323,27 +2286,23 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       _roomBack(oThis);
       _layer.close(_layerIndex['ROOMDESC']);
       _layerIndex['ROOMDESC'] = -1;
-      $('#layerRoomDesc').text(context)
     },
     sendRoomSubjet:function(oThis, e){
       let roomjid = $("#roomSubjectSt").attr('roomjid');
       let subject = $('#layerSubject').text();
-        let content = _layTpl(_eleSubject).render({
-          data:{
-            roomjid:roomjid,
-            valuesubject:subject
-          }
-        });
-        let roomSubjectindex = _layIM.panelExs({
-          title: '房间主题'
-          ,tpl: content
-        },'sendingSubject','完成');
+      let content = _layTpl(_eleSubject).render({
+        data:{
+          roomjid:roomjid,
+          valuesubject:subject
+        }
+      });
+
+      let roomSubjectindex = _layIM.panelExs({
+        title: '房间主题'
+        ,tpl: content
+      },'sendingSubject','完成');
       _layerIndex['ROOMSUBJECT'] = roomSubjectindex;
-        _layIM.panelEx({
-          title: '房间主题'
-          ,tpl: content
-        });
-        _layForm.render();
+      _layForm.render();
     },
     todoInviting:function(oThis, e){
       let roomjid = $(e.target).attr("data-jid");
@@ -2359,11 +2318,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     changeMeetAdminToOther:function(oThis, e){
       let roomjid = $(e.target).attr('data-jid');
       let oenNick = $(e.target).attr('data-nick');
-      // alert(roomjid + "   " + oneJid)
-      _changeAdminToOtherSr(roomjid,oneJid,oThis);
-    },
-    changeMeetAdminToOther:function(oThis, e){
-      let roomjid = $(e.target).attr('data-jid');
       let oneJid = XoW.utils.getBareJidFromJid($(e.target).text());
       // alert(roomjid + "   " + oneJid)
       _changemeetAdminToOtherSr(roomjid,oneJid,oThis);
@@ -2371,7 +2325,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     todoDenyRoomMemer:function(oThis, e){
       let roomjid = $(e.target).attr('data-jid');
       let oneNick = $(e.target).text();
-     _rodoDenyMember(roomjid,oneNick,e)
+      _rodoDenyMember(roomjid,oneNick,e)
 
     },
     roomAdimSetingSr:function(oThis, e){
@@ -2395,7 +2349,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         }
         let content = _layTpl(_eleRoomAdmin).render({   //_eleSearchLi  _eleRoomAdmin
           data:{
-             roomdata: data,
+            roomdata: data,
             roomjid:roomjid,
 
           }
@@ -2413,11 +2367,13 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           layui.each(data,function (index,item) {
             if(item.nick.match(reg)){
               html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeAdminToOther" data-nick = "'+item.nick+'" data-jid = "'+roomjid+'">'+item.jid+'</div>'
-              html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeAdminToOther" data-jid = "'+roomjid+'">'+item.jid+'</div>'
             }
           })
           $('#searchRoomAdmin').html(html);
+
         });
+
+
       });
     },//denyMemberSetingSr
     roomMeetAdimSetingSr:function(oThis, e){
@@ -2459,7 +2415,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           layui.each(data,function (index,item) {
             if(item.nick.match(reg)){
               html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeMeetAdminToOther" data-nick = "'+item.nick+'" data-jid = "'+roomjid+'">'+item.jid+'</div>'
-              html+=   '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="changeMeetAdminToOther" data-jid = "'+roomjid+'">'+item.jid+'</div>'
             }
           })
           $('#searchRoomAdmin').html(html);
@@ -2505,9 +2460,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           let choice = $('#roomSeachKeyDown').val();
           let reg = new RegExp(choice)
           layui.each(data,function (index,item) {
-               if(item.nick.match(reg)){
-                   html+= '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="todoDenyRoomMemer" data-jid = "'+roomjid+'">'+item.nick+'</div>'
-               }
+            if(item.nick.match(reg)){
+              html+= '<div style="width: 100%;height: 50px;background-color: white;line-height: 50px;text-align: left" layimEx-event="todoDenyRoomMemer" data-jid = "'+roomjid+'">'+item.nick+'</div>'
+            }
           })
           $('#searchSomeMember').html(html);
         });
@@ -2535,10 +2490,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         }
         let content = _layTpl(_eledealWRoomSpeak).render({
           data:{
-                roomdata: data,
-                roomjid:roomjid,
+            roomdata: data,
+            roomjid:roomjid,
 
-            }
+          }
         });
         _layIM.panel({
           title: '发言管理'
@@ -2582,7 +2537,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
     },
     detail:function(oThis, e){
-       let roomId = $.trim(oThis.parent().text());
+      let roomId = $.trim(oThis.parent().text());
       if($('.layim-chat-status').text().length>0){
         let getRoomId = roomId.substring(1,roomId.length-3);
         let roomjid = _client.getRoomMgr().getRoomByID(getRoomId);
@@ -2596,9 +2551,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           }
         }
         if(choiceroomlist.isPersistent){
-            _roomSeting(roomjid)
+          _roomSeting(roomjid)
         }else{
-           _roomMeetSeting(roomjid)
+          _roomMeetSeting(roomjid)
         }
       }else{
         let getRoomId = roomId.substring(1,roomId.length-1);
@@ -2710,15 +2665,11 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       var toId = '#demohelp';
       _layIM.chat({
         name: '智能客服',
-      var toId = 'demohelp';
-      _layIM.chat({
-        name: '进口小妹妹',
         username: toId,
         type: 'friend', //聊天类型不能用 kefu
         avatar: XoW.DefaultImage.AVATAR_KEFU,
         id: toId,
         jid: "#demohelp@intelligentcusservice.127.0.0.1",
-        jid: toId + '@' + XoW.config.domain,
         temporary: true
       });
     },
@@ -2897,11 +2848,11 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     set_mine_info_field: function(oThis, e) {
       XoW.logger.ms(_this.classInfo, 'set_mine_info_field()');
       var $layero = oThis.parents('.layui-m-layer').eq(0)
-        ,PANEL = '.layim-panel';
+          ,PANEL = '.layim-panel';
       var $elm = oThis.parent().find('textarea');
       // maybe prev is upload frame
       var $prevPnl = $layero.prev().find(PANEL).length === 0 ?
-        $layero.prev().prev().find(PANEL).eq(0) : $layero.prev().find(PANEL).eq(0);
+          $layero.prev().prev().find(PANEL).eq(0) : $layero.prev().find(PANEL).eq(0);
       $prevPnl.find('input[name={0}]'.f($elm.attr('name'))).val($elm.val());
       _back(oThis);
       XoW.logger.me(_this.classInfo, 'set_mine_info_field()');
@@ -3181,7 +3132,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         XoW.logger.ms(_this.classInfo, 'add_friend_submit()');
         var cont = $(window.event.currentTarget).parent().parent();
         this.groupid = pGroupName||'Friend';
-        this.groupid = pGroupName;
         this.remark = pRemark;
         this.username = /*'人工NICK_' + */this.username;
         layui.each(call.subContact, function(index, item){
@@ -3189,7 +3139,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         _layer.close(pIndex);
         XoW.logger.me(_this.classInfo, 'add_friend_submit()');
       };
-	    _setFriendGroup(stranger);
+      _setFriendGroup(stranger);
       XoW.logger.me(_this.classInfo, 'add_friend()');
     },
     approve_user_sub: function (oThis, e) {
@@ -3218,9 +3168,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           local.sysInfo = local.sysInfo || [];
           layui.each(local.sysInfo, function (idx, itm) {
             if (itm.cid === cid ||
-              (itm.from === userJid &&
-              itm.status === 'untreated' &&
-              itm.type === XoW.SERVICE_EVENT.SUB_ME_REQ_RCV)) {
+                (itm.from === userJid &&
+                    itm.status === 'untreated' &&
+                    itm.type === XoW.SERVICE_EVENT.SUB_ME_REQ_RCV)) {
               has = true;
               itm.status = '已接受';
               return false;
@@ -3254,9 +3204,9 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       local.sysInfo = local.sysInfo || [];
       layui.each(local.sysInfo, function (idx, itm) {
         if (itm.cid === cid ||
-          (itm.from === userJid &&
-          itm.status === 'untreated' &&
-          itm.type === XoW.SERVICE_EVENT.SUB_ME_REQ_RCV)) {
+            (itm.from === userJid &&
+                itm.status === 'untreated' &&
+                itm.type === XoW.SERVICE_EVENT.SUB_ME_REQ_RCV)) {
           has = true;
           itm.status = '已拒绝';
           return false;
@@ -3301,7 +3251,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     XoW.logger.ms(_this.classInfo, '_bindMainToolList()');
     var $layTitle =  $('.layim-title');
     $layTitle.append(_layTpl(_eleMainToolList).render(_layIM.cache().base.mainToolList));
-  XoW.logger.me(_this.classInfo, '_bindMainToolList()');
+    XoW.logger.me(_this.classInfo, '_bindMainToolList()');
   };
   var _bindSearchPanel = function() {
     XoW.logger.ms(_this.classInfo, '_bindSearchPanel()');
@@ -3362,6 +3312,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       if(oThis.hasClass('layim-null')) {
         return;
       }
+
       element.addEventListener('touchend', function(e) {
         XoW.logger.ms(_this.classInfo, 'bindFriendListMenu.touchend()');
         if(timers.has(id)) {
@@ -3392,7 +3343,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
             clearTimeout(timers.get(id));
             timers.delete(id);
             e.preventDefault();
-           // console.log("type:" + type);
+            // console.log("type:" + type);
             if(type == 'history'){
               return;
             }
@@ -3405,83 +3356,68 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     });
     XoW.logger.me(_this.classInfo, '_bindFriendListMenu()');
   };
-	var _rebindToolFileButton = function() {
-		XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
-		var thatChat = _getThisChat();
-		if(!thatChat) {
-			return;
-		}
-		// the tool box class name is 'layim-tool-image'
-		var $fileToolboxs = thatChat.elem.find('.layim-chat-footer').find('.layim-chat-tool .layim-tool-image');
-		$.each($fileToolboxs, function() {
-			// 屏蔽掉layim.js中的操作，阻止上传文件
-			var $fileInput = $(this);
-			this.removeAttribute('layim-event');
-			var type = this.getAttribute('data-type') || 'images';
-			if(type === 'images') {
-			//	$fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
-				$fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
-			}
-			// 离线状态屏蔽click操作
-			$fileInput.click(function(e) {
-				XoW.logger.ms(_this.classInfo, 'fileInput.click()');
-				// 小小依赖了下XoW.UserState by cy
-				if(thatChat.data.status === XoW.UserState.OFFLINE) {
-                  var $file = e.target.files[0];
-                  if($file != null&&typeof($file)!="undefined") {
-                    let thatchat = _getThisChat();
-                    layui.each(call.sendOffFile, function (index, item) {
-                      item && item($file,thatchat);
-                    });
-                  }
-                  e.stopImmediatePropagation();
-					// 如果对方离线，则阻止打开文件窗口事件
-					e.preventDefault();
-					_layer.msg('对方已离线，无法发送文件');
-				}
-			});
-			// 文件选定
-			$fileInput.change(function(e) {
-				XoW.logger.ms(_this.classInfo, 'fileInput.change({0})'.f($fileInput[0].children[0].value));
-				var $file = e.target.files[0]; // $file.size is base64 size?
-              if($file != null&&typeof($file)!="undefined") {
-                if ($file.size <= 10240 && XoW.utils.getDomainFromJid(thatChat.data.jid) != ('conference.' + XoW.config.domain)) {
-				var reader = new FileReader();
-                  reader.onload = function (e) {
-                    XoW.logger.ms('FileReader.onload() ' + $file.filename)
-                    layui.each(call.sendFile, function (index, item) {
-                      item && item(thatChat, $file, e.target.result);
-                    });
-				};
-                  if ($file) {
-                    reader.readAsDataURL($file);
-                    $fileInput[0].children[0].value = ''; // reset input value
-                  }
-                  delete reader;
-                } else {
-                  let thatchat = _getThisChat();
-                  layui.each(call.sendOffFile, function (index, item) {
-                    item && item($file,thatchat);
-                  });
-                  e.stopImmediatePropagation();
-                }
-              }
-				var reader = new FileReader();
-				// 得到文件的信息
-				reader.onload = function(e) {
-					XoW.logger.ms('FileReader.onload({0}) '.f($file.filename));
-					layui.each(call.sendFile, function(index, item){
-						item && item(thatChat, $file, e.target.result);});
-				};
-				if($file) {
-					reader.readAsDataURL($file);
-					$fileInput[0].children[0].value = ''; // reset input value
-				}
-				delete reader;
-			});
-		});
-		XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
-	};
+  var _rebindToolFileButton = function() {
+    XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
+    var thatChat = _getThisChat();
+    if(!thatChat) {
+      return;
+    }
+    // the tool box class name is 'layim-tool-image'
+    var $fileToolboxs = thatChat.elem.find('.layim-chat-footer').find('.layim-chat-tool .layim-tool-image');
+    $.each($fileToolboxs, function() {
+      // 屏蔽掉layim.js中的操作，阻止上传文件
+      var $fileInput = $(this);
+      this.removeAttribute('layim-event');
+      var type = this.getAttribute('data-type') || 'images';
+      if(type === 'images') {
+        //	$fileInput.find('input')[0].setAttribute('accept', '.png,.jpeg,.gif,.jpg')
+      }
+      // 离线状态屏蔽click操作
+      $fileInput.click(function(e) {
+        XoW.logger.ms(_this.classInfo, 'fileInput.click()');
+        // 小小依赖了下XoW.UserState by cy
+        if(thatChat.data.status === XoW.UserState.OFFLINE) {
+          var $file = e.target.files[0];
+          if($file != null&&typeof($file)!="undefined") {
+            let thatchat = _getThisChat();
+            layui.each(call.sendOffFile, function (index, item) {
+              item && item($file,thatchat);
+            });
+          }
+          e.stopImmediatePropagation();
+        }
+      });
+      // 文件选定
+      $fileInput.change(function(e) {
+        XoW.logger.ms(_this.classInfo, 'fileInput.change({0})'.f($fileInput[0].children[0].value));
+        var $file = e.target.files[0]; // $file.size is base64 size?
+        if($file != null&&typeof($file)!="undefined") {
+          if ($file.size <= 10240 && XoW.utils.getDomainFromJid(thatChat.data.jid) != ('conference.' + XoW.config.domain)) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              XoW.logger.ms('FileReader.onload() ' + $file.filename)
+              layui.each(call.sendFile, function (index, item) {
+                item && item(thatChat, $file, e.target.result);
+              });
+            };
+            if ($file) {
+              reader.readAsDataURL($file);
+              $fileInput[0].children[0].value = ''; // reset input value
+            }
+            delete reader;
+          } else {
+            let thatchat = _getThisChat();
+            layui.each(call.sendOffFile, function (index, item) {
+              item && item($file,thatchat);
+            });
+            e.stopImmediatePropagation();
+          }
+        }
+      });
+    });
+    XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
+  };
+
   var _clearCache = function() {
     XoW.logger.ms(_this.classInfo, '_clearCache()');
     _layer.open({
@@ -3499,10 +3435,10 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   };
   var _openSysInfoPanel = function() {
     XoW.logger.ms(_this.classInfo, '_openSysInfoPanel()');
-	  var local = layui.data('layim-mobile')[_cache.mine.id] || {};
+    var local = layui.data('layim-mobile')[_cache.mine.id] || {};
     local['hasUnreadSysInfo'] = false;
     _layIM.showNew('Friend', false);
-	  _layIM.showNew('List', false);
+    _layIM.showNew('List', false);
 
     var unitNum = 6;
     local.sysInfo = local.sysInfo || [];
@@ -3516,40 +3452,42 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       pCallback && pCallback(curAy.reverse(), local.sysInfo.length / unitNum);
     };
 
-	  _openSysInfoPanel.index = _layIM.panel({
-		  type: 1 // 1表示页面内，2表示frame
-		  ,title: '新的朋友'
-		  ,tpl: _eleSysInfoBox
-		  ,success: function(layero) {
-			  XoW.logger.ms(_this.classInfo, '_openSysInfoPanel.success()');
-			  var input = $(layero).find('input'), find = function(){
-				  XoW.logger.ms(_this.classInfo, '_openSysInfoPanel.find()');
-				  setTimeout(function() {
-					  input.blur(); // 解决焦点移不开问题
-				  }, 100);
+    _openSysInfoPanel.index = _layIM.panel({
+      type: 1 // 1表示页面内，2表示frame
+      ,title: '新的朋友'
+      ,tpl: _eleSysInfoBox
+      ,success: function(layero) {
+        XoW.logger.ms(_this.classInfo, '_openSysInfoPanel.success()');
+        var input = $(layero).find('input'), find = function(){
+          XoW.logger.ms(_this.classInfo, '_openSysInfoPanel.find()');
+          setTimeout(function() {
+            input.blur(); // 解决焦点移不开问题
+          }, 100);
 
-				  _openRemoteSearchBox();
-				  XoW.logger.me(_this.classInfo, '_openSysInfoPanel.find()');
-			  };
+          _openRemoteSearchBox();
+          XoW.logger.me(_this.classInfo, '_openSysInfoPanel.find()');
+        };
 
-			  input.off('touchend', find).on('touchend', find);
-			  _layFlow.load({
-				  elem: '#flow_msgbox_cont' //流加载容器
-				  , isAuto: false
-				  , end: '<li class="layim-msgbox-tips">暂无更多新消息</li>'
-				  , done: function(page, next) { //加载下一页
-					  renderMsg(page, function(data, pages) {
-						  var html = _layTpl(_eleSysInfoContent).render({
-							  data: data
-							  , page: page
-						  });
-						  next(html, page < pages);
-					  });
-				  }
-			  });
-			  XoW.logger.me(_this.classInfo, '_openSysInfoPanel.success()');
-		  }// eof layer open success
-	  });
+        input.off('touchend', find).on('touchend', find);
+        _layFlow.load({
+          elem: '#flow_msgbox_cont' //流加载容器
+          , isAuto: false
+          , end: '<li class="layim-msgbox-tips">暂无更多新消息</li>'
+          , done: function(page, next) { //加载下一页
+            renderMsg(page, function(data, pages) {
+              // console.log("****************************************")
+              // console.log(data)
+              var html = _layTpl(_eleSysInfoContent).render({
+                data: data
+                , page: page
+              });
+              next(html, page < pages);
+            });
+          }
+        });
+        XoW.logger.me(_this.classInfo, '_openSysInfoPanel.success()');
+      }// eof layer open success
+    });
 
 
 
@@ -3610,7 +3548,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     var img = listTop.find(".layui-circle,img");
     // 判断是否存在头像这个标签，因为刚登陆进来，可能界面上还没有显示好友列表
     if (img.length != 0) {
-        img.attr('src', params);
+      img.attr('src', params);
     }
     // todo 如果正在聊天要改聊天面板头像
     XoW.logger.me(_this.classInfo, "_changeMineAvatar()");
@@ -3655,14 +3593,14 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   };
   var _getThisChat = function(){
     XoW.logger.ms(_this.classInfo, '_getThisChat()');
-	  return _layIM.thisChat();
+    return _layIM.thisChat();
   };
   var _getLayImMain = function() {
     var $layimMain = $('.layui-layim');
     return $layimMain;
     // return $layimMain[0]; // dom对象
   };
- //todo wshengt added  用来退出当前panel界面   layim.event = 'back' 触发事件 独立出来
+  //todo wshengt added  用来退出当前panel界面   layim.event = 'back' 触发事件 独立出来
   var _roomBack = function(othis){
     var layero = othis.parents('.layui-m-layer').eq(0)
         ,index = layero.attr('index')
@@ -3735,7 +3673,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     XoW.logger.ms(_this.classInfo,  '_blinkSysInfoIcon()');
     if(!_getLayImMain()) return;
     _layIM.showNew('Friend', true); // 新的朋友
-	  _layIM.showNew('List', true);
+    _layIM.showNew('List', true);
     if(_cache.base.voice){
       _layIM.voice();
     }
@@ -3745,7 +3683,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   // region mobile mark
   var _renderSearchChatLogFrm = function() {
     XoW.logger.ms(_this.classInfo, '_renderSearchChatLogFrm()');
-   // _layForm.render();// 渲染下拉列表等
+    // _layForm.render();// 渲染下拉列表等
     //设置开始-结束时间，默认7天
     var curDate = new Date();
     var lastWeek = new Date(curDate.getTime() - 7 * 24 * 60 * 60 * 1000); //一周前
@@ -3797,7 +3735,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         for(var i = 0; i < friend.length; i++){
           for(var k = 0; k < (friend[i].list||[]).length; k++){
             if(friend[i].list[k].id.indexOfIgnoreCase(val) !== -1
-              || friend[i].list[k].username.indexOfIgnoreCase(val) !== -1){
+                || friend[i].list[k].username.indexOfIgnoreCase(val) !== -1){
               var item = friend[i].list[k];
               item.type = 'friend';
               item.name = friend[i].list[k].username || '佚名';
@@ -3809,7 +3747,7 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         }
         for(var j = 0; j < group.length; j++){
           if(group[j].id.indexOfIgnoreCase(val) !== -1
-            || group[j].groupname.indexOfIgnoreCase(val) !== -1){
+              || group[j].groupname.indexOfIgnoreCase(val) !== -1){
             group[j].type = 'group';
             group[j].name = group[j].groupname || '未知聊天室';
             group[j].list = j;
@@ -3876,12 +3814,11 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         _renderSearchChatLogFrm();
         if('user' === pParam.tab) {
           layero.find('#qry_user_keyword').val(pParam.keyword);
-	        // set timeout 解决无法及时获得焦点问题
-	        setTimeout(function() {
-		        layero.find('#qry_user_keyword').focus();
-	        }, 150);
+          // set timeout 解决无法及时获得焦点问题
+          setTimeout(function() {
+            layero.find('#qry_user_keyword').focus();
+          }, 150);
           let $layimSearchBtn = layero.find('#btn_search_user_remote');
-          var $layimSearchBtn = layero.find('#btn_search_user_remote');
           if($layimSearchBtn) {
             var event = document.createEvent('Events');
             event.initEvent('touchend', true, true);
@@ -3894,7 +3831,6 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         } else if('chatLog' === pParam.tab) {
           pParam = pParam || {tab: 'chatLog'};
           let $layimSearchBtn = layero.find('#btn_search_chat_log_remote');
-          var $layimSearchBtn = layero.find('#btn_search_chat_log_remote');
           if($layimSearchBtn) {
             $layimSearchBtn.click();
           }
@@ -3919,103 +3855,103 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     })
     XoW.logger.me(_this.classInfo, '_openMainToolMore()');
   };
-	var _setFriendGroup = function(data) {
-		XoW.logger.ms(_this.classInfo, '_setFriendGroup()');
+  var _setFriendGroup = function(data) {
+    XoW.logger.ms(_this.classInfo, '_setFriendGroup()');
     _popAdd(data, 'setGroup')
-		XoW.logger.me(_this.classInfo, '_setFriendGroup()');
-	};
+    XoW.logger.me(_this.classInfo, '_setFriendGroup()');
+  };
 
   //打开添加好友、群组面板、好友分组面板
   var _popAdd = function(data, type){
-	  XoW.logger.ms(_this.classInfo, '_popAdd()');
+    XoW.logger.ms(_this.classInfo, '_popAdd()');
     data = data || {};
     _layer.close(_popAdd.index);
     return _popAdd.index = _layer.open({
-	    type: 1
-	    ,title: [{
-		    friend: '添加好友'
-		    ,group: '加入群组'
-	    }[data.type] || '',
-		    'background-color: #FF4351; color:#fff;']
-	    ,shade: true
-	    ,shadeClose: true
-	    ,btn: type ? ['确认', '取消'] : ['发送申请', '关闭']
-	    ,content: _layTpl(_elemAddTpl).render({
-		    data: {
-			    name: data.username || data.groupname
-			    ,avatar: data.avatar
-			    ,group: data.group || parent.layui['layim-mobile'].cache().friend || []
-			    ,type: data.type
-		    }
-		    ,type: type
-	    })
-	    ,yes: function(index){
-		    XoW.logger.ms(_this.classInfo, '_popAdd.yes()');
-		    var layero = _layer.getLayer(index);
-		    var groupElem = $(layero).find('#LAY_layimGroup')
-			    ,remarkElem = $(layero).find('#LAY_layimRemark');
-		    if(type){
-			    data.submit && data.submit(groupElem.val(), index);
-		    } else {
-			    data.submit && data.submit(groupElem.val(), remarkElem.val(), index);
-		    }
-		    _layer.close(index);
-		    XoW.logger.me(_this.classInfo, '_popAdd.yes()');
-	    }
+      type: 1
+      ,title: [{
+        friend: '添加好友'
+        ,group: '加入群组'
+      }[data.type] || '',
+        'background-color: #FF4351; color:#fff;']
+      ,shade: true
+      ,shadeClose: true
+      ,btn: type ? ['确认', '取消'] : ['发送申请', '关闭']
+      ,content: _layTpl(_elemAddTpl).render({
+        data: {
+          name: data.username || data.groupname
+          ,avatar: data.avatar
+          ,group: data.group || parent.layui['layim-mobile'].cache().friend || []
+          ,type: data.type
+        }
+        ,type: type
+      })
+      ,yes: function(index){
+        XoW.logger.ms(_this.classInfo, '_popAdd.yes()');
+        var layero = _layer.getLayer(index);
+        var groupElem = $(layero).find('#LAY_layimGroup')
+            ,remarkElem = $(layero).find('#LAY_layimRemark');
+        if(type){
+          data.submit && data.submit(groupElem.val(), index);
+        } else {
+          data.submit && data.submit(groupElem.val(), remarkElem.val(), index);
+        }
+        _layer.close(index);
+        XoW.logger.me(_this.classInfo, '_popAdd.yes()');
+      }
     });
-	  XoW.logger.me(_this.classInfo, '_popAdd()');
+    XoW.logger.me(_this.classInfo, '_popAdd()');
   };
 
 
-    var _getRoomConfigHtml = function (roomjid) {
-        _getRoomConfig(roomjid, function (params) {
-            var fields = params.fields;
-            // var html = _roomConfigHtml(fields,roomjid);
-            let html = '<ul style="width: 100%;list-style-type: none">';
-            if (1 == fields['muc#roomconfig_changesubject'].value) {
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许任何人修改</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeSubject" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }else{
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许任何人修改</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeSubject" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }
+  var _getRoomConfigHtml = function (roomjid) {
+    _getRoomConfig(roomjid, function (params) {
+      var fields = params.fields;
+      // var html = _roomConfigHtml(fields,roomjid);
+      let html = '<ul style="width: 100%;list-style-type: none">';
+      if (1 == fields['muc#roomconfig_changesubject'].value) {
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许任何人修改</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeSubject" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }else{
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许任何人修改</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeSubject" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }
 
-            if (1 == fields['muc#roomconfig_publicroom'].value) {
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;公共房间</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changePublic" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }else{
-                html +=   '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;公共房间</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changePublic" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }
+      if (1 == fields['muc#roomconfig_publicroom'].value) {
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;公共房间</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changePublic" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }else{
+        html +=   '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;公共房间</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changePublic" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }
 
-            if (1 == fields['muc#roomconfig_membersonly'].value) {
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;仅对成员开放</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeMember" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }else{
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;仅对成员开放</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeMember" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }
+      if (1 == fields['muc#roomconfig_membersonly'].value) {
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;仅对成员开放</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeMember" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }else{
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;仅对成员开放</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="changeMember" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }
 
-            if (1 == fields['muc#roomconfig_allowinvites'].value) {
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许邀请</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="chengeAllowInvite" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }else{
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许邀请</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="chengeAllowInvite" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }
+      if (1 == fields['muc#roomconfig_allowinvites'].value) {
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许邀请</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="chengeAllowInvite" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }else{
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;允许邀请</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="chengeAllowInvite" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }
 
-            if (1 == fields['muc#roomconfig_passwordprotectedroom'].value) {
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;开启密码</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="switchUppassword" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }else{
-                html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;开启密码</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="switchUppassword" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
-            }
-            html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;最大人数</span><span style="text-align: right;width: 53%;display: inline-block" >'+fields['muc#roomconfig_maxusers'].value+'</span></li>'
-          html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 96%;display: inline-block" layImEx-event = "denyMemberSetingSr" data-jid = "'+roomjid+'" id="denyRoomMem">&nbsp;成员管理</span></li>'
-          html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 96%;display: inline-block" layImEx-event = "dealWithRoomSpeak" data-jid = "'+roomjid+'" id="ealWithRoomSpeak">&nbsp;发言权限管理</span></li>'
-            html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 96%;display: inline-block" layImEx-event = "roomAdimSetingSr" data-jid = "'+roomjid+'" id="changeRoomPower">&nbsp;转让房间</span></li>'
-            html+='</ul>';
-          //  $('#getRoomConfigSeting').html(html);
-            document.getElementById('getRoomConfigSeting').innerHTML = html;
-             _layForm.render();
-            // return true;
-        }.bind(this), function (errorStanza){
-             //$('#getRoomConfigSeting').html(" ");
-          document.getElementById('getRoomConfigSeting').innerHTML = " ";
-            // return true;
-        }.bind(this));
-    }
+      if (1 == fields['muc#roomconfig_passwordprotectedroom'].value) {
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;开启密码</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="switchUppassword" lay-skin="switch" checked lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }else{
+        html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;开启密码</span><span style="text-align: right;width: 53%;display: inline-block"><input type="checkbox" name="switchUppassword" lay-skin="switch" lay-filter="roomSetingSwitch" data-jid = "'+roomjid+'"></span></li>'
+      }
+      html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 45%;display: inline-block">&nbsp;最大人数</span><span style="text-align: right;width: 53%;display: inline-block" >'+fields['muc#roomconfig_maxusers'].value+'</span></li>'
+      html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 96%;display: inline-block" layImEx-event = "denyMemberSetingSr" data-jid = "'+roomjid+'" id="denyRoomMem">&nbsp;成员管理</span></li>'
+      html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 96%;display: inline-block" layImEx-event = "dealWithRoomSpeak" data-jid = "'+roomjid+'" id="ealWithRoomSpeak">&nbsp;发言权限管理</span></li>'
+      html +=  '<li style="height: 50px;line-height: 50px;width: 96%;margin-left:2%;border-bottom: 0.5px #d4d4d4 solid"><span style="align: left;width: 96%;display: inline-block" layImEx-event = "roomAdimSetingSr" data-jid = "'+roomjid+'" id="changeRoomPower">&nbsp;转让房间</span></li>'
+      html+='</ul>';
+      //  $('#getRoomConfigSeting').html(html);
+      document.getElementById('getRoomConfigSeting').innerHTML = html;
+      _layForm.render();
+      // return true;
+    }.bind(this), function (errorStanza){
+      //$('#getRoomConfigSeting').html(" ");
+      document.getElementById('getRoomConfigSeting').innerHTML = " ";
+      // return true;
+    }.bind(this));
+  }
   var _getMeetRoomConfigHtml = function (roomjid) {
     _getRoomConfig(roomjid, function (params) {
       var fields = params.fields;
@@ -4065,317 +4001,317 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       // return true;
     }.bind(this));
   }
-    var _getDestroyHtml  = function (roomjid) {
-      _getRoomConfig(roomjid, function (params) {
-        let html = '<button type="button" class="layui-btn layui-btn-fluid layui-btn-danger" style="text-align: center;padding: 0;margin: 0" layimex-event="destroyThisRoom" roomjid="'+roomjid+'" >解散房间</button>'
-        //$('#getDestroyR').html(html);
-        document.getElementById('getDestroyR').innerHTML = html;
-      }.bind(this), function (errorStanza){
-       // $('#getDestroyR').html(" ");
-        document.getElementById('getDestroyR').innerHTML = ' ';
-      }.bind(this));
-    }
-    var  _getRoomExit = function (roomjid,index) {
-      let html =    '<button type="button" class="layui-btn layui-btn-fluid layui-btn-danger" style="text-align: center;padding: 0;margin: 0" layimex-event="exitThisRoom" roomjid="'+roomjid+'" roomuindex = "'+index+'" >退出房间</button>'
-      document.getElementById('todoExitRoom').innerHTML = html;
-    }
+  var _getDestroyHtml  = function (roomjid) {
+    _getRoomConfig(roomjid, function (params) {
+      let html = '<button type="button" class="layui-btn layui-btn-fluid layui-btn-danger" style="text-align: center;padding: 0;margin: 0" layimex-event="destroyThisRoom" roomjid="'+roomjid+'" >解散房间</button>'
+      //$('#getDestroyR').html(html);
+      document.getElementById('getDestroyR').innerHTML = html;
+    }.bind(this), function (errorStanza){
+      // $('#getDestroyR').html(" ");
+      document.getElementById('getDestroyR').innerHTML = ' ';
+    }.bind(this));
+  }
+  var  _getRoomExit = function (roomjid,index) {
+    let html =    '<button type="button" class="layui-btn layui-btn-fluid layui-btn-danger" style="text-align: center;padding: 0;margin: 0" layimex-event="exitThisRoom" roomjid="'+roomjid+'" roomuindex = "'+index+'" >退出房间</button>'
+    document.getElementById('todoExitRoom').innerHTML = html;
+  }
 
 
-    var _getRoomConfig = function (roomJid, successCb, errorCb) {
-        XoW.logger.ms(_this.classInfo + "getRoomConfig");
-        var iq = $iq({
-            id : XoW.utils.getUniqueId('roomConfig'),
-            to : roomJid,
-            type : 'get',
-        }).c('query', {
-            xmlns : Strophe.NS.MUC_OWNER,
-        });
-        XoW.logger.me(_this.classInfo + "getRoomConfig");
-        return _client.getConnMgr().sendIQ(iq, function(stanza) {
-            var $stanza = $(stanza);
-            var fields = [];
-            $('field', $stanza).each(function(index, item) {
-                var $item = $(item);
-                if($item.attr('var')) {
-                    switch($item.attr('var')) {
-                        case 'muc#roomconfig_roomname' :
-                        case 'muc#roomconfig_roomdesc' :
-                        case 'muc#roomconfig_changesubject' :
-                        case 'muc#roomconfig_publicroom' :
-                        case 'muc#roomconfig_persistentroom' :
-                        case 'muc#roomconfig_moderatedroom' :
-                        case 'muc#roomconfig_membersonly' :
-                        case 'muc#roomconfig_allowinvites' :
-                        case 'muc#roomconfig_passwordprotectedroom' :
-                        case 'muc#roomconfig_roomsecret' :
-                        case 'muc#roomconfig_enablelogging' :
-                        case 'x-muc#roomconfig_reservednick' :
-                        case 'x-muc#roomconfig_canchangenick' :
-                        case 'x-muc#roomconfig_registration' :
-                            fields[$item.attr('var')] = {
-                                'var' : $item.attr('var'),
-                                type : $item.attr('type'),
-                                label : $item.attr('label'),
-                                value : $('value', $item).text(),
-                            };
-                            break;
-                        case 'muc#roomconfig_maxusers' :
-                        case 'muc#roomconfig_whois' :
-                            options = [];
-                            $item.find('option').each(function(index2, option) {
-                                var $option = $(option);
-                                options.push({
-                                    label :  $option.attr('label'),
-                                    value : $('value', $option).text(),
-                                });
-                            });
-                            fields[$item.attr('var')] = {
-                                'var' : $item.attr('var'),
-                                type : $item.attr('type'),
-                                label : $item.attr('label'),
-                                value : $item.children('value').text(),
-                                options : options,
-                            };
-                            break;
-                        case 'muc#roomconfig_presencebroadcast' :
-                            options = [];
-                            $item.find('option').each(function(index2, option) {
-                                var $option = $(option);
-                                options.push({
-                                    label :  $option.attr('label'),
-                                    value : $('value', $option).text(),
-                                });
-                            });
-                            values = [];
-                            $item.children('value').each(function(index2, value) {
-                                values.push($(value).text());
-                            });
-                            fields[$item.attr('var')] = {
-                                'var' : $item.attr('var'),
-                                type : $item.attr('type'),
-                                label : $item.attr('label'),
-                                value : values,
-                                options : options,
-                            };
-                            break;
-                        case 'muc#roomconfig_roomadmins' :
-                        case 'muc#roomconfig_roomowners' :
-                            values = [];
-                            $item.children('value').each(function(index2, value) {
-                                values.push($(value).text());
-                            });
-                            fields[$item.attr('var')] = {
-                                'var' : $item.attr('var'),
-                                type : $item.attr('type'),
-                                label : $item.attr('label'),
-                                value : values,
-                            };
-                            break;
-                    }
-                }
-            });
-            if(successCb) {
-                var params = {
-                    stanza : stanza,
-                    fields : fields
-                };
-                successCb(params);
-            }
-        }, errorCb);
-        XoW.logger.me(_this.classInfo + "getRoomConfig");
-    }
-
-    _layForm.on('switch(roomSetingSwitch)', function(obj){
-        let rswitch = $(obj.elem).attr('name');
-        let roomjid = $(obj.elem).attr('data-jid');
-        if(obj.elem.checked == true){//是主键
-             if('changeSubject' == rswitch){
-                 _saveChangeSubject(roomjid);
-             }else if('changePublic' == rswitch){
-                 _saveChangePublic(roomjid)
-             }else if('changeMember' == rswitch){
-                 _saveChangeMember(roomjid)
-             }else if('chengeAllowInvite' == rswitch){
-                 _saveChengeAllowInvite(roomjid)
-             }else if('switchUppassword' == rswitch){
-                _upPasswordSr(roomjid)
-             }
-        }else{
-            if('changeSubject' == rswitch){
-                _delChangeSubject(roomjid)
-            }else if('changePublic' == rswitch){
-                _delChangePublic(roomjid)
-            }else if('changeMember' == rswitch){
-                _delChangeMember(roomjid)
-            }else if('chengeAllowInvite' == rswitch){
-                _delChengeAllowInvite(roomjid)
-            }else if('switchUppassword' == rswitch){
-              _downPasswordSr(roomjid)
-            }
-        }
-
+  var _getRoomConfig = function (roomJid, successCb, errorCb) {
+    XoW.logger.ms(_this.classInfo + "getRoomConfig");
+    var iq = $iq({
+      id : XoW.utils.getUniqueId('roomConfig'),
+      to : roomJid,
+      type : 'get',
+    }).c('query', {
+      xmlns : Strophe.NS.MUC_OWNER,
     });
+    XoW.logger.me(_this.classInfo + "getRoomConfig");
+    return _client.getConnMgr().sendIQ(iq, function(stanza) {
+      var $stanza = $(stanza);
+      var fields = [];
+      $('field', $stanza).each(function(index, item) {
+        var $item = $(item);
+        if($item.attr('var')) {
+          switch($item.attr('var')) {
+            case 'muc#roomconfig_roomname' :
+            case 'muc#roomconfig_roomdesc' :
+            case 'muc#roomconfig_changesubject' :
+            case 'muc#roomconfig_publicroom' :
+            case 'muc#roomconfig_persistentroom' :
+            case 'muc#roomconfig_moderatedroom' :
+            case 'muc#roomconfig_membersonly' :
+            case 'muc#roomconfig_allowinvites' :
+            case 'muc#roomconfig_passwordprotectedroom' :
+            case 'muc#roomconfig_roomsecret' :
+            case 'muc#roomconfig_enablelogging' :
+            case 'x-muc#roomconfig_reservednick' :
+            case 'x-muc#roomconfig_canchangenick' :
+            case 'x-muc#roomconfig_registration' :
+              fields[$item.attr('var')] = {
+                'var' : $item.attr('var'),
+                type : $item.attr('type'),
+                label : $item.attr('label'),
+                value : $('value', $item).text(),
+              };
+              break;
+            case 'muc#roomconfig_maxusers' :
+            case 'muc#roomconfig_whois' :
+              options = [];
+              $item.find('option').each(function(index2, option) {
+                var $option = $(option);
+                options.push({
+                  label :  $option.attr('label'),
+                  value : $('value', $option).text(),
+                });
+              });
+              fields[$item.attr('var')] = {
+                'var' : $item.attr('var'),
+                type : $item.attr('type'),
+                label : $item.attr('label'),
+                value : $item.children('value').text(),
+                options : options,
+              };
+              break;
+            case 'muc#roomconfig_presencebroadcast' :
+              options = [];
+              $item.find('option').each(function(index2, option) {
+                var $option = $(option);
+                options.push({
+                  label :  $option.attr('label'),
+                  value : $('value', $option).text(),
+                });
+              });
+              values = [];
+              $item.children('value').each(function(index2, value) {
+                values.push($(value).text());
+              });
+              fields[$item.attr('var')] = {
+                'var' : $item.attr('var'),
+                type : $item.attr('type'),
+                label : $item.attr('label'),
+                value : values,
+                options : options,
+              };
+              break;
+            case 'muc#roomconfig_roomadmins' :
+            case 'muc#roomconfig_roomowners' :
+              values = [];
+              $item.children('value').each(function(index2, value) {
+                values.push($(value).text());
+              });
+              fields[$item.attr('var')] = {
+                'var' : $item.attr('var'),
+                type : $item.attr('type'),
+                label : $item.attr('label'),
+                value : values,
+              };
+              break;
+          }
+        }
+      });
+      if(successCb) {
+        var params = {
+          stanza : stanza,
+          fields : fields
+        };
+        successCb(params);
+      }
+    }, errorCb);
+    XoW.logger.me(_this.classInfo + "getRoomConfig");
+  }
 
-
-    var _saveChangeSubject = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_changesubject'].value = 1;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 3
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 3
-                });
-            });
-        }.bind(this));
-    }
-    var _delChangeSubject = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_changesubject'].value = 0;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
-    }
-
-    var _saveChangePublic = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_publicroom'].value = 1;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
-    }
-    var _delChangePublic = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_publicroom'].value = 0;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
-    }
-
-
-    var _saveChangeMember = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_membersonly'].value = 1;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
-    }
-    var _delChangeMember = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_membersonly'].value = 0;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
-    }
-
-    var _saveChengeAllowInvite = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_allowinvites'].value = 1;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
-    }
-    var _delChengeAllowInvite = function (roomJid) {
-        _getRoomConfig(roomJid, function (params) {
-            var fields = params.fields;
-            fields['muc#roomconfig_allowinvites'].value = 0;
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                _layer.open({
-                    content: '操作成功'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            }, function () {
-                _layer.open({
-                    content: '操作失败'
-                    ,skin: 'msg'
-                    ,time: 2
-                });
-            });
-        }.bind(this));
+  _layForm.on('switch(roomSetingSwitch)', function(obj){
+    let rswitch = $(obj.elem).attr('name');
+    let roomjid = $(obj.elem).attr('data-jid');
+    if(obj.elem.checked == true){//是主键
+      if('changeSubject' == rswitch){
+        _saveChangeSubject(roomjid);
+      }else if('changePublic' == rswitch){
+        _saveChangePublic(roomjid)
+      }else if('changeMember' == rswitch){
+        _saveChangeMember(roomjid)
+      }else if('chengeAllowInvite' == rswitch){
+        _saveChengeAllowInvite(roomjid)
+      }else if('switchUppassword' == rswitch){
+        _upPasswordSr(roomjid)
+      }
+    }else{
+      if('changeSubject' == rswitch){
+        _delChangeSubject(roomjid)
+      }else if('changePublic' == rswitch){
+        _delChangePublic(roomjid)
+      }else if('changeMember' == rswitch){
+        _delChangeMember(roomjid)
+      }else if('chengeAllowInvite' == rswitch){
+        _delChengeAllowInvite(roomjid)
+      }else if('switchUppassword' == rswitch){
+        _downPasswordSr(roomjid)
+      }
     }
 
-    var _upPasswordSr = function (roomJid) {
-      _getRoomConfig(roomJid, function (params) {
+  });
+
+
+  var _saveChangeSubject = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_changesubject'].value = 1;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 3
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 3
+        });
+      });
+    }.bind(this));
+  }
+  var _delChangeSubject = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_changesubject'].value = 0;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+
+  var _saveChangePublic = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_publicroom'].value = 1;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+  var _delChangePublic = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_publicroom'].value = 0;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+
+
+  var _saveChangeMember = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_membersonly'].value = 1;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+  var _delChangeMember = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_membersonly'].value = 0;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+
+  var _saveChengeAllowInvite = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_allowinvites'].value = 1;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+  var _delChengeAllowInvite = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_allowinvites'].value = 0;
+      _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
+
+  var _upPasswordSr = function (roomJid) {
+    _getRoomConfig(roomJid, function (params) {
       let index = _layer.open({
         title: [
           '密码设置',
@@ -4385,30 +4321,30 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         ,content: '<input type="text" name="roomTitle"   lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" id="getRoomPassword">'
         ,btn: ['确认', '取消']
         ,yes:function (index, layero) {
-            var fields = params.fields;
-            fields['muc#roomconfig_passwordprotectedroom'].value = 1;
-            fields['muc#roomconfig_roomsecret'].value = $.trim($('#getRoomPassword').val());
-            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-              _layer.open({
-                content: '操作成功'
-                ,skin: 'msg'
-                ,time: 2
-              });
-            }, function () {
-              _layer.open({
-                content: '操作失败'
-                ,skin: 'msg'
-                ,time: 2
-              });
+          var fields = params.fields;
+          fields['muc#roomconfig_passwordprotectedroom'].value = 1;
+          fields['muc#roomconfig_roomsecret'].value = $.trim($('#getRoomPassword').val());
+          _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+            _layer.open({
+              content: '操作成功'
+              ,skin: 'msg'
+              ,time: 2
             });
+          }, function () {
+            _layer.open({
+              content: '操作失败'
+              ,skin: 'msg'
+              ,time: 2
+            });
+          });
           _layer.close(index)
         },
         btn2:function (index, layero) {
-           _layer.close(index)
+          _layer.close(index)
         }
       });
-      }.bind(this));
-    }
+    }.bind(this));
+  }
 
   var  _changeAdminToOtherSr = function (roomjid,oneJId,oneNick,oThis) {
     _getRoomConfig(roomjid, function (params) {
@@ -4435,43 +4371,43 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
             });
           });
         },
-      btn1:function (index) {
+        btn1:function (index) {
           _layer.close(index);
-      }
+        }
       });
     }.bind(this));
   }
- var _changemeetAdminToOtherSr= function (roomjid,oneJId,oThis) {
-   _getRoomConfig(roomjid, function (params) {
-     var fields = params.fields;
-     _layer.open({
-       content: '确定将房间权限转给该用户，你将失去权限？'
-       ,btn: ['给了', '不要']
-       ,yes: function(index){
-         fields['muc#roomconfig_roomowners'].value = oneJId.split(",");
-         _client.getRoomMgr().saveRoomConfig(roomjid, fields, function () {
-           _layer.open({
-             content: '操作成功'
-             ,skin: 'msg'
-             ,time: 2
-           });
-           _roomBack(oThis)
-           _getMeetRoomConfigHtml(roomjid);
-           _getDestroyHtml(roomjid)
-         }, function () {
-           _layer.open({
-             content: '操作失败'
-             ,skin: 'msg'
-             ,time: 2
-           });
-         });
-       },
-       btn1:function (index) {
-         _layer.close(index);
-       }
-     });
-   }.bind(this));
- }
+  var _changemeetAdminToOtherSr= function (roomjid,oneJId,oThis) {
+    _getRoomConfig(roomjid, function (params) {
+      var fields = params.fields;
+      _layer.open({
+        content: '确定将房间权限转给该用户，你将失去权限？'
+        ,btn: ['给了', '不要']
+        ,yes: function(index){
+          fields['muc#roomconfig_roomowners'].value = oneJId.split(",");
+          _client.getRoomMgr().saveRoomConfig(roomjid, fields, function () {
+            _layer.open({
+              content: '操作成功'
+              ,skin: 'msg'
+              ,time: 2
+            });
+            _roomBack(oThis)
+            _getMeetRoomConfigHtml(roomjid);
+            _getDestroyHtml(roomjid)
+          }, function () {
+            _layer.open({
+              content: '操作失败'
+              ,skin: 'msg'
+              ,time: 2
+            });
+          });
+        },
+        btn1:function (index) {
+          _layer.close(index);
+        }
+      });
+    }.bind(this));
+  }
 
   var _rodoDenyMember = function (roomjid,oneNIck,e) {
     _layer.open({
@@ -4512,44 +4448,44 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
 
   //_todoInvitingToOtherSr
   var  _todoInvitingToOtherSr = function (roomjid,oneJId) {
-      _layer.open({
-        content: '你要邀请该用户加入房间吗'
-        ,btn: ['是的', '不要']
-        ,yes: function(index){
-          _todoInvition(roomjid, oneJId)
-          _layer.close(index);
-        },
-        btn1:function (index) {
-          _layer.close(index);
-        }
-      });
+    _layer.open({
+      content: '你要邀请该用户加入房间吗'
+      ,btn: ['是的', '不要']
+      ,yes: function(index){
+        _todoInvition(roomjid, oneJId)
+        _layer.close(index);
+      },
+      btn1:function (index) {
+        _layer.close(index);
+      }
+    });
   }
 
   var   _downPasswordSr = function(roomjid){
-      _getRoomConfig(roomjid, function (params) {
-        var fields = params.fields;
-        fields['muc#roomconfig_passwordprotectedroom'].value = 0;
-        fields['muc#roomconfig_roomsecret'].value = "";
-        _client.getRoomMgr().saveRoomConfig(roomjid, fields, function () {
-          _layer.open({
-            content: '操作成功'
-            ,skin: 'msg'
-            ,time: 2
-          });
-        }, function () {
-          _layer.open({
-            content: '操作失败'
-            ,skin: 'msg'
-            ,time: 2
-          });
+    _getRoomConfig(roomjid, function (params) {
+      var fields = params.fields;
+      fields['muc#roomconfig_passwordprotectedroom'].value = 0;
+      fields['muc#roomconfig_roomsecret'].value = "";
+      _client.getRoomMgr().saveRoomConfig(roomjid, fields, function () {
+        _layer.open({
+          content: '操作成功'
+          ,skin: 'msg'
+          ,time: 2
         });
-      }.bind(this));
-    }
+      }, function () {
+        _layer.open({
+          content: '操作失败'
+          ,skin: 'msg'
+          ,time: 2
+        });
+      });
+    }.bind(this));
+  }
 
   var  _todoSaveRoomDesc =  function (text,roomjid,userjid) {
     _getRoomConfig(roomjid, function (params) {
       var fields = params.fields;
-       fields['muc#roomconfig_roomdesc'].value = text;
+      fields['muc#roomconfig_roomdesc'].value = text;
       _client.getRoomMgr().saveRoomConfig(roomjid, fields, function () {
         _layer.open({
           content: '操作成功'
@@ -4565,13 +4501,14 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
         });
       });
     },function (error) {
-        _layer.open({
-            content: '没有此权限'
-            ,skin: 'msg'
-            ,time: 2
-        });
-     });
+      _layer.open({
+        content: '没有此权限'
+        ,skin: 'msg'
+        ,time: 2
+      });
+    });
   }
+
   var _getEleRemoteSearchRoomResnofind = function (text) {
     var _eleRemoteSearchRoomResnofind = "";
     if(text == "") {
@@ -4612,13 +4549,13 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   }
 
   var _exitRoom = function (roomjid) {
-      let user = _client.getCurrentUser().jid;
-      let pe = $pres({
-          from:user,
-          to:roomjid,
-          type:'unavailable'
-      })
-      _client.getConnMgr().send(pe);
+    let user = _client.getCurrentUser().jid;
+    let pe = $pres({
+      from:user,
+      to:roomjid,
+      type:'unavailable'
+    })
+    _client.getConnMgr().send(pe);
   }
   var _banSpeak = function (roomjid,nick,handle_cb,error_cb) {
     var user = _client.getCurrentUser().jid;
@@ -4661,28 +4598,28 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
   }
 
 
-	// region form utils
+  // region form utils
   var _verifyForm = function(pFrm, pSettings) {
     XoW.logger.ms(_this.classInfo, '_verifyForm()');
     if(pSettings) {
       $.extend(true, VERIFY_REGEX, pSettings);
     }
     var verify = VERIFY_REGEX, stop = null
-      ,DANGER = 'layui-form-danger'
-      ,verifyElem = pFrm.find('*[lay-verify]'); //获取需要校验的元素
+        ,DANGER = 'layui-form-danger'
+        ,verifyElem = pFrm.find('*[lay-verify]'); //获取需要校验的元素
 
     //1. 开始校验, reference to form.js
     layui.each(verifyElem, function(_, item){
       var othis = $(this)
-        ,vers = othis.attr('lay-verify').split('|')
-        ,verType = othis.attr('lay-verType') //提示方式
-        ,value = othis.val();
+          ,vers = othis.attr('lay-verify').split('|')
+          ,verType = othis.attr('lay-verType') //提示方式
+          ,value = othis.val();
 
       othis.removeClass(DANGER);
       layui.each(vers, function(_, thisVer){
         var isTrue //是否命中校验
-          ,errorText = '' //错误提示文本
-          ,isFn = typeof verify[thisVer] === 'function';
+            ,errorText = '' //错误提示文本
+            ,isFn = typeof verify[thisVer] === 'function';
 
         //匹配验证规则
         if(verify[thisVer]){
@@ -4770,51 +4707,51 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     ]
   };
 
- var _roomSeting = function (roomjid) {
-   let data = [];
-   _client.getRoomMgr().getRoomByJidFromServer(roomjid, function (params) {
-     let room = params.room;
-     let roomInMuc = _client.getRoomMgr().getXmppRoom(roomjid);
-     let currentUserInMucRoom = roomInMuc.roster[roomInMuc.nick];
-     if (null == room) {
-       _layer.msg('房间信息不存在！');
-       return;
-     } else if (null == roomInMuc) {
-       _layer.msg('请先加入该房间！');
-       return;
-     }
-     for (let key in roomInMuc.roster) {
-       let o = roomInMuc.roster[key];
-       if (roomInMuc.nick !== key) {
-         data.push(o);
-       }
-     }
-     let content = _layTpl(_eleRoomSetingHtml).render({
-         data:{
-             roomjid:roomjid,
-             me:_client.getCurrentUser().jid,
-             meaffiliation:currentUserInMucRoom.affiliation,
-             menick:currentUserInMucRoom.nick,
-             memList:data,
-             room:room,
-         }
-     });
-       $('#getRoomConfigSeting').html(" ");
-       $('#getDestroyR').html(" ");
-     let rindex = _layIM.panel({
-       title: '房间设置'
-       ,tpl: content
-       ,data: { //数据
-         getRoomConfigHtml:_getRoomConfigHtml(roomjid),
-         getDestroyHtml: _getDestroyHtml(roomjid),
+  var _roomSeting = function (roomjid) {
+    let data = [];
+    _client.getRoomMgr().getRoomByJidFromServer(roomjid, function (params) {
+      let room = params.room;
+      let roomInMuc = _client.getRoomMgr().getXmppRoom(roomjid);
+      let currentUserInMucRoom = roomInMuc.roster[roomInMuc.nick];
+      if (null == room) {
+        _layer.msg('房间信息不存在！');
+        return;
+      } else if (null == roomInMuc) {
+        _layer.msg('请先加入该房间！');
+        return;
+      }
+      for (let key in roomInMuc.roster) {
+        let o = roomInMuc.roster[key];
+        if (roomInMuc.nick !== key) {
+          data.push(o);
+        }
+      }
+      let content = _layTpl(_eleRoomSetingHtml).render({
+        data:{
+          roomjid:roomjid,
+          me:_client.getCurrentUser().jid,
+          meaffiliation:currentUserInMucRoom.affiliation,
+          menick:currentUserInMucRoom.nick,
+          memList:data,
+          room:room,
+        }
+      });
+      $('#getRoomConfigSeting').html(" ");
+      $('#getDestroyR').html(" ");
+      let rindex = _layIM.panel({
+        title: '房间设置'
+        ,tpl: content
+        ,data: { //数据
+          getRoomConfigHtml:_getRoomConfigHtml(roomjid),
+          getDestroyHtml: _getDestroyHtml(roomjid),
 
-       }
-     });
-     _getRoomExit(roomjid,rindex)
-       _layerIndex["ROOMSETING"] = rindex;
+        }
+      });
+      _getRoomExit(roomjid,rindex)
+      _layerIndex["ROOMSETING"] = rindex;
       _layForm.render();
     });
- }
+  }
 
   var _roomMeetSeting = function (roomjid) {
     let data = [];
@@ -4861,17 +4798,19 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
       _layForm.render();
     });
   }
+
   var _temparatureFriend = function(onejid,onenick){
     let _friend =  _client.getRosterMgr().getFriendGroups();
     let btnType = false;
     for (var i = 0; i < _friend.length; i++) {
       _friend[i].list.find(function (x) {
-          if(XoW.utils.getNodeFromJid(x.jid) == XoW.utils.getNodeFromJid(onejid) ){
-               btnType = true;
-               return;
-          }
+        if(XoW.utils.getNodeFromJid(x.jid) == XoW.utils.getNodeFromJid(onejid) ){
+          btnType = true;
+          return;
+        }
       });
     }
+
     let content = _layTpl(_eleTemparatureFriend).render({
       data:{
         btnType:btnType,
@@ -4886,15 +4825,16 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     _layerIndex['TEMPFREINED'] = tempIndex
 
   }
-    _layForm.on('checkbox(layimwritePaasword)', function(obj){
-        if(obj.elem.checked == true){
-            let html ='<input type="text" name="roomPassword"  id="toGetRoomPassword"  lay-verify="required" placeholder="房间密码" autocomplete="off" class="layui-input">'
-            $("#writeRoomPaaswod").html(html)
-        }else{
-            $("#writeRoomPaaswod").html(" ")
-        }
-        _layForm.render();
-    });
+
+  _layForm.on('checkbox(layimwritePaasword)', function(obj){
+    if(obj.elem.checked == true){
+      let html ='<input type="text" name="roomPassword"  id="toGetRoomPassword"  lay-verify="required" placeholder="房间密码" autocomplete="off" class="layui-input">'
+      $("#writeRoomPaaswod").html(html)
+    }else{
+      $("#writeRoomPaaswod").html(" ")
+    }
+    _layForm.render();
+  });
 
   // endregion form utils
 
@@ -4910,260 +4850,255 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     return arr;
   }();
 
-    var  _makeChatingRoom = function (oThis) {
-        let roomName = $('#getRoomName').val();
-        let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
-        if(regex.test(roomName)==false){
-            _layer.msg("房间名称只能包含字母、数字、_、不能以下划线开头和结尾");
-            return;
-        }
-        let roomDesc = $('#getRoomDesc').val();
-
-        let roomPeopleNums = $('#roomMaxNum').val();
-        if(roomPeopleNums == 'no'){
-            _layer.msg("请选中房间上限人数");
-            return;
-        }
-        let isPasswordRoom = $('input[name="needPassword"]:checked ').val();
-        let isMemberRoom = $('input[name="onlyMember"]:checked ').val();
-        let isSecretRoom = $('input[name="noPublic"]:checked ').val();
-        let MemberRoomSwitch = 0;
-        let isSecretRoomSwitch = 1;
-        if(isMemberRoom){
-            MemberRoomSwitch = 1;
-        }
-        if(isSecretRoom){
-            isSecretRoomSwitch = 0;
-        }
-        let roomPassword = " ";
-        let passwordSwitch = 0;
-        if(isPasswordRoom){
-            if($('#toGetRoomPassword').val().length>0){
-                passwordSwitch = 1;
-                roomPassword = $.trim($('#toGetRoomPassword').val());
-            }
-            else{
-                _layer.msg("密码不能为空！");
-                return;
-            }
-        }
-        var user = _client.getCurrentUser();
-        if (!roomName) {
-            _layer.msg("请输入有效的房间名称！");
-            return;
-        }
-        var roomServerAbility = _client.getServerMgr().getAbilityByCategroy('conference', 'text');
-        if (!roomServerAbility) {
-            _layer.msg("没有房间服务器！");
-            _roomBack(oThis)
-             if(_layerIndex['CREATEROOM']!=-1){
-                 _layer.close(_layerIndex['CREATEROOM'])
-               _layerIndex['CREATEROOM'] = -1;
-             }
-            return;
-        }
-        var roomJid = roomName.toLocaleLowerCase() + "@" + roomServerAbility.jid;
-        _client.getRoomMgr().getRoomByJidFromServer(roomJid, function (params) {
-            var isRoom = _client.getRoomMgr().getRoomByJid(roomJid);
-            if(isRoom!=null){
-                _layer.msg("你创建的房间地址已被使用，该房间存在");
-            }
-        }.bind(this), function (errorStanza) {
-            var errorCode = $('error', $(errorStanza)).attr('code');
-            if (404 == errorCode) {
-                XoW.logger.d(this.classInfo + "房间不存在，可以创建该房间");
-                _client.getRoomMgr().createRoom(roomJid,
-                    XoW.utils.getNodeFromJid(user.getFullJid()),
-                    XoW.utils.getNodeFromJid(user.getFullJid()), function (params) {
-                        //创建成功
-                        var roomJid = params.roomJid;
-                        var name = XoW.utils.getNodeFromJid(roomJid);
-                        var peopleNumber = 0;
-                        var nick = params.nick;
-                        var room = new XoW.Room();
-                        room.jid = roomJid;
-                        room.name = name;
-                        room.id = room.name
-                        _client.getRoomMgr().PushRoom(room);
-                        XoW.logger.d('创建成功！' + roomJid + " " + name);
-                        var roomlist = {
-                            type : 'group',
-                            name:name,
-                            groupname:name,
-                            username:name,
-                            jid:roomJid,  //这个需要添加
-                            id: name,
-                            isPersistent:true,
-                            avatar:"http://tp2.sinaimg.cn/2211874245/180/40050524279/0",
-                            isUnsecured:true
-                        };
-                        _getRoomConfig(roomJid, function (params) {
-                            var fields = params.fields;
-                            fields['muc#roomconfig_roomdesc'].value = roomDesc;
-                            fields['muc#roomconfig_changesubject'].value = 1;
-                            fields['muc#roomconfig_publicroom'].value = isSecretRoomSwitch;
-                            fields['muc#roomconfig_membersonly'].value = MemberRoomSwitch;
-                            fields['muc#roomconfig_allowinvites'].value = 1;
-                            fields['muc#roomconfig_passwordprotectedroom'].value = passwordSwitch;
-                            fields['muc#roomconfig_roomsecret'].value=roomPassword;
-                            fields['muc#roomconfig_enablelogging'].value = 0;
-                            fields['x-muc#roomconfig_reservednick'].value = 0;
-                            fields['x-muc#roomconfig_canchangenick'].value = 1;
-                            fields['x-muc#roomconfig_registration'].value = 1;
-                            fields['muc#roomconfig_persistentroom'].value = 1;
-                            fields['muc#roomconfig_moderatedroom'].value = 1;
-                            fields['muc#roomconfig_maxusers'].value = roomPeopleNums;
-                            fields['muc#roomconfig_whois'].value = 'anyone';
-                            var presValues = [];
-                            presValues.push('moderator');
-                            presValues.push('participant');
-                            presValues.push('visitor');
-                            fields['muc#roomconfig_presencebroadcast'].value = presValues;
-                            fields['muc#roomconfig_roomadmins'].value ='';
-                            var ismiii = _client.getCurrentUser1().jid;
-                            var rrd = XoW.utils.getNodeFromJid(ismiii);
-                            var sendme = rrd+"@"+XoW.config.domain;
-                            var ownValues = [];
-                            ownValues.push(sendme);
-                            fields['muc#roomconfig_roomowners'].value = ownValues;
-                            _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                                _layer.msg('初始化成功！');
-                            }, function () {
-                                _layer.msg('初始化失败');
-                            });
-                        }.bind(this));
-                        _layIM.addList(roomlist);
-                        _client.getRoomMgr().SaveoutAllRoom(roomlist);
-                        _roomRefresh()
-                        _roomBack(oThis)
-                        if(_layerIndex['CREATEROOM']!=-1){
-                          _layer.close(_layerIndex['CREATEROOM'])
-                          _layerIndex['CREATEROOM'] = -1;
-                        }
-                        _layIM.chat(roomlist);
-                    }.bind(this), function () {
-                        // 创建失败
-                        _layer.msg('创建失败');
-                        _roomBack(oThis)
-                        if(_layerIndex['CREATEROOM']!=-1){
-                          _layer.close(_layerIndex['CREATEROOM'])
-                          _layerIndex['CREATEROOM'] = -1;
-                        }
-                        XoW.logger.d('创建失败');
-                    });
-
-            } else {
-                _roomBack(oThis)
-                if(_layerIndex['CREATEROOM']!=-1){
-                  _layer.close(_layerIndex['CREATEROOM'])
-                  _layerIndex['CREATEROOM'] = -1;
-                }
-                _layer.msg('未知错误，错误代码：' + errorCode);
-            }
-        }.bind(this));
+  var  _makeChatingRoom = function (oThis) {
+    let roomName = $('#getRoomName').val();
+    let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+    if(regex.test(roomName)==false){
+      _layer.msg("房间名称只能包含字母、数字、_、不能以下划线开头和结尾");
+      return;
     }
-    var _makeMeetingRoom = function(oThis){
-      let roomName = $('#getMeetRoomName').val();
-      let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
-      if(regex.test(roomName)==false){
-        _layer.msg("房间名称只能包含字母、数字、_、不能以下划线开头和结尾");
+    let roomDesc = $('#getRoomDesc').val();
+
+    let roomPeopleNums = $('#roomMaxNum').val();
+    if(roomPeopleNums == 'no'){
+      _layer.msg("请选中房间上限人数");
+      return;
+    }
+    let isPasswordRoom = $('input[name="needPassword"]:checked ').val();
+    let isMemberRoom = $('input[name="onlyMember"]:checked ').val();
+    let isSecretRoom = $('input[name="noPublic"]:checked ').val();
+    let MemberRoomSwitch = 0;
+    let isSecretRoomSwitch = 1;
+    if(isMemberRoom){
+      MemberRoomSwitch = 1;
+    }
+    if(isSecretRoom){
+      isSecretRoomSwitch = 0;
+    }
+    let roomPassword = " ";
+    let passwordSwitch = 0;
+    if(isPasswordRoom){
+      if($('#toGetRoomPassword').val().length>0){
+        passwordSwitch = 1;
+        roomPassword = $.trim($('#toGetRoomPassword').val());
+      }
+      else{
+        _layer.msg("密码不能为空！");
         return;
       }
-      let roomDesc = $('#getMeetRoomDesc').val();
-      let roomPeopleNums = $('#roomMeetMaxNum').val();
-      if(roomPeopleNums == 'no'){
-        _layer.msg("请选中房间上限人数");
-        return;
+    }
+    var user = _client.getCurrentUser();
+    if (!roomName) {
+      _layer.msg("请输入有效的房间名称！");
+      return;
+    }
+    var roomServerAbility = _client.getServerMgr().getAbilityByCategroy('conference', 'text');
+    if (!roomServerAbility) {
+      _layer.msg("没有房间服务器！");
+      _roomBack(oThis)
+      if(_layerIndex['CREATEROOM']!=-1){
+        _layer.close(_layerIndex['CREATEROOM'])
+        _layerIndex['CREATEROOM'] = -1;
       }
-      var user = _client.getCurrentUser();
-      if (!roomName) {
-        _layer.msg("请输入有效的房间地址！");
-        return;
+      return;
+    }
+    var roomJid = roomName.toLocaleLowerCase() + "@" + roomServerAbility.jid;
+    _client.getRoomMgr().getRoomByJidFromServer(roomJid, function (params) {
+      var isRoom = _client.getRoomMgr().getRoomByJid(roomJid);
+      if(isRoom!=null){
+        _layer.msg("你创建的房间地址已被使用，该房间存在");
       }
-      var roomServerAbility = _client.getServerMgr().getAbilityByCategroy('conference', 'text');
-      if (!roomServerAbility) {
+    }.bind(this), function (errorStanza) {
+      var errorCode = $('error', $(errorStanza)).attr('code');
+      if (404 == errorCode) {
+        XoW.logger.d(this.classInfo + "房间不存在，可以创建该房间");
+        _client.getRoomMgr().createRoom(roomJid,
+            XoW.utils.getNodeFromJid(user.getFullJid()),
+            XoW.utils.getNodeFromJid(user.getFullJid()), function (params) {
+              //创建成功
+              var roomJid = params.roomJid;
+              var name = XoW.utils.getNodeFromJid(roomJid);
+              var peopleNumber = 0;
+              var nick = params.nick;
+              var room = new XoW.Room();
+              room.jid = roomJid;
+              room.name = name;
+              room.id = room.name
+              _client.getRoomMgr().PushRoom(room);
+              XoW.logger.d('创建成功！' + roomJid + " " + name);
+              var roomlist = {
+                type : 'group',
+                name:name,
+                groupname:name,
+                username:name,
+                jid:roomJid,  //这个需要添加
+                id: name,
+                isPersistent:true,
+                avatar:"http://tp2.sinaimg.cn/2211874245/180/40050524279/0",
+                isUnsecured:true
+              };
+              _getRoomConfig(roomJid, function (params) {
+                var fields = params.fields;
+                fields['muc#roomconfig_roomdesc'].value = roomDesc;
+                fields['muc#roomconfig_changesubject'].value = 1;
+                fields['muc#roomconfig_publicroom'].value = isSecretRoomSwitch;
+                fields['muc#roomconfig_membersonly'].value = MemberRoomSwitch;
+                fields['muc#roomconfig_allowinvites'].value = 1;
+                fields['muc#roomconfig_passwordprotectedroom'].value = passwordSwitch;
+                fields['muc#roomconfig_roomsecret'].value=roomPassword;
+                fields['muc#roomconfig_enablelogging'].value = 0;
+                fields['x-muc#roomconfig_reservednick'].value = 0;
+                fields['x-muc#roomconfig_canchangenick'].value = 1;
+                fields['x-muc#roomconfig_registration'].value = 1;
+                fields['muc#roomconfig_persistentroom'].value = 1;
+                fields['muc#roomconfig_moderatedroom'].value = 1;
+                fields['muc#roomconfig_maxusers'].value = roomPeopleNums;
+                fields['muc#roomconfig_whois'].value = 'anyone';
+                var presValues = [];
+                presValues.push('moderator');
+                presValues.push('participant');
+                presValues.push('visitor');
+                fields['muc#roomconfig_presencebroadcast'].value = presValues;
+                fields['muc#roomconfig_roomadmins'].value ='';
+                var ismiii = _client.getCurrentUser1().jid;
+                var rrd = XoW.utils.getNodeFromJid(ismiii);
+                var sendme = rrd+"@"+XoW.config.domain;
+                var ownValues = [];
+                ownValues.push(sendme);
+                fields['muc#roomconfig_roomowners'].value = ownValues;
+                _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+                  _layer.msg('初始化成功！');
+                }, function () {
+                  _layer.msg('初始化失败');
+                });
+              }.bind(this));
+              _layIM.addList(roomlist);
+              _client.getRoomMgr().SaveoutAllRoom(roomlist);
+              _roomRefresh()
+              _roomBack(oThis)
+              if(_layerIndex['CREATEROOM']!=-1){
+                _layer.close(_layerIndex['CREATEROOM'])
+                _layerIndex['CREATEROOM'] = -1;
+              }
+              _layIM.chat(roomlist);
+            }.bind(this), function () {
+              // 创建失败
+              _layer.msg('创建失败');
+              _roomBack(oThis)
+              if(_layerIndex['CREATEROOM']!=-1){
+                _layer.close(_layerIndex['CREATEROOM'])
+                _layerIndex['CREATEROOM'] = -1;
+              }
+              XoW.logger.d('创建失败');
+            });
+
+      } else {
+        _roomBack(oThis)
+        if(_layerIndex['CREATEROOM']!=-1){
+          _layer.close(_layerIndex['CREATEROOM'])
+          _layerIndex['CREATEROOM'] = -1;
+        }
+        _layer.msg('未知错误，错误代码：' + errorCode);
+      }
+    }.bind(this));
+  }
+  var _makeMeetingRoom = function(oThis){
+    let roomName = $('#getMeetRoomName').val();
+    let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+    if(regex.test(roomName)==false){
+      _layer.msg("房间名称只能包含字母、数字、_、不能以下划线开头和结尾");
+      return;
+    }
+    let roomDesc = $('#getMeetRoomDesc').val();
+    let roomPeopleNums = $('#roomMeetMaxNum').val();
+    if(roomPeopleNums == 'no'){
+      _layer.msg("请选中房间上限人数");
+      return;
+    }
+    var user = _client.getCurrentUser();
+    if (!roomName) {
+      _layer.msg("请输入有效的房间地址！");
+      return;
+    }
+    var roomServerAbility = _client.getServerMgr().getAbilityByCategroy('conference', 'text');
+    if (!roomServerAbility) {
+      _roomBack(oThis);
+      if( _layerIndex['MEETINGEROOM']!=-1){
+        _layer.close( _layerIndex['MEETINGEROOM']);
+        _layerIndex['MEETINGEROOM'] = -1;
+      }
+      _layer.msg("没有房间服务器！");
+      return;
+    }
+    var roomJid = roomName.toLocaleLowerCase() + "@" + roomServerAbility.jid; //房间jid
+    _client.getRoomMgr().getRoomByJidFromServer(roomJid, function (params) {
+      var isRoom = _client.getRoomMgr().getRoomByJid(roomJid);
+      if(isRoom!=null){
+        _layer.msg("你创建的房间地址已被使用，该房间存在");
+      }
+    }.bind(this), function (errorStanza) {
+      var errorCode = $('error', $(errorStanza)).attr('code');
+      if (404 == errorCode) {
+        _client.getRoomMgr().createRoom(roomJid,
+            XoW.utils.getNodeFromJid(user.getFullJid()),
+            XoW.utils.getNodeFromJid(user.getFullJid()), function (params) {
+              var roomJid = params.roomJid;
+              var name = XoW.utils.getNodeFromJid(roomJid);
+              var peopleNumber = 0;
+              var nick = params.nick;
+              var room = new XoW.Room();
+              room.jid = roomJid;
+              room.name = name;
+              room.id = room.name
+              _client.getRoomMgr().PushRoom(room);
+              var roomlist = {
+                type : 'group',
+                groupname:name,
+                name:name,
+                username:name,
+                jid:roomJid,
+                id: name,
+                avatar:"../skin/images/avatar_room.png",
+                isPersistent:false,
+                isUnsecured:true
+              };
+              _getRoomConfig(roomJid, function (params) {
+                var fields = params.fields;
+                fields['muc#roomconfig_roomdesc'].value = roomDesc;
+                fields['muc#roomconfig_maxusers'].value = roomPeopleNums;
+                _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
+                  _layer.msg('初始化成功！');
+                }, function () {
+                  _layer.msg('初始化失败');
+                });
+              }.bind(this));
+              _layIM.addList(roomlist);
+              _client.getRoomMgr().SaveoutAllRoom(roomlist);
+              _roomRefresh()
+              _roomBack(oThis);
+              if( _layerIndex['MEETINGEROOM']!=-1){
+                _layer.close( _layerIndex['MEETINGEROOM']);
+                _layerIndex['MEETINGEROOM'] = -1;
+              }
+              _layIM.chat(roomlist);
+            }.bind(this), function () {
+              _roomBack(oThis);
+              if( _layerIndex['MEETINGEROOM']!=-1){
+                _layer.close( _layerIndex['MEETINGEROOM']);
+                _layerIndex['MEETINGEROOM'] = -1;
+              }
+              _layer.msg('创建失败');
+            });
+      } else {
         _roomBack(oThis);
         if( _layerIndex['MEETINGEROOM']!=-1){
           _layer.close( _layerIndex['MEETINGEROOM']);
           _layerIndex['MEETINGEROOM'] = -1;
         }
-        _layer.msg("没有房间服务器！");
-        return;
+        _layer.msg('未知错误，错误代码：' + errorCode);
       }
-      var roomJid = roomName.toLocaleLowerCase() + "@" + roomServerAbility.jid; //房间jid
-      _client.getRoomMgr().getRoomByJidFromServer(roomJid, function (params) {
-        var isRoom = _client.getRoomMgr().getRoomByJid(roomJid);
-        if(isRoom!=null){
-          _layer.msg("你创建的房间地址已被使用，该房间存在");
-        }
-      }.bind(this), function (errorStanza) {
-        var errorCode = $('error', $(errorStanza)).attr('code');
-        if (404 == errorCode) {
-          _client.getRoomMgr().createRoom(roomJid,
-              XoW.utils.getNodeFromJid(user.getFullJid()),
-              XoW.utils.getNodeFromJid(user.getFullJid()), function (params) {
-                var roomJid = params.roomJid;
-                var name = XoW.utils.getNodeFromJid(roomJid);
-                var peopleNumber = 0;
-                var nick = params.nick;
-                var room = new XoW.Room();
-                room.jid = roomJid;
-                room.name = name;
-                room.id = room.name
-                _client.getRoomMgr().PushRoom(room);
-                var roomlist = {
-                  type : 'group',
-                  groupname:name,
-                  name:name,
-                  username:name,
-                  jid:roomJid,
-                  id: name,
-                  avatar:"../skin/images/avatar_room.png",
-                  isPersistent:false,
-                  isUnsecured:true
-                };
-                _getRoomConfig(roomJid, function (params) {
-                  var fields = params.fields;
-                  fields['muc#roomconfig_roomdesc'].value = roomDesc;
-                  fields['muc#roomconfig_maxusers'].value = roomPeopleNums;
-                  _client.getRoomMgr().saveRoomConfig(roomJid, fields, function () {
-                    _layer.msg('初始化成功！');
-                  }, function () {
-                    _layer.msg('初始化失败');
-                  });
-                }.bind(this));
-                _layIM.addList(roomlist);
-                _client.getRoomMgr().SaveoutAllRoom(roomlist);
-                _roomRefresh()
-                _roomBack(oThis);
-                if( _layerIndex['MEETINGEROOM']!=-1){
-                  _layer.close( _layerIndex['MEETINGEROOM']);
-                  _layerIndex['MEETINGEROOM'] = -1;
-                }
-                _layIM.chat(roomlist);
-              }.bind(this), function () {
-                _roomBack(oThis);
-                if( _layerIndex['MEETINGEROOM']!=-1){
-                  _layer.close( _layerIndex['MEETINGEROOM']);
-                  _layerIndex['MEETINGEROOM'] = -1;
-                }
-                _layIM.chat(roomlist);
-              }.bind(this), function () {
-                _roomBack(oThis);
-                _layer.msg('创建失败');
-              });
-        } else {
-          _roomBack(oThis);
-          if( _layerIndex['MEETINGEROOM']!=-1){
-            _layer.close( _layerIndex['MEETINGEROOM']);
-            _layerIndex['MEETINGEROOM'] = -1;
-          }
-          _layer.msg('未知错误，错误代码：' + errorCode);
-        }
-      }.bind(this));
-    }
-
-
+    }.bind(this));
+  }
   layui.data.content = function(content){
     //XoW.logger.e('self content @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     //支持的html标签
@@ -5172,74 +5107,74 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
     };
     content = (content||'')
 
-      .replace(/&(?!#?[a-zA-Z0-9]+;)/g, '&amp;')
-      .replace(/</g, '&lt;').replace(/>/g, '&gt;') //XSS
-      // .replace(/@(\S+)(\s+?|$)/g, '@<a href="javascript:;">$1</a>$2') //转义@ // 与jid的@符号冲突 del by cy [20190417]
-      .replace(/'/g, '&#39;').replace(/"/g, '&quot;')
-      .replace(/fileEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义文件
-        var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
-        if(!text) return str;
-        text = text.replace(/&quot;/g, '"');
-        // 把: { } 转换过来先
-        var theThumbnail = $.parseJSON(text); // 存在
-        if(!theThumbnail) return str;
+        .replace(/&(?!#?[a-zA-Z0-9]+;)/g, '&amp;')
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;') //XSS
+        // .replace(/@(\S+)(\s+?|$)/g, '@<a href="javascript:;">$1</a>$2') //转义@ // 与jid的@符号冲突 del by cy [20190417]
+        .replace(/'/g, '&#39;').replace(/"/g, '&quot;')
+        .replace(/fileEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义文件
+          var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
+          if(!text) return str;
+          text = text.replace(/&quot;/g, '"');
+          // 把: { } 转换过来先
+          var theThumbnail = $.parseJSON(text); // 存在
+          if(!theThumbnail) return str;
 
-        var overdue = false;
-        if(_cache.local && _cache.local.chatlog ) {
-          var thisChatLog = _cache.local.chatlog[theThumbnail.type + theThumbnail.id];
-          if (thisChatLog && thisChatLog.findIndex(function(x) {return x.sid == theThumbnail.sid;}) > -1) {
-            overdue = true;
+          var overdue = false;
+          if(_cache.local && _cache.local.chatlog ) {
+            var thisChatLog = _cache.local.chatlog[theThumbnail.type + theThumbnail.id];
+            if (thisChatLog && thisChatLog.findIndex(function(x) {return x.sid == theThumbnail.sid;}) > -1) {
+              overdue = true;
+            }
           }
-        }
 
-        var thatFile = new XoW.File(theThumbnail.to);
-        thatFile.filename = theThumbnail.filename;
-        thatFile.size = theThumbnail.size;
-        thatFile.mime = theThumbnail.mime;
-        thatFile.mine = theThumbnail.mine;
-        thatFile.sid = theThumbnail.sid;
-        thatFile.status = theThumbnail.status;
-        thatFile.errorMsg = theThumbnail.errorMsg;
-        if(overdue) {
-          thatFile.setState(XoW.FileReceiveState.OVERDUE);
-        }
+          var thatFile = new XoW.File(theThumbnail.to);
+          thatFile.filename = theThumbnail.filename;
+          thatFile.size = theThumbnail.size;
+          thatFile.mime = theThumbnail.mime;
+          thatFile.mine = theThumbnail.mine;
+          thatFile.sid = theThumbnail.sid;
+          thatFile.status = theThumbnail.status;
+          thatFile.errorMsg = theThumbnail.errorMsg;
+          if(overdue) {
+            thatFile.setState(XoW.FileReceiveState.OVERDUE);
+          }
 
-        var html = _layTpl(_eleFileThumbnail).render(thatFile);
-        thatFile = null;
-        return html;
-        // return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
-      })
-      .replace(/imgEx\[[\s\S]*?\]/g, function(img){  //转义图片
-        var text = img.replace(/(^imgEx\[)|(\]$)/g, '').replace(/&quot;/g, '"');
-        var theThumbnail = $.parseJSON(text); // 存在
-        if(!theThumbnail) return img;
-        var thatFile = new XoW.File(theThumbnail.to);
-        thatFile.filename = theThumbnail.filename;
-        thatFile.size = theThumbnail.size;
-        thatFile.mime = theThumbnail.mime;
-        thatFile.mine = theThumbnail.mine;
-        thatFile.sid = theThumbnail.sid;
-        thatFile.status = theThumbnail.status;
-        thatFile.errorMsg = theThumbnail.errorMsg;
-        thatFile.base64 = theThumbnail.base64;
-        var html = _layTpl(_eleImage).render(thatFile);
-        thatFile = null;
-        return html;
-      })
-      .replace(/face\[([^\s\[\]]+?)\]/g, function(face){  //转义表情
-        var alt = face.replace(/^face/g, '');
-        return '<img alt="'+ alt +'" title="'+ alt +'" src="' + faces[alt] + '">';
-      })
-      .replace(/img\[([^\s]+?)\]/g, function(img){  //转义图片
-        return '<img class="layui-layim-photos" src="' + img.replace(/(^img\[)|(\]$)/g, '') + '">';
-      })
-      .replace(/file\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义文件
-        var href = (str.match(/file\(([\s\S]+?)\)\[/)||[])[1];
-        var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
-        if(!href) return str;
-        return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
-      })
-      .replace(/hpFile\[[\s\S]*?\]/g, function(img){
+          var html = _layTpl(_eleFileThumbnail).render(thatFile);
+          thatFile = null;
+          return html;
+          // return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
+        })
+        .replace(/imgEx\[[\s\S]*?\]/g, function(img){  //转义图片
+          var text = img.replace(/(^imgEx\[)|(\]$)/g, '').replace(/&quot;/g, '"');
+          var theThumbnail = $.parseJSON(text); // 存在
+          if(!theThumbnail) return img;
+          var thatFile = new XoW.File(theThumbnail.to);
+          thatFile.filename = theThumbnail.filename;
+          thatFile.size = theThumbnail.size;
+          thatFile.mime = theThumbnail.mime;
+          thatFile.mine = theThumbnail.mine;
+          thatFile.sid = theThumbnail.sid;
+          thatFile.status = theThumbnail.status;
+          thatFile.errorMsg = theThumbnail.errorMsg;
+          thatFile.base64 = theThumbnail.base64;
+          var html = _layTpl(_eleImage).render(thatFile);
+          thatFile = null;
+          return html;
+        })
+        .replace(/face\[([^\s\[\]]+?)\]/g, function(face){  //转义表情
+          var alt = face.replace(/^face/g, '');
+          return '<img alt="'+ alt +'" title="'+ alt +'" src="' + faces[alt] + '">';
+        })
+        .replace(/img\[([^\s]+?)\]/g, function(img){  //转义图片
+          return '<img class="layui-layim-photos" src="' + img.replace(/(^img\[)|(\]$)/g, '') + '">';
+        })
+        .replace(/file\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义文件
+          var href = (str.match(/file\(([\s\S]+?)\)\[/)||[])[1];
+          var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
+          if(!href) return str;
+          return '<a class="layui-layim-file" href="'+ href +'" download target="_blank"><i class="layui-icon">&#xe61e;</i><cite>'+ (text||href) +'</cite></a>';
+        })
+        .replace(/hpFile\[[\s\S]*?\]/g, function(img){
           let text = img.replace(/(^hpFile\[)|(\]$)/g, '').replace(/&quot;/g, '"');
           let theThumbnail = $.parseJSON(text);
           if(!theThumbnail) return img;
@@ -5283,40 +5218,40 @@ layui.define(['laytpl','upload-mobile','mobile','laydate','flow-mobile','client'
           }
           thatFile = null;
           return html;
-       })
-      //.replace(/linkEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){
-      .replace(/linkEx\[[\s\S]*?\]/g, function(str){
-        var text = (str.match(/\[([\s\S]*?)\]/)||[])[1];
-        //var href = (content.match(/linkEx\(([\s\S]+?)\)\[/)||[])[1];
-        if(!text) return str;
-        var theThumbnail = $.parseJSON(text.replace(/&quot;/g, '"'));
-        if(!theThumbnail) return str;
-        var html = _layTpl(_elePageThumbnail).render(theThumbnail);
-        theThumbnail = null;
-        return html;
-      })
+        })
+        //.replace(/linkEx\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){
+        .replace(/linkEx\[[\s\S]*?\]/g, function(str){
+          var text = (str.match(/\[([\s\S]*?)\]/)||[])[1];
+          //var href = (content.match(/linkEx\(([\s\S]+?)\)\[/)||[])[1];
+          if(!text) return str;
+          var theThumbnail = $.parseJSON(text.replace(/&quot;/g, '"'));
+          if(!theThumbnail) return str;
+          var html = _layTpl(_elePageThumbnail).render(theThumbnail);
+          theThumbnail = null;
+          return html;
+        })
 
-      .replace(/audio\[([^\s]+?)\]/g, function(audio){  //转义音频
-        return '<div class="layui-unselect layui-layim-audio" layim-event="playAudio" data-src="' + audio.replace(/(^audio\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i><p>音频消息</p></div>';
-      })
-      .replace(/video\[([^\s]+?)\]/g, function(video){  //转义音频
-        return '<div class="layui-unselect layui-layim-video" layim-event="playVideo" data-src="' + video.replace(/(^video\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i></div>';
-      })
+        .replace(/audio\[([^\s]+?)\]/g, function(audio){  //转义音频
+          return '<div class="layui-unselect layui-layim-audio" layim-event="playAudio" data-src="' + audio.replace(/(^audio\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i><p>音频消息</p></div>';
+        })
+        .replace(/video\[([^\s]+?)\]/g, function(video){  //转义音频
+          return '<div class="layui-unselect layui-layim-video" layim-event="playVideo" data-src="' + video.replace(/(^video\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i></div>';
+        })
 
-      .replace(/a\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义链接
-        var href = (str.match(/a\(([\s\S]+?)\)\[/)||[])[1];
-        var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
-        if(!href) return str;
-        return '<a href="'+ href +'" target="_blank">'+ (text||href) +'</a>';
-      }).replace(html(), '\<$1 $2\>').replace(html('/'), '\</$1\>') //转移HTML代码
-      .replace(/\n/g, '<br>'); //转义换行
+        .replace(/a\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义链接
+          var href = (str.match(/a\(([\s\S]+?)\)\[/)||[])[1];
+          var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];
+          if(!href) return str;
+          return '<a href="'+ href +'" target="_blank">'+ (text||href) +'</a>';
+        }).replace(html(), '\<$1 $2\>').replace(html('/'), '\</$1\>') //转移HTML代码
+        .replace(/\n/g, '<br>'); //转义换行
     return content;
   };
   // endregion Overload functions of layim
 
   exports('layImExMobile', new LAYIMEX()); //注意，这里是模块输出的核心，模块名必须和use时的模块名一致
 })
-	.addcss(
-  '../../skin/css/layimex.mobile.css?v=2.0.2'
-  ,'skinlayimex-mobilecss'
-);
+    .addcss(
+        '../../skin/css/layimex.mobile.css?v=2.0.2'
+        ,'skinlayimex-mobilecss'
+    );
