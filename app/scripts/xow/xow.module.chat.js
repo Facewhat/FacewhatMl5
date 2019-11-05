@@ -45,18 +45,15 @@
     //};
     let _onMessage = (stanza)=> {
       XoW.logger.ms(_this.classInfo, '_onMessage()');
-<<<<<<< HEAD
       var fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
       var myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
       let isType = stanza.getAttribute('type');
 
       if(_filterComponentMessage(stanza)){ return true;}
-=======
       let fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
       let myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
       // 以这种方式来区分是会议室的消息/会议室的私聊 还是个人消息
       // 如果两个doamin相同，则说明是个人消息
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       XoW.logger.d(_this.classInfo, 'fromDomain：{0} toDomain: {1}'.f(fromDomain, myDomain));
       if (fromDomain == myDomain) {
         // 到时候这边看看要不要把type=errror的消息拦截下来。在外面进行统一的处理。
@@ -126,7 +123,6 @@
 
               if(stanza.getAttribute('type') == 'error'){
                 if((stanza.getElementsByTagName('subject').textContent)){
-<<<<<<< HEAD
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "权限不够，发送失败");
                   return true;
                 }
@@ -136,7 +132,6 @@
                 }
                 if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "您被禁言,发送失败");
-=======
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "权限不够，发送失败");
                   return true;
                 }
@@ -146,7 +141,6 @@
                 }
                 if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "您被禁言,发送失败");
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                   return true;
                 }
               }
@@ -158,7 +152,6 @@
               XoW.logger.d(_this.classInfo + "刚到的消息是一个groupchat！");
               //todo g关于群组消息设置
               if(stanza.getAttribute('type')==undefined && XoW.utils.getNodeFromJid(stanza.getAttribute('to'))==XoW.utils.getNodeFromJid(_gblMgr.getCurrentUser().jid)&&stanza.getElementsByTagName('decline')[0]){
-<<<<<<< HEAD
                 _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_DISAGREE_INVITE,{from:stanza.getElementsByTagName('decline')[0].getAttribute('from'),reason:stanza.getElementsByTagName('reason')[0].textContent,roomjid:stanza.getAttribute('from')});
               }
               if(stanza.getAttribute('type') == 'error'){
@@ -172,7 +165,6 @@
                 }
                 if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "您被禁言,发送失败");
-=======
                 _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.DISAGREE_INVITATION,{from:stanza.getElementsByTagName('decline')[0].getAttribute('from'),reason:stanza.getElementsByTagName('reason')[0].textContent,roomjid:stanza.getAttribute('from')});
               }
               if(stanza.getAttribute('type') == 'error'){
@@ -186,7 +178,6 @@
                 }
                 if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
                   _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "您被禁言,发送失败");
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                   return true;
                 }
               }
@@ -262,7 +253,6 @@
           XoW.logger.w("这个节没有类型");
         }
       } else {
-<<<<<<< HEAD
         if (isType == 'chat') {
           let  theMsg = new XoW.Message();
           theMsg.cid = stanza.getAttribute('id');
@@ -296,8 +286,6 @@
           }
           if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_MEMBERSPEARK, "您被禁言,发送失败");
-=======
-
         //todo g关于群组消息设置
         if(stanza.getAttribute('type')==undefined && XoW.utils.getNodeFromJid(stanza.getAttribute('to'))==XoW.utils.getNodeFromJid(_gblMgr.getCurrentUser().jid)&&stanza.getElementsByTagName('decline')[0]){
           _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.DISAGREE_INVITATION,{from:stanza.getElementsByTagName('decline')[0].getAttribute('from'),reason:stanza.getElementsByTagName('reason')[0].textContent,roomjid:stanza.getAttribute('from')});
@@ -313,7 +301,6 @@
           }
           if(stanza.getElementsByTagName('error')[0].getAttribute('code')=="403") {
             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANSPEAKED, "您被禁言,发送失败");
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             return true;
           }
         }
@@ -337,22 +324,14 @@
             theMsg1.timestamp = stanza.getElementsByTagName('delay')[0].getAttribute('stamp');
             theMsg1.contentType = 'delaymsg';
           }
-
-<<<<<<< HEAD
           if (theMsg1.content == "" || theMsg1.content == undefined || theMsg1.content == null || (theMsg1.content.length > 0 && theMsg1.content.trim().length == 0)) {
-=======
           if(theMsg1.content  == "" || theMsg1.content  == undefined || theMsg1.content  == null || (theMsg1.content.length>0 && theMsg1.content .trim().length == 0)){
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             return true;
           }
           _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_MSG_RCV, theMsg1);
           return true;
         }
-<<<<<<< HEAD
       }
-=======
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       }
       XoW.logger.me(_this.classInfo, "_onMessage()");
       return true; // 必须返回true
@@ -457,7 +436,6 @@
       }
       return false;
     }
-<<<<<<< HEAD
     var _filterComponentMessage = function(stanza){   //过滤组件的消息
         if(stanza.getAttribute('from') == "filetransfer."+ XoW.config.domain){
             return true;
@@ -474,9 +452,6 @@
         }
         return false;
       }
-
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     // endregion Public Methods
 
     // construct
