@@ -252,7 +252,7 @@ XoW.File = function (toJid) {
       'errorMsg': _this.errorMsg,
       'seq' : _this.seq,
       'blockSize' : _this.blockSize,
-      'url':_this.url
+      'url':_this.url,
       'blockSize' : _this.blockSize
     };
   };
