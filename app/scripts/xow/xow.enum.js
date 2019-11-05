@@ -54,8 +54,6 @@
         CHAT_FILE_TRANS_REQ_SUC: 'CHAT_FILE_TRANS_REQ_SUC',
         CHAT_FILE_STATE_CHANGED: 'CHAT_FILE_STATE_CHANGED',
         USER_SEARCH_RSP_RCV: 'USER_SEARCH_RSP_RCV',
-<<<<<<< HEAD
-
         ROOM_ROOMLIST_ADDED:'ROOM_ROOMLIST_ADDED',
         ROOM_MSG_RCV:'ROOM_MSG_MUC',
         ROOM_FORBIT_MEMBERSPEARK:'ROOM_FORBIT_MEMBERSPEARK',
@@ -84,7 +82,6 @@
         HTTP_FILE_STRANSFER_OVERDUE:'HTTP_FILE_STRANSFER_OVERDUE',
         ERROR: 'error',
         KEFUMSGREV:'KEFUMSGREV'
-=======
         ROOM_ROOMLIST_ADDED:'ADDROOM_MUC',
         ROOM_MSG_RCV:"ROOM_MSG_MUC",
         ROOM_BANSPEAKED:"BANDSPEAKE",
@@ -101,7 +98,6 @@
         NO_POWER_INVITION:"NOTPOWERINVITION",
         ROOM_KICKED_SOMEONE_RCV:"ROOM_KICKED_SOMEONE_RCV",
         ERROR: 'error'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       },
       VIEW_EVENT: {
         V_LOGIN_STATE_CHANGED: 'V_LOGIN_STATE_CHANGED',
@@ -128,10 +124,7 @@
         V_FILE_STATE_CHANGED: 'V_FILE_STATE_CHANGED',
         V_FILE_OVERDUE: 'V_FILE_OVERDUE',
         V_USER_SEARCH_RSP_RCV: 'V_USER_SEARCH_RSP_RCV',
-
         V_ERROR_PROMPT: 'V_ERROR_PROMPT',
-
-<<<<<<< HEAD
         V_ROOMLIST_ADDED:'V_ROOMLIST_ADDED',
         V_ROOM_MSG_RCV:'V_ROOM_MSG_RCV',
         V_ROOM_FORBIT_MEMBERSPEARK:'V_ROOM_FORBIT_MEMBERSPEARK',
@@ -163,7 +156,6 @@
         V_ROOM_OJROOMCHAT:'V_ROOM_OJROOMCHAT',
         V_KEFUMSGREV:'V_KEFUMSGREV',
         ERROR: 'V_error'
-=======
         V_ROOMLIST_ADDED:'VIEW_ADD_ROOM_MUC',
         V_ROOM_MSG_RCV:'VIEW_ROOM_MSG',
         V_BANSPEAKE:'BANSPEAKE',
@@ -182,7 +174,6 @@
         V_NO_POWER_INVITION:"V_NOTPOWERINVITION",
         V_ROOM_KICKED_SOMEONE_RCV:"SHOW_ROOM_KICKED_SOMEONE_RCV",
         V_ERROR: 'V_error'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       },
       // 在线状态枚举
       UserState: {
@@ -238,7 +229,6 @@
         REMOTE_STOPPED: 'remoteStopped', // canceled by remote when transferring
         ERROR: 'error',
         OVERDUE: 'overdue'
-<<<<<<< HEAD
       },
     FileHttpFileState:{
         OPEN :   'open',
@@ -250,9 +240,7 @@
         SENDING:'sending',
         OVERDUE: 'overdue'
     }
-=======
       }
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     };
   return XoW;
 }));
