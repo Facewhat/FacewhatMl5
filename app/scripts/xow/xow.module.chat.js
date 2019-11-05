@@ -50,8 +50,8 @@
       let isType = stanza.getAttribute('type');
 
       if(_filterComponentMessage(stanza)){ return true;}
-      let fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
-      let myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
+//       let fromDomain = XoW.utils.getDomainFromJid(stanza.getAttribute('from'));
+//       let myDomain = XoW.utils.getDomainFromJid(_gblMgr.getCurrentUser().jid);
       // 以这种方式来区分是会议室的消息/会议室的私聊 还是个人消息
       // 如果两个doamin相同，则说明是个人消息
       XoW.logger.d(_this.classInfo, 'fromDomain：{0} toDomain: {1}'.f(fromDomain, myDomain));
