@@ -17,20 +17,17 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     var _layForm = layui.form;
     var _layDate = layui.laydate;
     var _layUtil = layui.util;
-<<<<<<< HEAD
-  var _client = layui.client;
-  var _element = layui.element;
-  var _Sketchpad = layui.Sketchpad;
-  var stope = layui.stope;
+    var _client = layui.client;
+    var _element = layui.element;
+    var _Sketchpad = layui.Sketchpad;
+    var stope = layui.stope;
 
-  var THIS = 'layim-this', MAX_ITEM = 20;
-  var _layerMainIndex = [];
-  var _this = this;
-=======
+    var THIS = 'layim-this', MAX_ITEM = 20;
+    var _layerMainIndex = [];
+    var _this = this;
     var _Sketchpad = layui.Sketchpad;
     var THIS = 'layim-this', MAX_ITEM = 20;
     var _this = this;
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
 
     // layui.data('layim')[_cache.mine.id] 保存当前数据
     //>history:最近联系人
@@ -119,7 +116,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         ' </div></div>'
     ].join('');
 
-<<<<<<< HEAD
   var _eleImage = [
     '<div class="layim_file" sid="{{ d.sid }}">'
     ,'  <div class="layim_fileinfo">'
@@ -254,7 +250,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                       ,'{{# } }}'
                   ,'{{# } }}'
        ,'</div>'
-=======
     var _eleImage = [
         '<div class="layim_file" sid="{{ d.sid }}">'
         , '  <div class="layim_fileinfo">'
@@ -266,7 +261,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         , '    </div>'
         , '    <em class="layim_zero"></em>'
         , '  {{# } }}'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         , '</div>'
     ].join('');
 
@@ -356,7 +350,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         , '        <div id="search_user_remote_res"></div>'
         , '     </div>'
         , '     <div class="layui-tab-item {{# if(\'room\' === d.tab){ }}layui-show{{# } }}">'
-<<<<<<< HEAD
     ,'        <div class="layui-row layui-col-space15">'
     ,'          <div class="layui-col-xs8">'
     ,'            <input class="layui-input" name="qry_room_keyword" id="qry_room_keyword" placeholder="请输入房间昵称/JID" autocomplete="off"/>'
@@ -366,9 +359,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     ,'          </div>'
     ,'        </div>'
     ,'        <div id="search_room_remote_res"></div>'
-=======
         , '      搜索聊天室，聊天室功能模块添加了嘛'
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         , '     </div>'
         , '     <div class="layui-tab-item {{# if(\'chatLog\' === d.tab){ }}layui-show{{# } }}">'
         , '        <div><form class="layui-form" id="frmQryChatLog" action="">'
@@ -830,7 +821,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         , '<li layImEx-event="roomRefresh"><i class="layui-icon">&#xe666;</i> 刷新</li>'
         , '</ul>'
     ].join('');
-<<<<<<< HEAD
   var _getEleRemoteSearchRoomResnofind = function (text) {
     var _eleRemoteSearchRoomResnofind = "";
     if(text == "") {
@@ -868,9 +858,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     _eleRemoteSearchRoomRes +='</div>'
     return _eleRemoteSearchRoomRes;
   }
-=======
 
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     var _groupSet = function (roomjid, roomname, ev) {
         var html = [
             '<div style="width: 720px; height: 490px;margin-top: 5px">'
@@ -1220,11 +1208,8 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                         roomInMuc=param;
                     });
                 });
-<<<<<<< HEAD
                 //console.log(roomInMuc);
-=======
                 console.log(roomInMuc);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                 if (null == room) {
                     _layer.msg('房间信息不存在！');
                     return;
@@ -2078,7 +2063,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         _layForm.render();
     });
 
-<<<<<<< HEAD
   var  _makeChatingRoom = function () {
     let roomName = $('#createRoomnname').val();
     let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
@@ -2141,7 +2125,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
               var name = XoW.utils.getNodeFromJid(roomJid);
               var peopleNumber = 0;
               var nick = params.nick;
-=======
     var _makeChatingRoom = function () {
         let roomName = $('#createRoomnname').val();
         let regex = /^[A-Za-z0-9_\-]+$/ig;
@@ -2226,8 +2209,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                                 var name = XoW.utils.getNodeFromJid(roomJid);
                                 var peopleNumber = 0;
                                 var nick = params.nick;
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
                                 var room = new XoW.Room();
                                 room.jid = roomJid;
                                 room.name = name;
@@ -2305,21 +2286,12 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                                 _layer.msg('创建失败');
                                 XoW.logger.d('创建失败');
                             });
-<<<<<<< HEAD
-
-=======
                     });
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
                 } else {
                     _layer.msg('未知错误，错误代码：' + errorCode);
                 }
             }.bind(this));
-<<<<<<< HEAD
-
-=======
         });
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     }
     var _createMeetingRoom = function () {
         XoW.logger.ms(_this.classInfo + "创建房间");
@@ -2347,14 +2319,11 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     }
     var _makeMeetingRoom = function () {
         let roomName = $('#createMeetingRoomnname').val();
-<<<<<<< HEAD
 	    let  regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/
 	    if(regex.test(roomName)==false){
 	       _layer.msg("房间名称只能包含字母、数字、-、_");
 	       return;
 	    }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         let roomDesc = $('#roomMeetingDesc').val();
         let roomPeopleNums = $('input[name="roomPeoleNum"]:checked ').val();
         var user ;
@@ -2669,7 +2638,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             item&&item(iq, successCb, errorCb);
         });
     }
-<<<<<<< HEAD
      var _getAllroomINFPO = function(handle_cb,error_cb){
     var user ;
         //add by zjy for 消除Client依赖 [20190801]
@@ -2688,8 +2656,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             item&&item(iq, successCb, errorCb);
     });
   }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     var _removeRoomModerator = function (roomjid, nick, successCb, errorCb) {
         var user ;
         //add by zjy for 消除Client依赖 [20190801]
@@ -2963,7 +2929,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         _changeMineStatus(pStatus);
     };
 
-<<<<<<< HEAD
   // LAYIMEX.prototype.getMessage = function(params){
   //   XoW.logger.ms(_this.classInfo,'searchMessage()');
   //   console.log(params);
@@ -2991,7 +2956,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     var layimChat = $('.layui-layim-chat'); // 详见layim.js
     var layimMin = $('.layui-layim-min');
     if(!layimChat) return;
-=======
     LAYIMEX.prototype.getMessage = function (params) {
         _layIM.searchMessage(params);
     };
@@ -3018,8 +2982,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         var layimChat = $('.layui-layim-chat'); // 详见layim.js
         var layimMin = $('.layui-layim-min');
         if (!layimChat) return;
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
         //如果是最小化，则还原窗口
         if (layimChat.css('display') === 'none') {
             layimChat.show();
@@ -3218,8 +3180,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 $btn.attr('layImEx-event', 'open_sys_info_box');
             });
         }
-
-<<<<<<< HEAD
     XoW.logger.me(_this.classInfo, 'rebindToolButtons()');
   };
   LAYIMEX.prototype.rebindToolFileButton = function(pCallback) {
@@ -3503,7 +3463,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     _layTpl(_eleRemoteSearchUserRes).render(data, function (html) {
       $layimRes[0].innerHTML = html;
     });
-=======
         XoW.logger.me(_this.classInfo, 'rebindToolButtons()');
     };
     LAYIMEX.prototype.rebindToolFileButton = function (pCallback) {
@@ -3571,8 +3530,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         _layTpl(_eleRemoteSearchUserRes).render(data, function (html) {
             $layimRes[0].innerHTML = html;
         });
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
         XoW.logger.me(_this.classInfo, 'setUserSearchResult()');
     };
     LAYIMEX.prototype.pushExtMsg = function (pMsg) {
@@ -3718,7 +3675,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         _layIM.sendMessage();
         XoW.logger.ms(_this.classInfo, 'sendMsgForTop()');
     }
-<<<<<<< HEAD
   LAYIMEX.prototype.KeFuMsgRev = function(pMsgCont) {
     XoW.logger.ms(_this.classInfo, 'KeFuMsgRev()');
     let thatChat = _getThisChat(), ul = thatChat.elem.find('.layim-chat-main ul');
@@ -3728,8 +3684,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
     _chatListMore();
     XoW.logger.ms(_this.classInfo, 'KeFuMsgRev()');
   }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     LAYIMEX.prototype.inviteMegrouphtml = function (room) {
         return _inviteMegrouphtml(room);
     };
@@ -3831,11 +3785,8 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             })
             _rebindToolFileButton();
         } else if (type === XoW.MessageType.GROUP_CHAT) {
-<<<<<<< HEAD
              _rebindToolFileButton();
-=======
             //add by zjy for 消除Client依赖 [20190802]
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             layui.each(call.intoRoom,function(index,item){
                 item&&item(type, jid);
             });
@@ -3871,7 +3822,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         roomRefresh: function (oThis, e) {
             _roomRefresh();
         },
-<<<<<<< HEAD
     thisTest:function(){
       // let token = {
       //       //   to: '第一次周赛',
@@ -3905,8 +3855,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
           + "&res=fwh5_desktop";
       window.location.href = getPara;
     },
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         layim_invitIntoroomagree: function (oThis, e) {
             var _this = $(this);
             var $tr = _this.parent().parent();
@@ -3931,7 +3879,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 item&&item(room, password);
             });
         },
-<<<<<<< HEAD
      stop_http_file:function(oThis, e){
         let fileid = $(e.target).attr('data-cid');
         sessionStorage.setItem(fileid, false);
@@ -3953,9 +3900,7 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
       });
 
     },
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-        layim_invitIntoroomdisagree: function (oThis, e) {
+     layim_invitIntoroomdisagree: function (oThis, e) {
             var _this = $(this);
             var $tr = _this.parent().parent();
             var id = $tr.parent().attr('id');
@@ -4078,7 +4023,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             }, function () {
                 _layer.close(index);
             });
-<<<<<<< HEAD
     },
     search_room_remote:function(oThis,e){
       _getAllroomINFPO(function (stanza) {
@@ -4112,8 +4056,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         }
       });
       e.stopImmediatePropagation();
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         },
         roomRemoveModerator: function (oThis, e) {
             let roomjid = $(e.target).attr('data-roomjid');
@@ -4470,7 +4412,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             XoW.logger.ms(_this.classInfo, 'menu_help()');
             // todo 打开聊天客服界面
             _layer.close(events.find.index);
-<<<<<<< HEAD
       var toId = '#demohelp';
       _layIM.chat({
         name: '智能客服',
@@ -4480,7 +4421,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         id: toId,
         jid: "#demohelp@intelligentcusservice." + XoW.config.domain,
         temporary: true
-=======
             var toId = 'demohelp';
             _layIM.chat({
                 name: '进口小妹妹',
@@ -4490,7 +4430,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 id: toId,
                 jid: toId + '@' + XoW.config.domain,
                 temporary: true
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
             });
         },
         login: function (oThis, e) {
@@ -5261,7 +5200,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         });
         XoW.logger.me(_this.classInfo, '_init()');
     };
-<<<<<<< HEAD
 	var _rebindToolFileButton = function() {
 		XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
 		var thatChat = _getThisChat();
@@ -5322,7 +5260,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
 		});
 		XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
 	};
-=======
     var _rebindToolFileButton = function () {
         XoW.logger.ms(_this.classInfo, 'rebindToolFileButton()');
         var thatChat = _getThisChat();
@@ -5370,7 +5307,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
         });
         XoW.logger.me(_this.classInfo, 'rebindToolFileButton()');
     };
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     var _changeMineStatus = function (pStatus) {
         XoW.logger.ms(_this.classInfo, '_changeMineStatus()');
         // $('.layui-layim-status').find('ul li:last-child')等价于 $('.layui-layim-status').find('li').eq(-1)
@@ -5785,7 +5721,6 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 thatFile.sid = theThumbnail.sid;
                 thatFile.status = theThumbnail.status;
                 thatFile.errorMsg = theThumbnail.errorMsg;
-<<<<<<< HEAD
         if(theThumbnail.url!='*'){
           thatFile.url = theThumbnail.url;
         }
@@ -5836,10 +5771,8 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
             default:
                html = _layTpl(_eleHttpFile).render(thatFile);
           }
-=======
                 thatFile.base64 = theThumbnail.base64;
                 var html = _layTpl(_eleImage).render(thatFile);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                 thatFile = null;
                 return html;
             })
@@ -5868,23 +5801,18 @@ layui.define(['layer', 'laytpl', 'form', 'laypage',
                 theThumbnail = null;
                 return html;
             })
-
-<<<<<<< HEAD
       .replace(/audio\[([^\s]+?)\]/g, function(audio){  //转义音频
         return '<div class="layui-unselect layui-layim-audio" layim-event="playAudio" data-src="' + audio.replace(/(^audio\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i><p>音频消息</p></div>';
       })
       .replace(/video\[([^\s]+?)\]/g, function(video){  //转义视频
         return '<div class="layui-unselect layui-layim-video" layim-event="playVideo" data-src="' + video.replace(/(^video\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i></div>';
       })
-=======
             .replace(/audio\[([^\s]+?)\]/g, function (audio) {  //转义音频
                 return '<div class="layui-unselect layui-layim-audio" layim-event="playAudio" data-src="' + audio.replace(/(^audio\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i><p>音频消息</p></div>';
             })
             .replace(/video\[([^\s]+?)\]/g, function (video) {  //转义音频
                 return '<div class="layui-unselect layui-layim-video" layim-event="playVideo" data-src="' + video.replace(/(^video\[)|(\]$)/g, '') + '"><i class="layui-icon">&#xe652;</i></div>';
             })
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
-
             .replace(/a\([\s\S]+?\)\[[\s\S]*?\]/g, function (str) { //转义链接
                 var href = (str.match(/a\(([\s\S]+?)\)\[/) || [])[1];
                 var text = (str.match(/\)\[([\s\S]*?)\]/) || [])[1];
