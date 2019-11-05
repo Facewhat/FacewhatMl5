@@ -281,7 +281,6 @@ layui.extend({
       , content: nick + '拒绝加入房间，reason：'+  params.reason
     });
     return true;
-<<<<<<< HEAD
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_DISAGREE_INVITE);
   });
   _client.on(XoW.VIEW_EVENT.V_ROOM_FORBIT_MEMBERSPEARK, function (Msg){
