@@ -66,14 +66,11 @@ layui.extend({
     XoW.logger.d("index.html on document ready");
     _client.getCache = _layIM.cache;
     if (LOGIN_OPTION.mode === XoW.ClientMode.KEFU) {
-<<<<<<< HEAD
       let token = JSON.parse(XoW.utils.getUrlPar('token'));
       let from = token.from;
       let password = token.password;
       LOGIN_OPTION.id = from;
       LOGIN_OPTION.password = password;
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       _client.login(LOGIN_OPTION);
     } else {
       var local = layui.data('layim')[0] || layui.data('layim-mobile')[0];
@@ -273,12 +270,9 @@ layui.extend({
     _layImEx.pushSysInfo(pSubMsg);
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_APPROVED);
   });
-<<<<<<< HEAD
   _client.on(XoW.VIEW_EVENT.V_ROOM_DISAGREE_INVITE, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_DISAGREE_INVITE);
-=======
   _client.on(XoW.VIEW_EVENT.V_DISAGREE_INVITATION, function (params) {
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     let nick = XoW.utils.getNodeFromJid(params.from);
     _layImEx.getMessage({
       system: true
@@ -333,7 +327,6 @@ layui.extend({
   });
   _client.on(XoW.VIEW_EVENT.V_ROOM_ONE_EXIT, function (params){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_EXIT);
-=======
   });
   _client.on(XoW.VIEW_EVENT.V_BANSPEAKE, function (Msg){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_BANSPEAKE);
@@ -377,7 +370,6 @@ layui.extend({
   });
   _client.on(XoW.VIEW_EVENT.V_ONEPERSON_EXIT_ROOM, function (params){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ONEPERSON_EXIT_ROOM);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     if(params.roomjid != XoW.utils.getNodeFromJid(_client.getCurrentUser().jid)) {
       _layImEx.getMessage({
         system: true
@@ -386,7 +378,6 @@ layui.extend({
         , content: params.nick + '退出房间'
       });
     }
-<<<<<<< HEAD
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_EXIT);
   })
   _client.on(XoW.VIEW_EVENT.V_ROOM_INVITE_RCV, function (params) {
@@ -466,7 +457,6 @@ layui.extend({
     return true;
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_KEFUMSGREV);
   })
-=======
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ONEPERSON_EXIT_ROOM);
   })
   _client.on(XoW.VIEW_EVENT.V_INVITE_RCV, function (params) {
@@ -475,7 +465,6 @@ layui.extend({
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_INVITE_RCV);
     return true;
   })
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   _client.on(XoW.VIEW_EVENT.V_ROOMTILE_RCV,function (data) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOMTILE_RCV);
     // _layImEx.showNewtile(data);
@@ -488,7 +477,6 @@ layui.extend({
     });
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOMTILE_RCV);
   })
-<<<<<<< HEAD
   _client.on(XoW.VIEW_EVENT.V_ROOM_OJROOMCHAT,function (roomjid) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_OJROOMCHAT);
      let roomlist = _client.getRoomMgr().getSaveoutAllRoom();
@@ -508,9 +496,7 @@ layui.extend({
   })
   _client.on(XoW.VIEW_EVENT.V_ROOM_AGREE_INTO, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_AGREE_INTO);
-=======
   _client.on(XoW.VIEW_EVENT.V_AGREE_INTO_ROOM_RCV, function (params) {
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     let roomlist = new XoW.RoomList();
     roomlist.type = 'group'
     roomlist.name=params.name
@@ -526,16 +512,13 @@ layui.extend({
       roomlist.avatar="../skin/images/avatar_room.png";
     }
     _layIM.chat(roomlist);
-<<<<<<< HEAD
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOM_AGREE_INTO);
   })
   _client.on(XoW.VIEW_EVENT.V_ROOM_ONE_INTO, function (params){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_INTO);
-=======
   })
   _client.on(XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE, function (params){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     if(params.nick != XoW.utils.getNodeFromJid(_client.getCurrentUser().jid)) {
       _layImEx.getMessage({
         system: true
@@ -544,11 +527,8 @@ layui.extend({
         , content: params.nick + '加入房间'
       });
     }
-<<<<<<< HEAD
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_INTO);
-=======
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   })
   _client.on(XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED, function (pSubMsg) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED);
@@ -566,34 +546,28 @@ layui.extend({
     _layImEx.pushSysInfo(pSubMsg);
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_NEW_INFO_ADDED);
   });
-<<<<<<< HEAD
     _client.on(XoW.VIEW_EVENT.ERROR, function (pSubMsg) {
         XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.ERROR);
       console.log('**************')
         console.log(pSubMsg)
        // _layImEx.msg(pSubMsg);
         XoW.logger.me(_classInfo, XoW.VIEW_EVENT.ERROR);
-=======
     _client.on(XoW.VIEW_EVENT.V_ERROR, function (pSubMsg) {
         XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ERROR);
        layui.msg(pSubMsg);
         XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ERROR);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     });
   _client.on(XoW.VIEW_EVENT.V_ROOM_MSG_RCV, function (params) {
     params.type = 'group';
     params.groupname = XoW.utils.getNodeFromJid(params.from);
     params.username =  XoW.utils.getResourceFromJid(params.from);
-<<<<<<< HEAD
     params.avatar="../skin/images/avatar_male.bmp";
     //var group = _client.getRoomMgr().getRoomByJid(XoW.utils.getNodeFromJid(params.from) + "@"+XoW.utils.getDomainFromJid(params.from));
     params.id =  params.groupname;
     console.log(params)
-=======
     params.avatar="http://tp2.sinaimg.cn/2211874245/180/40050524279/0";
     var group = _client.getRoomMgr().getRoomByJid(XoW.utils.getNodeFromJid(params.from) + "@"+XoW.utils.getDomainFromJid(params.from));
     params.id = group.id;
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     _layImEx.getMessage(params);
   })
   _client.on(XoW.VIEW_EVENT.V_ROOMLIST_ADDED, function (params) {
@@ -614,11 +588,8 @@ layui.extend({
     }else{
       roomlist.avatar="../skin/images/avatar_room.png";
     }
-<<<<<<< HEAD
     // console.log(roomlist)
-=======
     console.log(roomlist)
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     _layIM.addList(roomlist);
     _client.getRoomMgr().SaveoutAllRoom(roomlist);
     return true;
@@ -653,7 +624,6 @@ layui.extend({
         XoW.logger.e('There is no toId, return.');
         return;
       }
-<<<<<<< HEAD
       if(token.type){
           if(token.type == 'group'){
             _client.getRoomMgr().getAllroomINFPO(function (stanza) {
@@ -688,8 +658,6 @@ layui.extend({
              return;
           }
       }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       // 在好友列表中找
       var theCusSvr = _client.getContactById(toId);
       if (!theCusSvr) {
@@ -728,12 +696,9 @@ layui.extend({
       var toJid = data.to.id + '@' + XoW.utils.getIPFromURL(XoW.config.serviceUrl);
       _client.sendMessage(data.mine.content, toJid);
     } else {
-<<<<<<< HEAD
       // // 主动发起的对话,data.to表示friend
       // _client.sendMessage(data.mine.content, data.to.jid);
-=======
       // 主动发起的对话,data.to表示friend
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
       if(data.to.type=='friend') {
         _client.sendMessage(data.mine.content, data.to.jid);
       } else{
@@ -754,26 +719,21 @@ layui.extend({
     _client.login(pParam);
     XoW.logger.me(_classInfo, 'getMineInfo()');
   });
-<<<<<<< HEAD
   
   // _layImEx.on('httpfiletransfer',function (pSucCb) {
   //    _client.getHttpSeviceMsg(pSucCb);
   // })
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
+
   _layImEx.on('getMineInfo', function (pSucCb) {
     XoW.logger.ms(_classInfo, 'getMineInfo()');
     _client.getMineInfo(pSucCb);
     XoW.logger.me(_classInfo, 'getMineInfo()');
   });
-<<<<<<< HEAD
   _layImEx.on('continuehttpfilestransfer', function (data,pSucCb) {
     XoW.logger.ms(_classInfo, 'continuehttpfilestransfer()');
    _client.continueHttpFileStransfer(data,pSucCb);
     XoW.logger.me(_classInfo, 'continuehttpfilestransfer()');
   });
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   _layImEx.on('setMineInfo', function (param, pSucCb) {
     XoW.logger.ms(_classInfo, 'setMineInfo()');
     var vCardTemp = new XoW.VCard();
@@ -972,16 +932,13 @@ layui.extend({
         _client.denyinvitRoom(room, invifrom);
         XoW.logger.me(_classInfo, 'denyinvitRoom()');
     });
-<<<<<<< HEAD
     _layImEx.on('sendOffFile', function ($file,thatchat) {
 	XoW.logger.ms(_classInfo, 'sendOffFile()');
 	_client.sendoffFile($file,thatchat);
 	XoW.logger.me(_classInfo, 'sendOffFile()');
      });
     // endregion UI Callback By LayIM.extend
-=======
     //endregion end add by zjy for 处理layim-extend中的client依赖 [20190802]
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   // region Private Methods
   function _layInit(params) {
     XoW.logger.ms(_classInfo, '_layInit()');
