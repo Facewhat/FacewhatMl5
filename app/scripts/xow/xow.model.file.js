@@ -17,11 +17,7 @@ XoW.File = function (toJid) {
   this.isRead = false;
   this.timestamp = ''; // 时间
   // endregion adapt for message
-<<<<<<< HEAD
   this.url = '*'
-=======
-
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
   // 文件信息
   this.filename = ''; // 文件名
   this.size = ''; // actual size of the file(byte)
@@ -255,12 +251,9 @@ XoW.File = function (toJid) {
       'status' : _this.status,
       'errorMsg': _this.errorMsg,
       'seq' : _this.seq,
-<<<<<<< HEAD
       'blockSize' : _this.blockSize,
       'url':_this.url
-=======
       'blockSize' : _this.blockSize
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
     };
   };
   // endregion Public methods
