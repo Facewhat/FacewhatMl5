@@ -272,7 +272,6 @@ layui.extend({
   });
   _client.on(XoW.VIEW_EVENT.V_ROOM_DISAGREE_INVITE, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_DISAGREE_INVITE);
-  _client.on(XoW.VIEW_EVENT.V_DISAGREE_INVITATION, function (params) {
     let nick = XoW.utils.getNodeFromJid(params.from);
     _layImEx.getMessage({
       system: true
@@ -326,49 +325,6 @@ layui.extend({
   });
   _client.on(XoW.VIEW_EVENT.V_ROOM_ONE_EXIT, function (params){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_EXIT);
-  });
-  _client.on(XoW.VIEW_EVENT.V_BANSPEAKE, function (Msg){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_BANSPEAKE);
-    _layImEx.roomMasterDenyYouSpeak(Msg);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_BANSPEAKE);
-    return true
-  });
-  _client.on(XoW.VIEW_EVENT.V_NO_POWER_INVITION, function (Msg){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_NO_POWER_INVITION);
-    _layer.msg(Msg);
-  })
-  _client.on(XoW.VIEW_EVENT.V_WRONGPASSWROD, function (Msg){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_WRONGPASSWROD);
-    _layImEx.wrongPaaswordIntoThisRoom(Msg);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_WRONGPASSWROD);
-  })
-  _client.on(XoW.VIEW_EVENT.V_NON_MEMBERS, function (Msg){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_NON_MEMBERS);
-    _layImEx.OnlyMemberIntoRoom(Msg);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_NON_MEMBERS)
-  });
-  _client.on(XoW.VIEW_EVENT.V_MAXIMUM_PEOPLE, function (Msg){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_MAXIMUM_PEOPLE);
-    _layImEx.outRoomMaxPeples(Msg)
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_MAXIMUM_PEOPLE);
-  })
-  _client.on(XoW.VIEW_EVENT.V_BANIN_RCV, function (Msg){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_BANIN_RCV);
-    _layImEx.banIntoThisRoom(Msg);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_BANIN_RCV);
-  })
-  _client.on(XoW.VIEW_EVENT.V_ROOMKICKOUT_RCV, function (params){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOMKICKOUT_RCV);
-      _layImEx.roomOutSide(params);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOMKICKOUT_RCV);
-  })
-  _client.on(XoW.VIEW_EVENT.V_ROOMDESROY_RCV, function (params){
-    XoW.logger.ms(_this.classInfo,XoW.VIEW_EVENT.V_ROOMDESROY_RCV);
-    _layImEx.roomMastarDestroyThisRoom(params);
-    XoW.logger.me(_this.classInfo,XoW.VIEW_EVENT.V_ROOMDESROY_RCV);
-  });
-  _client.on(XoW.VIEW_EVENT.V_ONEPERSON_EXIT_ROOM, function (params){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ONEPERSON_EXIT_ROOM);
     if(params.roomjid != XoW.utils.getNodeFromJid(_client.getCurrentUser().jid)) {
       _layImEx.getMessage({
         system: true
@@ -385,6 +341,7 @@ layui.extend({
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOM_INVITE_RCV);
     return true;
   })
+
   _client.on(XoW.VIEW_EVENT.V_HTTP_FILETRANSFER_CLOSE, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_HTTP_FILETRANSFER_CLOSE);
     if(params.mine == true){
@@ -406,6 +363,7 @@ layui.extend({
     }
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_HTTP_FILETRANSFER_CLOSE);
   })
+
   _client.on(XoW.VIEW_EVENT.V_HTTP_SEND_FILE_TO_USER_FROM_MINE, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_HTTP_SEND_FILE_TO_USER_FROM_MINE);
     _layImEx.getMessage(params);
@@ -456,14 +414,7 @@ layui.extend({
     return true;
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_KEFUMSGREV);
   })
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ONEPERSON_EXIT_ROOM);
-  })
-  _client.on(XoW.VIEW_EVENT.V_INVITE_RCV, function (params) {
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_INVITE_RCV);
-   _layImEx.someBodyIntoMeIntoRoom(params);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_INVITE_RCV);
-    return true;
-  })
+
   _client.on(XoW.VIEW_EVENT.V_ROOMTILE_RCV,function (data) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOMTILE_RCV);
     // _layImEx.showNewtile(data);
@@ -495,7 +446,6 @@ layui.extend({
   })
   _client.on(XoW.VIEW_EVENT.V_ROOM_AGREE_INTO, function (params) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_AGREE_INTO);
-  _client.on(XoW.VIEW_EVENT.V_AGREE_INTO_ROOM_RCV, function (params) {
     let roomlist = new XoW.RoomList();
     roomlist.type = 'group'
     roomlist.name=params.name
@@ -515,9 +465,6 @@ layui.extend({
   })
   _client.on(XoW.VIEW_EVENT.V_ROOM_ONE_INTO, function (params){
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_INTO);
-  })
-  _client.on(XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE, function (params){
-    XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE);
     if(params.nick != XoW.utils.getNodeFromJid(_client.getCurrentUser().jid)) {
       _layImEx.getMessage({
         system: true
@@ -527,7 +474,6 @@ layui.extend({
       });
     }
     XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ROOM_ONE_INTO);
-    XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE);
   })
   _client.on(XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED, function (pSubMsg) {
     XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_SUB_CONTACT_BE_DENIED);
@@ -551,10 +497,6 @@ layui.extend({
         console.log(pSubMsg)
        // _layImEx.msg(pSubMsg);
         XoW.logger.me(_classInfo, XoW.VIEW_EVENT.ERROR);
-    _client.on(XoW.VIEW_EVENT.V_ERROR, function (pSubMsg) {
-        XoW.logger.ms(_classInfo, XoW.VIEW_EVENT.V_ERROR);
-       layui.msg(pSubMsg);
-        XoW.logger.me(_classInfo, XoW.VIEW_EVENT.V_ERROR);
     });
   _client.on(XoW.VIEW_EVENT.V_ROOM_MSG_RCV, function (params) {
     params.type = 'group';
@@ -564,9 +506,6 @@ layui.extend({
     //var group = _client.getRoomMgr().getRoomByJid(XoW.utils.getNodeFromJid(params.from) + "@"+XoW.utils.getDomainFromJid(params.from));
     params.id =  params.groupname;
     console.log(params)
-    params.avatar="http://tp2.sinaimg.cn/2211874245/180/40050524279/0";
-    var group = _client.getRoomMgr().getRoomByJid(XoW.utils.getNodeFromJid(params.from) + "@"+XoW.utils.getDomainFromJid(params.from));
-    params.id = group.id;
     _layImEx.getMessage(params);
   })
   _client.on(XoW.VIEW_EVENT.V_ROOMLIST_ADDED, function (params) {
@@ -588,7 +527,6 @@ layui.extend({
       roomlist.avatar="../skin/images/avatar_room.png";
     }
     // console.log(roomlist)
-    console.log(roomlist)
     _layIM.addList(roomlist);
     _client.getRoomMgr().SaveoutAllRoom(roomlist);
     return true;
@@ -656,6 +594,7 @@ layui.extend({
             _layImEx.sendMsgForTop(getMsg);
              return;
           }
+
       }
       // 在好友列表中找
       var theCusSvr = _client.getContactById(toId);
@@ -697,7 +636,6 @@ layui.extend({
     } else {
       // // 主动发起的对话,data.to表示friend
       // _client.sendMessage(data.mine.content, data.to.jid);
-      // 主动发起的对话,data.to表示friend
       if(data.to.type=='friend') {
         _client.sendMessage(data.mine.content, data.to.jid);
       } else{
