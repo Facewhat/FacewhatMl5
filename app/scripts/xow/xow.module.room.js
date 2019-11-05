@@ -19,7 +19,7 @@
 
         var _init = function () {
             XoW.logger.ms(_classInfo + "Room_intt");
-           _gblMgr.getConnMgr().addHandler(_roomInviteCb.bind(_this), Strophe.NS.MUC_USER, "message");
+            _gblMgr.getConnMgr().addHandler(_roomInviteCb.bind(_this), Strophe.NS.MUC_USER, "message");
             XoW.logger.me(_classInfo + "Room_intt");
         }
         var _getAllRoomFromSer = function() {
@@ -180,7 +180,6 @@
                     case '401' :
                         roomPresence.message = "未提供密码或者密码错误！";
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_WRONG_PASSWORD,roomPresence.message);
-                        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.WRONG_PASSWORD,roomPresence.message);
                         break;
                     case '403' :
                         roomPresence.message = "您已被禁止进入该房间！";
@@ -188,7 +187,6 @@
                     case '407' :
                         roomPresence.message = "该房间仅限会员进入！";
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_MEMBER_ONLY,roomPresence.message);
-                        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.NON_MEMBERS,roomPresence.message);
                         break;
                     case '409' :
                         XoW.logger.w("该用户名已被该聊天室中其他人使用！");
@@ -197,7 +195,6 @@
                     case '503' :
                         roomPresence.message = "该聊天室已达到最大人数，您无法进入！";
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_MAXNUM_PEOPLE,roomPresence.message);
-                        _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.MAXIMUM_PEOPLE,roomPresence.message);
                         break;
                     default :
                         roomPresence.message = "未知错误，错误类型" + presence.error + ",错误代码" + presence.errorcode;
@@ -232,7 +229,6 @@
                         if(me == presence.nick) {
                             roomPresence.message = '你被禁止进入此聊天室';
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_IN,roomPresence.message);
-                            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANIN_RCV,roomPresence.message);
                         } else {
                             roomPresence.message = '[' + presence.nick + ']被禁止进入此聊天室';
                         }
@@ -243,7 +239,6 @@
                             let roomname = XoW.utils.getNodeFromJid(stanza.getAttribute('from'));
                             roomPresence.message = '你被移出' + roomname + '房间';
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_SELF_MOVEOUT,roomPresence.message);
-                            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_KICKED_OUR_RCV,roomPresence.message);
                         } else {
                             roomPresence.message = '[' + presence.nick + ']被踢出此聊天室';
                         }
@@ -274,9 +269,6 @@
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_ROOM,Mssg);
                         }else{
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_ONE_EXITROOM,onePerson);
-                            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_RCV,Mssg);
-                        }else{
-                            _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ONEPERSON_EXIT_ROOM,onePerson);
                         }
                     } else if(isInOrOut){
                         XoW.logger.d(presence.nick + "加入了房间");
@@ -286,7 +278,6 @@
                             nick:presence.nick
                         }
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ROOM_ONE_INTO,onePerson);
-                        _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE,onePerson);
                     } else {
                         XoW.logger.d(presence.nick + "更改了状态");
                     }
@@ -362,7 +353,7 @@
             return null;
         };
 
-       var _isCurrentUserAlreadyInRoom =function(roomJid) {
+        var _isCurrentUserAlreadyInRoom =function(roomJid) {
             XoW.logger.ms(_classInfo + "isCurrentUserAlreadyInRoom");
             if(null != _getXmppRoom(roomJid)) {
                 return true;
@@ -405,7 +396,7 @@
             return true;
         };
 
-         var _removePoweerroomemmer = function (item) {
+        var _removePoweerroomemmer = function (item) {
             XoW.logger.ms(_classInfo + "removePoweerroomemmer");
             _roomMembers[item] = {};
             XoW.logger.me(_classInfo + "removePoweerroomemmer");
@@ -478,7 +469,7 @@
             return true;
         };
 
-          var _SendagreejoinInviteRoom = function (room,password) {
+        var _SendagreejoinInviteRoom = function (room,password) {
             XoW.logger.ms(_classInfo + "SendagreejoinInviteRoom");
             var user = _gblMgr.getCurrentUser().jid;
             var t = XoW.utils.getNodeFromJid(user);
@@ -491,35 +482,35 @@
                     xmlns: Strophe.NS.MUC
                 }).c('password',password)
             }
-             _gblMgr.getConnMgr().send(presence);
+            _gblMgr.getConnMgr().send(presence);
             XoW.logger.me(this.classInfo + "SendagreejoinInviteRoom");
         };
         var _leaveOneXmppRoom = function(roomjid) {
             XoW.logger.ms(_classInfo + "leaveAllXmppRoom");
-           // setTimeout(function() {
-                var xmppRooms = _getAllXmppRoom();
-                for (var key in xmppRooms) {
-                    // if(XoW.utils.getNodeFromJid(key) == XoW.utils.getNodeFromJid(roomjid)) {
-                        XoW.logger.d(_classInfo + "离开房间" + key);
-                        xmppRooms[key].leave();
-                    }
-                // }
-           // }.bind(this), 500);
+            // setTimeout(function() {
+            var xmppRooms = _getAllXmppRoom();
+            for (var key in xmppRooms) {
+                // if(XoW.utils.getNodeFromJid(key) == XoW.utils.getNodeFromJid(roomjid)) {
+                XoW.logger.d(_classInfo + "离开房间" + key);
+                xmppRooms[key].leave();
+            }
+            // }
+            // }.bind(this), 500);
             XoW.logger.me(this.classInfo + "leaveAllXmppRoom");
         };
         var _leaveXmppRoom = function(roomjid) {
             XoW.logger.ms(_classInfo + "_leaveXmppRoom");
             var xmppRooms = _getAllXmppRoom();
             for (var key in xmppRooms) {
-                 if(XoW.utils.getNodeFromJid(key) == XoW.utils.getNodeFromJid(roomjid)) {
+                if(XoW.utils.getNodeFromJid(key) == XoW.utils.getNodeFromJid(roomjid)) {
                     XoW.logger.d(_classInfo + "离开房间" + key);
                     xmppRooms[key].leave();
-                 }
-             }
+                }
+            }
             XoW.logger.me(this.classInfo + "_leaveXmppRoom");
         };
 
-       var _getXmppRoomLength = function() {
+        var _getXmppRoomLength = function() {
             XoW.logger.ms(_classInfo + "getXmppRoomLength");
             var rooms = _getAllXmppRoom();
             var length = 0;
@@ -553,18 +544,18 @@
         }
         this.isRoomByjid = function (jid) {
             XoW.logger.ms(_classInfo + "getRoomdByJid");
-             return _isExisThisRoomByjid(jid)
+            return _isExisThisRoomByjid(jid)
             XoW.logger.d(_classInfo, 'room{0}'.f(jid));
 
         };
         this.isCurrentUserAlreadyInRoom =function(roomJid) {
             XoW.logger.ms(_classInfo + "isCurrentUserAlreadyInRoom");
-           return  _isCurrentUserAlreadyInRoom(roomJid)
+            return  _isCurrentUserAlreadyInRoom(roomJid)
             XoW.logger.me(this.classInfo + "isCurrentUserAlreadyInRoom");
         };
         this.getRoomByJid = function(jid) {
             XoW.logger.ms(_classInfo + "getRoomByJid");
-             return _getRoomByJid(jid)
+            return _getRoomByJid(jid)
             XoW.logger.me(_classInfo + "getRoomByJid没有符合条件的room");
         };
         this.joinRoom = function(roomJid, nick, password) {
@@ -750,8 +741,6 @@
                 iq.c('value').t(fields['muc#roomconfig_roomowners'].value[i]).up();
             }
             _gblMgr.getConnMgr().sendIQ(iq, successCb, errorCb);
-
-
             XoW.logger.me(_classInfo + "saveRoomConfig");
         };
         this.denyinvitRoom = function (room,invitfrom) {
@@ -784,13 +773,11 @@
                     let oldroom = _getRoomByJid(room.jid);
                     oldroom.setConfig(_roomConfigParser.parse(roomInfoResult));
                     _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ROOM_AGREE_INTO,oldroom);
-                    _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_AGREE_INTO_ROOM_RCV,oldroom);
                     return true;
                 }
                 room.setConfig(_roomConfigParser.parse(roomInfoResult));
                 _addRoomList(room);
                 _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ROOM_AGREE_INTO,room);
-                _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_AGREE_INTO_ROOM_RCV,room);
                 layer.msg("加入房间成功");
             }.bind(this), function(error) {
                 layer.msg("加入房间失败");
@@ -852,12 +839,12 @@
             XoW.logger.me(this.classInfo + "getAllRFServer()");
         };
         this.getXmppRoomLength = function() {
-             return _getXmppRoomLength();
+            return _getXmppRoomLength();
         };
         this.closeThisRoom = function(roomjid){
             if(0 != _getXmppRoomLength()) {
-              _leaveOneXmppRoom(roomjid);
-              layer.msg("已退出房间");
+                _leaveOneXmppRoom(roomjid);
+                layer.msg("已退出房间");
             }
         }
         this.closeOneThisRoom = function(roomjid){
