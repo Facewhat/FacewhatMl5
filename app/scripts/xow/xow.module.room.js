@@ -179,22 +179,16 @@
                 switch(presence.errorcode) {
                     case '401' :
                         roomPresence.message = "未提供密码或者密码错误！";
-<<<<<<< HEAD
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_WRONG_PASSWORD,roomPresence.message);
-=======
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.WRONG_PASSWORD,roomPresence.message);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         break;
                     case '403' :
                         roomPresence.message = "您已被禁止进入该房间！";
                         break;
                     case '407' :
                         roomPresence.message = "该房间仅限会员进入！";
-<<<<<<< HEAD
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_MEMBER_ONLY,roomPresence.message);
-=======
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.NON_MEMBERS,roomPresence.message);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         break;
                     case '409' :
                         XoW.logger.w("该用户名已被该聊天室中其他人使用！");
@@ -202,11 +196,8 @@
                         break;
                     case '503' :
                         roomPresence.message = "该聊天室已达到最大人数，您无法进入！";
-<<<<<<< HEAD
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_MAXNUM_PEOPLE,roomPresence.message);
-=======
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.MAXIMUM_PEOPLE,roomPresence.message);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         break;
                     default :
                         roomPresence.message = "未知错误，错误类型" + presence.error + ",错误代码" + presence.errorcode;
@@ -240,11 +231,8 @@
                         XoW.logger.d(presence.nick + "被禁止进入此房间");
                         if(me == presence.nick) {
                             roomPresence.message = '你被禁止进入此聊天室';
-<<<<<<< HEAD
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_FORBIT_IN,roomPresence.message);
-=======
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_BANIN_RCV,roomPresence.message);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         } else {
                             roomPresence.message = '[' + presence.nick + ']被禁止进入此聊天室';
                         }
@@ -254,11 +242,8 @@
                         if(me == presence.nick) {
                             let roomname = XoW.utils.getNodeFromJid(stanza.getAttribute('from'));
                             roomPresence.message = '你被移出' + roomname + '房间';
-<<<<<<< HEAD
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_SELF_MOVEOUT,roomPresence.message);
-=======
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_KICKED_OUR_RCV,roomPresence.message);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         } else {
                             roomPresence.message = '[' + presence.nick + ']被踢出此聊天室';
                         }
@@ -286,15 +271,12 @@
                                 Msg:"所有者销毁了"+roomname+"房间",
                                 id: XoW.utils.getNodeFromJid(stanza.getAttribute('from')),
                             }
-<<<<<<< HEAD
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_ROOM,Mssg);
                         }else{
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_ONE_EXITROOM,onePerson);
-=======
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ROOM_DESTROY_RCV,Mssg);
                         }else{
                             _gblMgr.getHandlerMgr().triggerHandler(XoW.SERVICE_EVENT.ONEPERSON_EXIT_ROOM,onePerson);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                         }
                     } else if(isInOrOut){
                         XoW.logger.d(presence.nick + "加入了房间");
@@ -303,11 +285,8 @@
                             roomjid : stanza.getAttribute('from'),
                             nick:presence.nick
                         }
-<<<<<<< HEAD
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ROOM_ONE_INTO,onePerson);
-=======
                         _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ONEINTOROOM_VOICE,onePerson);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                     } else {
                         XoW.logger.d(presence.nick + "更改了状态");
                     }
@@ -804,20 +783,14 @@
                     layer.msg("加入房间成功");
                     let oldroom = _getRoomByJid(room.jid);
                     oldroom.setConfig(_roomConfigParser.parse(roomInfoResult));
-<<<<<<< HEAD
                     _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ROOM_AGREE_INTO,oldroom);
-=======
                     _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_AGREE_INTO_ROOM_RCV,oldroom);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                     return true;
                 }
                 room.setConfig(_roomConfigParser.parse(roomInfoResult));
                 _addRoomList(room);
-<<<<<<< HEAD
                 _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_ROOM_AGREE_INTO,room);
-=======
                 _gblMgr.getHandlerMgr().triggerHandler(XoW.VIEW_EVENT.V_AGREE_INTO_ROOM_RCV,room);
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
                 layer.msg("加入房间成功");
             }.bind(this), function(error) {
                 layer.msg("加入房间失败");
@@ -893,7 +866,6 @@
                 layer.msg("已退出房间");
             }
         }
-<<<<<<< HEAD
         this.getAllroomINFPO = function(handle_cb,error_cb){
             var user = _gblMgr.getCurrentUser().jid;
             var iq = $iq({
@@ -920,8 +892,6 @@
             });
 
         }
-=======
->>>>>>> ff75c69adf4aaeeec610e1d9d8003751510e0010
         // this.removeOneFromAllRooms= function (jid) {
         //     XoW.logger.ms(_classInfo + "getRoomdByJid");
         //     jid = XoW.utils.getBareJidFromJid(jid);
