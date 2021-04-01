@@ -9,26 +9,14 @@
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
-    "natives": "^1.1.6"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "babel-preset-es2015": "^6.24.1",
-    "cssmin": "^0.4.3",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^8.0.0",
-    "gulp-clean": "^0.3.2",
-    "gulp-connect": "^5.2.0",
-    "gulp-jshint": "^2.1.0",
-    "gulp-less": "^3.5.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^3.0.0"
+    "natives": "^1.1.6",
+    "gulp-htmlmin": "latest",
+    "gulp-cache": "latest",
+    "gulp-babel": "latest"
   },
   "devDependencies": {
     "cssmin": "^0.4.3",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-clean": "^0.3.2",
     "gulp-connect": "^5.2.0",
     "gulp-jshint": "^2.1.0",
